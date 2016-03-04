@@ -6512,8 +6512,8 @@ ul {
   margin-left: 0; }
 
 img.pageLogo {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   margin: 8px !important; }
 
 .menu-bar > li > a.pageLogo {
@@ -6541,13 +6541,51 @@ img.pageLogo {
     color: white; }
   .app-header .gitter {
     margin-right: 34px; }
+  .app-header .disclaimer, .app-header .repo {
+    color: white;
+    border-color: white;
+    padding: 4px;
+    margin: 2px; }
 
 .menu-bar h1 {
+  font-size: 2.5rem;
   color: white;
   margin: 0; }
 
 .menu-bar h6 {
   color: #ababab; }
+
+.searchField {
+  padding: 0 3rem; }
+  .searchField hr {
+    margin-top: 5px; }
+
+.openOptions, .openSaves {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  position: absolute;
+  top: 106px;
+  padding: 6px;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.25);
+  border: 1px solid lightgrey; }
+
+.openOptions {
+  left: 0; }
+
+.openSaves {
+  right: 0; }
+  .openSaves.bookmark {
+    top: 136px; }
+
+.footer {
+  max-height: 50px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid grey;
+  background-color: #004978;
+  color: white;
+  font-size: 0.625rem; }
 
 img.gitter-badge {
   margin: 0; }
@@ -6580,6 +6618,9 @@ img.gitter-badge {
     right: 10px; }
   .absoluteNavBtn.scrollTop {
     right: 182px; }
+
+.search-results .debugInfo {
+  font-size: 12px; }
 
 .search-results .item {
   min-width: 600px;
@@ -6833,3 +6874,11 @@ img.gitter-badge {
         cursor: pointer; }
   .panel .block-list li > a, .panel .block-list li > span, .panel .block-list li > label {
     font-size: 0.75rem; }
+  .panel .search-options {
+    margin-top: 50px !important; }
+    .panel .search-options a {
+      position: relative; }
+    .panel .search-options section {
+      width: 100%;
+      margin-left: 0px;
+      padding-left: 0px; }
