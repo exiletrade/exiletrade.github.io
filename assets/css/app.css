@@ -6574,7 +6574,7 @@ img.pageLogo {
   left: 0; }
 
 .openSaves {
-  right: 0; }
+  right: 16px; }
   .openSaves.bookmark {
     top: 136px; }
 
@@ -6767,6 +6767,9 @@ img.gitter-badge {
   margin-top: 10px;
   font-size: 0.75rem;
   margin-bottom: 5px; }
+  .search-results .mods ul a, .search-results .modsPseudo ul a {
+    display: inline-block;
+    max-width: 350px; }
 
 .search-results .mods .firstExplicit, .search-results .modsPseudo .firstExplicit {
   border-top: 1px dotted #008ee8; }
@@ -6882,3 +6885,7 @@ img.gitter-badge {
       width: 100%;
       margin-left: 0px;
       padding-left: 0px; }
+  .panel .saveOptionsLink {
+    position: absolute;
+    top: 10px;
+    left: 10px; }

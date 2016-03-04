@@ -186,9 +186,58 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		$scope.queryString = "";
 		$scope.savedSearchesList = JSON.parse(localStorage.getItem("savedSearches"));
 		$scope.savedItemsList = JSON.parse(localStorage.getItem("savedItems"));
+		$scope.loadedOptions = JSON.parse(localStorage.getItem("savedOptions"));
+
+		$scope.options = {
+			"leagueSelect" : {
+				"type": "select",
+				"name": "League",
+				"value": 'Perandus SC',
+				"options": ["Perandus SC", "Perandus HC", "Standard", "Hardcore"]
+			},
+			"buyoutSelect" : {
+				"type": "select",
+				"name": "Buyout",
+				"value": 'Buyout: Yes',
+				"options": ["Buyout: Yes", "Buyout: No", "Buyout: Either"]
+			},
+			"searchPrefixInputs" : [{"value": "s"}]
+		};
+
+		if($scope.loadedOptions) checkDefaultOptions();
+
+		function checkDefaultOptions(){
+		
+			if(typeof $scope.loadedOptions.leagueSelect !== 'undefined'){
+				$scope.options.leagueSelect.value = $scope.loadedOptions.leagueSelect.value;
+			}
+			if(typeof $scope.loadedOptions.buyoutSelect !== 'undefined'){
+				$scope.options.buyoutSelect.value = $scope.loadedOptions.buyoutSelect.value;
+			}
+			if (typeof $scope.loadedOptions.searchPrefixInputs !== 'undefined' && $scope.loadedOptions.searchPrefixInputs !== null) {
+				$scope.options.searchPrefixInputs = $scope.loadedOptions.searchPrefixInputs;
+			}
+		}
+
+		function createSearchPrefix(options){
+			var searchPrefix = " " + options['leagueSelect']['value'].replace(" ","");
+			var buyout = options['buyoutSelect']['value'];
+			switch(buyout){
+				case "Buyout: Yes":	searchPrefix += " bo"; break;
+				case "Buyout: No": searchPrefix += " nobo"; break;
+				case "Buyout: Either": searchPrefix += " "; break;
+			}
+			options['searchPrefixInputs'].forEach(function(e){
+				searchPrefix += " " + e['value'];
+			});
+			return searchPrefix;		
+		}
 
 		$scope.termsMap = {};
 
+		//				case 0 : cssClasses = 'socketLeft'; break;
+			//		case 1 : cssClasses = 'socketRight'; break
+		
 		var mergeIntoTermsMap = function(res){
 			var ymlData = jsyaml.load(res.data);
 			jQuery.extend($scope.termsMap, ymlData);
@@ -217,7 +266,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		};
 
 		$scope.stateChanged = function() {
-			console.log('h');
+			console.log('stateChanged');
 		};
 
 		/*
@@ -232,7 +281,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 
 		function doActualSearch(size, sortKey, sortOrder) {
 			$scope.Response = null;
-			var searchQuery = parseSearchInput($scope.termsMap, $scope.searchInput);
+			var searchQuery = parseSearchInput($scope.termsMap, $scope.searchInput + createSearchPrefix($scope.options));
 			console.log("searchQuery=" + searchQuery);
 			$scope.queryString = searchQuery;
 
@@ -371,6 +420,39 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 
 			localStorage.setItem("savedItems", JSON.stringify(savedItems));
 			$scope.savedItemsList = savedItems.reverse();
+		};
+
+
+		/*
+			Add input Fields (search Prefixes)
+		*/
+		$scope.addInputField = function() {
+			console.log($scope.options.searchPrefixInputs);
+			$scope.options.searchPrefixInputs.push({"value":""});
+			console.log($scope.options.searchPrefixInputs);
+		};
+
+		/*
+			Save options to HTML storage
+		*/
+		$scope.saveOptions = function(){
+			localStorage.setItem("savedOptions", JSON.stringify($scope.options));
+		};
+
+		$scope.removeInputFromList = function(x){
+			var savedOptions = JSON.parse(localStorage.getItem("savedOptions"));
+			/*
+			console.log($scope.options.searchPrefixInputs);
+			//savedOptions = savedOptions.searchPrefixInputs
+			$scope.options.searchPrefixInputs.filter(function (el) {
+					return el.value !== x.value;
+				}
+			);
+
+			console.log($scope.options.searchPrefixInputs);
+			//$scope.searchPrefixInputs = savedOptions.reverse();
+			localStorage.setItem("savedOptions", JSON.stringify(savedOptions));
+			*/
 		};
 
 		/*
