@@ -25,6 +25,10 @@
 							>
 						<img zf-iconic="" icon="circle-check" size="small">Save
 					</a>
+					<div class="searchStats" title="{{queryString}}" ng-if="Response.took" zf-open="showElasticJsonRequestModal">
+						&nbsp;&nbsp;<img zf-iconic="" icon="Dashboard" size="small"> {{Response.took}} ms <br/>
+						&nbsp;&nbsp;<img zf-iconic="" icon="Document" size="small"> {{Response.hits.total}} hits
+					</div>
 				</span>
 			</label>
 		</div>
@@ -150,8 +154,15 @@
 		<!-- Show Disclaimer Modal -->
 		<div zf-modal="" id="showDisclaimerModal">
 			<a zf-close="" class="close-button">×</a>
-			<h3>Disclaimer</h3>
-			<p>This site is fan-made and not affiliated with Grinding Gear Games in any way.</p>
+			<h3>About</h3>
+			<p>This site is fan-made and not affiliated with Grinding Gear Games in any way. ExileTrade is fully open source under GNU General Public License v2.0.</p>
+		</div>
+
+		<!-- Show Elastic JSON Request Debug Modal -->
+		<div zf-modal="" id="showElasticJsonRequestModal">
+			<a zf-close="" class="close-button">×</a>
+			<h4>Elastic JSON Request</h4>
+			<pre>{{elasticJsonRequest}}</pre>
 		</div>
 
 		<hr width=100% size=1>
@@ -159,13 +170,6 @@
 
 	<!-- Searchresults -->
 	<div class="grid-content search-results">
-
-		<ul class="debugInfo">
-			<li>Request took {{Response.took}} ms
-			<li>Request matched {{Response.hits.total}} hits
-			<li>Query String: {{queryString}}
-		</ul>
-		
 		<div class="grid-block search-items large-up-2">
 			<div class="grid-content item" ng-repeat="item in Response.hits.hits" ng-style=""
 				 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
@@ -191,7 +195,8 @@
 					<div class="grid-block item-inner-border" ng-style="switchValue">
 						<div class="grid-block item-box-left">
 
-							<div class="grid-block image-container" ng-style="{'background-image': 'url({{item._source.info.icon}})'}">
+							<div class="grid-block image-container" ng-style="{'background-image': 'url({{item._source.info.icon}})'}"
+								title="Stash Name: {{item._source.shop.stash.stashName}}">
 								<div ng-repeat="cssClasses in getSocketClasses(item._source.sockets.allSockets)" class="socket {{cssClasses}}">
 								</div>
 								<div ng-repeat="cssClasses in getSocketLinkClasses(item._source.sockets.allSockets)" class="socketLink {{cssClasses}}">
@@ -202,12 +207,10 @@
 							<div class="grid-block item-info">
 								<div class="vertical grid-block">
 									<div class="grid-block">
-										<h5 class="item-name">
+										<h5 class="item-name" title="Note: {{item._source.shop.note}}">
 											<span class="label corrupted" ng-if="item._source.attributes.corrupted">Corrupted</span>
 											<span class="label mirrored" ng-if="item._source.attributes.mirrored">Mirrored</span>
-											<a class="name" href="http://www.pathofexile.com/forum/view-thread/{{item._source.shop.threadid}}" target="_blank">
-												{{item._source.info.fullName}}
-											</a>
+											<a class="name" ngclipboard data-clipboard-text="{{copyWhisperToClipboard(item)}}">{{item._source.info.fullName}}</a>
 										</h5>
 									</div>
 
@@ -320,11 +323,11 @@
 											<i class="seperator"></i>
 										</span>
 
-										<span class="click verified {{item._source.shop.verified}}">
+										<!--span class="click verified {{item._source.shop.verified}}">
 											Verify
 											<span class=""></span>
 											<i class="seperator"></i>
-										</span>
+										</span-->
 
 										<span class="" data-ign="{{item._source.shop.lastCharacterName}}">
 											IGN: {{item._source.shop.lastCharacterName}}
@@ -332,7 +335,7 @@
 										</span>
 
 										<span>
-											<a ngclipboard class="click small hollow whisper-btn" data-clipboard-text="{{copyWhisperToClipboard(item)}}">Copy Whisper</a>
+											<a ngclipboard class="click small hollow whisper-btn" data-clipboard-text="{{copyWhisperToClipboard(item)}}">Whisper</a>
 										</span>
 									</div>
 								</div>

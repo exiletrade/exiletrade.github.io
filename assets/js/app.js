@@ -37,6 +37,8 @@ function parseSearchInputTokens(input) {
 			if (evaluatedToken && hasBackTick(evaluatedToken)) {
 				evaluatedToken = parseSearchInputTokens(evaluatedToken);
 			}
+		} else {
+			evaluatedToken = token;
 		}
 		queryTokens.push(evaluatedToken);
 	}
@@ -168,7 +170,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		$urlProvider.otherwise('/');
 
 		$locationProvider.html5Mode({
-			enabled:false,
+			enabled: true,
 			requireBase: false
 		});
 
@@ -187,7 +189,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', 'es', function($q, $scope, $http, $location, es) {
 		console.info('controller');
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
-		$scope.queryString = "";
+		$scope.elasticJsonRequest = "";
 
 		var httpParams = $location.search();
 		console.trace('httpParams:' + angular.toJson(httpParams, true));
@@ -313,10 +315,10 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			console.trace('changed location to: ' + $location.absUrl());
 			var searchQuery = parseSearchInput($scope.termsMap, finalSearchInput);
 			console.log("searchQuery=" + searchQuery);
-			$scope.queryString = searchQuery;
-
+			
 			var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder);
-			console.info("Final search json: " +  JSON.stringify(esBody));
+			$scope.elasticJsonRequest = angular.toJson(esBody, true);
+			console.info("Final search json: " +  $scope.elasticJsonRequest);
 			
 			es.search({
 				index: 'index',
