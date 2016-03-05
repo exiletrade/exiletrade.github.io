@@ -1,0 +1,11 @@
+#
+# Seller
+#
+#offline                         =       online=
+#online                          =       online=x
+bo:
+  query: shop.hasPrice:true
+nobo:
+  query: shop.hasPrice:false
+seller(.*):
+  query: (shop.sellerAccount:$1)
