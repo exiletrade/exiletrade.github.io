@@ -4,7 +4,7 @@ function parseSearchInput(_terms, input) {
 	terms = _terms;
 
 	// capture literal search terms (LST) like name="veil of the night"
-	var regex = /([^\s]*=\".*?\")/g;
+	var regex = /([^\s]*[:=]\".*?\")/g;
 	var lsts = input.match(regex);
 	lsts = expandLsts(lsts);
 	var _input = input.replace(regex, 'LST');
@@ -15,7 +15,9 @@ function parseSearchInput(_terms, input) {
 		i++;
 		return lst;
 	});
-	return _queryStr;
+	var ri = new RegExp('^name[:=]"(.+)"$', 'i');
+	if(ri.test(_queryStr)) return _queryStr.replace("name","info.tokenized.fullName").replace("=",":");
+	return _queryStr.replace("=",":");
 	return parseSearchInputTokens(input);
 }
 
@@ -27,10 +29,10 @@ function parseSearchInputTokens(input) {
 	var tokens = input.split(" ");
 	var queryTokens = [];
 	for (i in tokens) {
-		var token = tokens[i].toUpperCase();
-		var evaluatedToken = token;
+		var evaluatedToken = tokens[i];
+		var token = evaluatedToken.toUpperCase();
 		if ( token != "OR" && token != "AND" && token !="LST" && token !="NOT" ) {
-			evaluatedToken = evalSearchTerm(token);
+			evaluatedToken = evalSearchTerm(evaluatedToken);
 			console.trace(token + '=' + evaluatedToken);
 			if (evaluatedToken && hasBackTick(evaluatedToken)) {
 				evaluatedToken = parseSearchInputTokens(evaluatedToken);
@@ -182,10 +184,21 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		return esFactory({ host: 'http://apikey:07e669ae1b2a4f517d68068a8e24cfe4@api.exiletools.com' }); // poeblackmarketweb@gmail.com
 	});
 
-	appModule.controller('SearchController', ['$scope', '$http', 'es', function($scope, $http, es) {
-		// Default
-		$scope.searchInput = ""; // (gloves or chest) 60life 80eleres
+	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', 'es', function($q, $scope, $http, $location, es) {
+		console.info('controller');
+		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.queryString = "";
+
+		var httpParams = $location.search();
+		console.trace('httpParams:' + angular.toJson(httpParams, true));
+		var sortKeyDefault = 'shop.chaosEquiv';
+		var sortOrderDefault = 'asc';
+		var limitDefault = 50;
+		if (httpParams['q']) $scope.searchInput = httpParams['q'];
+		if (httpParams['sortKey'])   sortKeyDefault   = httpParams['sortKey'];
+		if (httpParams['sortOrder']) sortOrderDefault = httpParams['sortOrder'];
+		if (httpParams['limit'])     limitDefault     = httpParams['limit'];
+
 		$scope.savedSearchesList = JSON.parse(localStorage.getItem("savedSearches"));
 		$scope.savedItemsList = JSON.parse(localStorage.getItem("savedItems"));
 		$scope.loadedOptions = JSON.parse(localStorage.getItem("savedOptions"));
@@ -245,26 +258,34 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			jQuery.extend($scope.termsMap, ymlData);
 		};
 
-		$http.get('assets/terms/itemtypes.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/gems.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/mod-ofs.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/mod-def.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/mod-vaal.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/attributes.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/sockets.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/buyout.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/uniques.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/basetypes.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/currencies.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/leagues.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/seller.yml').then(mergeIntoTermsMap);
-		$http.get('assets/terms/mod-jewels.yml').then(mergeIntoTermsMap);
+		$q.all([
+			$http.get('assets/terms/itemtypes.yml'),
+			$http.get('assets/terms/gems.yml'),
+			$http.get('assets/terms/mod-ofs.yml'),
+			$http.get('assets/terms/mod-def.yml'),
+			$http.get('assets/terms/mod-vaal.yml'),
+			$http.get('assets/terms/attributes.yml'),
+			$http.get('assets/terms/sockets.yml'),
+			$http.get('assets/terms/buyout.yml'),
+			$http.get('assets/terms/uniques.yml'),
+			$http.get('assets/terms/basetypes.yml'),
+			$http.get('assets/terms/currencies.yml'),
+			$http.get('assets/terms/leagues.yml'),
+			$http.get('assets/terms/seller.yml'),
+			$http.get('assets/terms/mod-jewels.yml')
+		]).then(function (results) {
+			for (var i = 0; i < results.length; i++) {
+				mergeIntoTermsMap(results[i]);
+			}
+			if (typeof httpParams['q'] !== 'undefined') $scope.doSearch();
+		});
 
+		
 		/*
 			Runs the current searchInput with default sort
 		*/		
 		$scope.doSearch = function() {
-			doActualSearch(50, 'shop.chaosEquiv', 'asc');
+			doActualSearch($scope.searchInput, limitDefault, sortKeyDefault, sortOrderDefault);
 		};
 
 		$scope.stateChanged = function() {
@@ -278,16 +299,23 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			var elem = event.currentTarget;
 			var sortKey = elem.getAttribute('data-sort-key');
 			var sortOrder = elem.getAttribute('data-sort-order');
-			doActualSearch(50, sortKey, sortOrder);
+			var limit = 50;
+			if (httpParams['limit']) limit  = httpParams['limit'];
+			doActualSearch($scope.searchInput, limit, sortKey, sortOrder);
 		};
 
-		function doActualSearch(size, sortKey, sortOrder) {
+		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
 			$scope.Response = null;
-			var searchQuery = parseSearchInput($scope.termsMap, $scope.searchInput + ' ' + createSearchPrefix($scope.options));
+			if (limit > 999) limit = 999; // deny power overwhelming
+			var finalSearchInput = searchInput + ' ' + createSearchPrefix($scope.options);
+			$location.search({'q' : searchInput, 'sortKey': sortKey, 'sortOrder': sortOrder, 'limit' : limit});
+			$location.replace();
+			console.trace('changed location to: ' + $location.absUrl());
+			var searchQuery = parseSearchInput($scope.termsMap, finalSearchInput);
 			console.log("searchQuery=" + searchQuery);
 			$scope.queryString = searchQuery;
 
-			var esBody = buildElasticJSONRequestBody(searchQuery, size, sortKey, sortOrder);
+			var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder);
 			console.info("Final search json: " +  JSON.stringify(esBody));
 			
 			es.search({
