@@ -18223,12 +18223,19 @@ function fm_processExplicitMods(item) {
 	//console.trace('name: ' + name)
 	var forgottenMods = item.forgottenMods
 	
-	// our affixes map has plural fields
+	// our affixes map has plural fields & other mismatches
 	var baseType = item.attributes.itemType.toLowerCase()
-	if (['body', 'boots', 'gloves'].indexOf(baseType) == -1) {
+	var equipType = item.attributes.equipType
+	if (['body', 'boots', 'gloves', 'sword', 'axe', 'mace'].indexOf(baseType) == -1) {
 		 baseType = baseType + 's'
 	}
 	if (baseType == 'body') baseType = 'chests'
+	if (baseType == 'sword' && equipType == 'One Handed Melee Weapon') baseType = 'onehandswordsandaxes'
+	if (baseType == 'axe' && equipType == 'One Handed Melee Weapon') baseType = 'onehandswordsandaxes'
+	if (baseType == 'mace' && equipType == 'One Handed Melee Weapon') baseType = 'onehandmaces'
+	if (baseType == 'sword' && equipType == 'Two Handed Melee Weapon') baseType = 'twohandswordsandaxes'
+	if (baseType == 'axe' && equipType == 'Two Handed Melee Weapon') baseType = 'twohandswordsandaxes'
+	if (baseType == 'mace' && equipType == 'Two Handed Melee Weapon') baseType = 'twohandmaces'
 
 	//console.trace('basetype: ' + baseType)
 	if(!baseType) return
@@ -18441,11 +18448,13 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 	sortObj[sortKey] = { "order": sortOrder };
 	var esBody = {
 					"sort": [ sortObj ],
-					"query": {
-						"query_string": { // TODO Is this it faster if we used filter-query instead of query?
-							"default_operator": "AND",
-							"query": searchQuery
-						}
+					"filter" : {
+						"query": {
+							"query_string": {
+								"default_operator": "AND",
+								"query": searchQuery
+							}
+						}	
 					},
 					size:_size
 				};
