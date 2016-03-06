@@ -125,6 +125,11 @@
 									ng-options="v for v in options.buyoutSelect.options">
 							</select>
 						</li>
+						<li class="with-dropdown">
+							<select name="" ng-model="options.verificationSelect.value" id="option-verified"
+									ng-options="v for v in options.verificationSelect.options">
+							</select>
+						</li>
 						<li ng-repeat="input in options.searchPrefixInputs track by $index">
 							<input type="text" ng-model="input.value" placeholder="Custom prefix">
 							<!--<img zf-iconic="" icon="ban" size="small" class="iconic-color-alert" ng-click="removeInputFromList(input)">-->
@@ -174,6 +179,13 @@
 			<div class="grid-content item" ng-repeat="item in Response.hits.hits" ng-style=""
 				 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
 
+				<!-- Show ExileTools Item JSON Debug Modal -->
+				<div zf-modal="" id="showExileToolsItemJsonModal{{item._id}}">
+					<!--a zf-close="" class="close-button">×</a-->
+					<h4>ExileTools Item JSON</h4>
+					<textarea rows="20" cols="80">{{item | json}}</textarea>
+				</div>
+
 				<div class="grid-block item-border">
 					<div class="grid-block item-header medium-12 right-ju">
 						<div class="controls" >
@@ -196,7 +208,8 @@
 						<div class="grid-block item-box-left">
 
 							<div class="grid-block image-container" ng-style="{'background-image': 'url({{item._source.info.icon}})'}"
-								title="Stash Name: {{item._source.shop.stash.stashName}}">
+								title="Stash Name: {{item._source.shop.stash.stashName}}"
+								zf-open="showExileToolsItemJsonModal{{item._id}}">
 								<div ng-repeat="cssClasses in getSocketClasses(item._source.sockets.allSockets)" class="socket {{cssClasses}}">
 								</div>
 								<div ng-repeat="cssClasses in getSocketLinkClasses(item._source.sockets.allSockets)" class="socketLink {{cssClasses}}">
