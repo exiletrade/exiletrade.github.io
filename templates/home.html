@@ -200,8 +200,16 @@
 		</div>
 
 		<hr width=100% size=1>
-	</div>
 
+	</div>
+	
+	<div ng-if="badSearchInputTerms.length">
+		<strong>Invalid Search Terms</strong>
+		<ul class="grid-content">
+			<li ng-repeat="badTerm in badSearchInputTerms"><span>{{badTerm}}<span>
+		</ul>
+	</div>
+	
 	<!-- Searchresults -->
 	<div class="grid-content search-results">
 		<div class="grid-block search-items large-up-2">
@@ -222,7 +230,7 @@
 								<input type="checkbox" id="switch-{{item._id}}"
 									ng-model="switchValue"
                      				ng-true-value="{backgroundColor:'rgba(0,0,0,.1'}" ng-false-value="">
-								<label for="switch-{{item._id}}"></label>
+								<label title="Highlight Item" for="switch-{{item._id}}"></label>
 							</div>
 							<span>
 								<a class="saveNotificationLink" title="Save Item" content="Saved: {{item._source.info.fullName}}" color="success" autoclose="2000" zf-notify="save-notification-{{item._id}}">
@@ -429,7 +437,14 @@
 									</tr>
 									<tr ng-repeat="(defense, value) in itemType.estimatedQ20">
 										<td>{{defense}}</td>
-										<td>{{value}}</td>
+										<td>
+											<a
+												data-sort-key="propertiesPseudo.Armour.estimatedQ20.{{defense}}"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{value}}
+											</a>
+										</td>
 									</tr>
 									</tbody>
 								</table>
