@@ -6631,6 +6631,20 @@ img.gitter-badge {
   padding: 0; }
   .search-results .item h5 {
     margin: 0; }
+  .search-results .item a.name.Normal {
+    color: #111; }
+  .search-results .item a.name.Magic {
+    color: #4E4EEB; }
+  .search-results .item a.name.Rare {
+    color: #a3a314; }
+  .search-results .item a.name.Unique {
+    color: #af6025; }
+  .search-results .item a.name.Gem {
+    color: #1ba29b; }
+  .search-results .item a.name.Currency {
+    color: #9c7e38; }
+  .search-results .item a.name.Card {
+    color: #dcd3c3; }
   .search-results .item .item-border {
     margin: 0 5px;
     border-top: transparent; }
