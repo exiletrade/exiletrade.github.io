@@ -6590,6 +6590,20 @@ img.pageLogo {
   color: white;
   font-size: 0.625rem; }
 
+.DivWithScroll {
+  height: 520px;
+  overflow: scroll;
+  overflow-x: hidden; }
+
+#showSearchTermsDocModal aside {
+  max-width: 740px; }
+
+.rowOdd {
+  background-color: #FFF; }
+
+.rowEven {
+  background-color: #BFE7FF; }
+
 img.gitter-badge {
   margin: 0; }
 
