@@ -27,8 +27,10 @@ crafted:
   query: properties.Gem.Level:$1
 (\d+)q(uality)?:
   query: properties.Quality:$1  
-(\d+)iLe?ve?l:
+(\d+)i(tem)?Le?ve?l:
   query: attributes.ilvl:>=$1
+i(tem)?Le?ve?l(\d+):
+  query: attributes.ilvl:>=$2
 (\d+)rDex:
   query: requirements.Dex:<=$1
 (\d+)rStr:
@@ -85,7 +87,7 @@ e(le)?Dps:
 ((\d+)?\.?(\d+))-((\d+)?\.?(\d+))aps:
   query: properties.Weapon.Attacks per Second:[$1 TO $2]
 
-(\d+)(Map)?t(ier)?\:
+(\d+)(Map)?t(ier)?:
   query: properties.Map.Map Tier:$1 
 (\d+)(Map)?t(ier)?\+:
   query: properties.Map.Map Tier:>=$1
@@ -131,4 +133,9 @@ pure(es|energyshield):
 (\d+)-(\d+)pure(es|energyshield):
   query: (`-es `-ev) `$1-$2es
 
-  
+p(hys?)?Da?ma?ge?:
+  query: properties.Weapon.Physical Damage.avg:>0
+(\d+)p(hys?)?Da?ma?ge?:
+  query: properties.Weapon.Physical Damage.avg:>=$1
+(\d+)-(\d+)p(hys?)?Da?ma?ge?:
+  query: properties.Weapon.Physical Damage.avg:[$1 TO $2] 

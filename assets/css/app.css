@@ -6590,6 +6590,20 @@ img.pageLogo {
   color: white;
   font-size: 0.625rem; }
 
+.DivWithScroll {
+  height: 520px;
+  overflow: scroll;
+  overflow-x: hidden; }
+
+#showSearchTermsDocModal aside {
+  max-width: 740px; }
+
+.rowOdd {
+  background-color: #FFF; }
+
+.rowEven {
+  background-color: #BFE7FF; }
+
 img.gitter-badge {
   margin: 0; }
 
@@ -6625,12 +6639,31 @@ img.gitter-badge {
 .searchStats {
   font-size: 12px; }
 
+.code {
+  font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+  font-weight: 100;
+  font-size: 13px; }
+
 .search-results .item {
   min-width: 600px;
   margin: 5px 0;
   padding: 0; }
   .search-results .item h5 {
     margin: 0; }
+  .search-results .item a.name.Normal {
+    color: #111; }
+  .search-results .item a.name.Magic {
+    color: #4E4EEB; }
+  .search-results .item a.name.Rare {
+    color: #a3a314; }
+  .search-results .item a.name.Unique {
+    color: #af6025; }
+  .search-results .item a.name.Gem {
+    color: #1ba29b; }
+  .search-results .item a.name.Currency {
+    color: #9c7e38; }
+  .search-results .item a.name.Card {
+    color: #dcd3c3; }
   .search-results .item .item-border {
     margin: 0 5px;
     border-top: transparent; }
@@ -6756,7 +6789,7 @@ img.gitter-badge {
       background-position: right -570px; }
     .search-results .requirements span.currency.Prism, .search-results .sell-infos span.currency.Prism {
       background-position: right -600px; }
-    .search-results .requirements span.currency.Jeweller, .search-results .sell-infos span.currency.Jeweller {
+    .search-results .requirements span.currency.Jewellers, .search-results .sell-infos span.currency.Jewellers {
       background-position: right -630px; }
     .search-results .requirements span.currency.Alteration, .search-results .sell-infos span.currency.Alteration {
       background-position: right -660px; }

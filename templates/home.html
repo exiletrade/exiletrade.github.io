@@ -125,6 +125,11 @@
 									ng-options="v for v in options.buyoutSelect.options">
 							</select>
 						</li>
+						<li class="with-dropdown">
+							<select name="" ng-model="options.verificationSelect.value" id="option-verified"
+									ng-options="v for v in options.verificationSelect.options">
+							</select>
+						</li>
 						<li ng-repeat="input in options.searchPrefixInputs track by $index">
 							<input type="text" ng-model="input.value" placeholder="Custom prefix">
 							<!--<img zf-iconic="" icon="ban" size="small" class="iconic-color-alert" ng-click="removeInputFromList(input)">-->
@@ -151,18 +156,47 @@
 			Placeholder text for saved Item.
 		</div>
 
+		<!-- Show Search Terms Doc Modal -->
+		<div zf-modal="" id="showSearchTermsDocModal">
+			<!--a zf-close="" class="close-button">×</a-->
+			<h4>Search Terms</h4>
+			<div class="DivWithScroll">
+				<table>
+					<thead>
+						<th>Term</th>
+						<th>Translation</th>
+					</thead>
+					<tbody>
+						<tr 
+							ng-repeat="(key, value) in termsMap"
+							ng-class-odd="'rowOdd'" 
+							ng-class-even="'rowEven'">
+							<td>{{key}}</td>
+							<td>{{value.query}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
 		<!-- Show Disclaimer Modal -->
 		<div zf-modal="" id="showDisclaimerModal">
 			<a zf-close="" class="close-button">×</a>
 			<h3>About</h3>
 			<p>This site is fan-made and not affiliated with Grinding Gear Games in any way. ExileTrade is fully open source under GNU General Public License v2.0.</p>
+			<p>ExileTrade is powered by <a href="https://github.com/trackpete/exiletools-indexer">ExileTools Indexer Public API</a>.</p>
+			<h5>Support Us!</h5>
+			<p>Found this tool useful? Feel free to Donate:</p>
+			<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=3BULCX8UDSN9S&lc=PH&item_name=Durian%20Open%20Source%20Project&currency_code=USD&bn=PP%2dDonationsBF%3aO6Y32pY%2epng%3aNonHosted">
+				<img src="http://i.imgur.com/O6Y32pY.png" />
+			</a>
 		</div>
 
 		<!-- Show Elastic JSON Request Debug Modal -->
 		<div zf-modal="" id="showElasticJsonRequestModal">
 			<a zf-close="" class="close-button">×</a>
 			<h4>Elastic JSON Request</h4>
-			<pre>{{elasticJsonRequest}}</pre>
+			<textarea class="code" rows="30" cols="160">{{elasticJsonRequest}}</textarea>
 		</div>
 
 		<hr width=100% size=1>
@@ -173,6 +207,13 @@
 		<div class="grid-block search-items large-up-2">
 			<div class="grid-content item" ng-repeat="item in Response.hits.hits" ng-style=""
 				 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
+
+				<!-- Show ExileTools Item JSON Debug Modal -->
+				<div zf-modal="" id="showExileToolsItemJsonModal{{item._id}}">
+					<!--a zf-close="" class="close-button">×</a-->
+					<h4>ExileTools Item JSON</h4>
+					<textarea class="code" rows="40" cols="160">{{item | json}}</textarea>
+				</div>
 
 				<div class="grid-block item-border">
 					<div class="grid-block item-header medium-12 right-ju">
@@ -196,7 +237,8 @@
 						<div class="grid-block item-box-left">
 
 							<div class="grid-block image-container" ng-style="{'background-image': 'url({{item._source.info.icon}})'}"
-								title="Stash Name: {{item._source.shop.stash.stashName}}">
+								title="Stash Name: {{item._source.shop.stash.stashName}}"
+								zf-open="showExileToolsItemJsonModal{{item._id}}">
 								<div ng-repeat="cssClasses in getSocketClasses(item._source.sockets.allSockets)" class="socket {{cssClasses}}">
 								</div>
 								<div ng-repeat="cssClasses in getSocketLinkClasses(item._source.sockets.allSockets)" class="socketLink {{cssClasses}}">
@@ -210,7 +252,9 @@
 										<h5 class="item-name" title="Note: {{item._source.shop.note}}">
 											<span class="label corrupted" ng-if="item._source.attributes.corrupted">Corrupted</span>
 											<span class="label mirrored" ng-if="item._source.attributes.mirrored">Mirrored</span>
-											<a class="name" ngclipboard data-clipboard-text="{{copyWhisperToClipboard(item)}}">{{item._source.info.fullName}}</a>
+											<a class="name {{item._source.attributes.rarity}}"
+											   ngclipboard
+											   data-clipboard-text="{{copyWhisperToClipboard(item)}}">{{item._source.info.fullName}}</a>
 										</h5>
 									</div>
 
@@ -228,7 +272,10 @@
 											  ng-if="needsILvl(item._source.attributes)"
 											  data-value="{{item._source.attributes.ilvl}}"
 											  data-name="iLvl">
-											Item Lvl: {{item._source.attributes.ilvl}}
+											  <a href="" 
+												   data-sort-key="attributes.ilvl"
+												   data-sort-order="desc"
+												   ng-click="doSearchWithSort($event)">Item Lvl: {{item._source.attributes.ilvl}}</a>
 											<i class="seperator"></i>
 										</span>
 
@@ -236,7 +283,10 @@
 											  ng-show="{{item._source.requirements.Level}}"
 											  data-value="{{item._source.requirements.Level}}"
 											  data-name="Level">
-											Level: {{item._source.requirements.Level}}
+											  <a href="" 
+												   data-sort-key="requirements.Level"
+												   data-sort-order="desc"
+												   ng-click="doSearchWithSort($event)">Level: {{item._source.requirements.Level}}</a>
 											<i class="seperator"></i>
 										</span>
 
@@ -244,7 +294,10 @@
 											  ng-show="{{item._source.requirements.Str}}"
 											  data-value="{{item._source.requirements.Str}}"
 											  data-name="Str">
-											Str: {{item._source.requirements.Str}}
+											  <a href="" 
+												   data-sort-key="requirements.Str"
+												   data-sort-order="desc"
+												   ng-click="doSearchWithSort($event)">Str: {{item._source.requirements.Str}}</a>
 											<i class="seperator"></i>
 										</span>
 
@@ -252,7 +305,10 @@
 											  ng-show="{{item._source.requirements.Dex}}"
 											  data-value="{{item._source.requirements.Dex}}"
 											  data-name="Int">
-											Dex: {{item._source.requirements.Dex}}
+											  <a href="" 
+												   data-sort-key="requirements.Dex"
+												   data-sort-order="desc"
+												   ng-click="doSearchWithSort($event)">Dex: {{item._source.requirements.Dex}}</a>
 											<i class="seperator"></i>
 										</span>
 
@@ -260,7 +316,10 @@
 											  ng-show="{{item._source.requirements.Int}}"
 											  data-value="{{item._source.requirements.Int}}"
 											  data-name="Int">
-											Int: {{item._source.requirements.Int}}
+											  <a href="" 
+												   data-sort-key="requirements.Int"
+												   data-sort-order="desc"
+												   ng-click="doSearchWithSort($event)">Int: {{item._source.requirements.Int}}</a>
 										</span>
 									</div>
 
@@ -278,7 +337,7 @@
 												<a href="" 
 												   data-sort-key="{{mod.key}}"
 												   data-sort-order="desc"
-												   ng-click="doSearchWithSort($event)">{{mod.display}}</a>
+												   ng-click="doSearchWithSort($event)"><span ng-if="mod.affix">[{{mod.affix}} T{{mod.tier}}/{{mod.maxTier}}]</span> {{mod.display}}</a>
 											</li>
 											<li ng-if="item._source.mods.Card">
 												{{item._source.mods.Card.DivinationReward}}
@@ -351,7 +410,15 @@
 									<tbody>
 									<tr>
 										<td>Quality</td>
-										<td>{{item._source.properties.Quality | defaultToValue }} <span>+{{20-(item._source.properties.Quality)}}</span></td>
+										<td>
+											{{item._source.properties.Quality | defaultToValue }} 
+											<a
+												data-sort-key="properties.Quality"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												+{{20-(item._source.properties.Quality)}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-repeat="(defense, value) in itemType.estimatedQ20">
 										<td>{{defense}}</td>
@@ -368,15 +435,37 @@
 									<tbody>
 									<tr>
 										<td>Quality</td>
-										<td>{{item._source.properties.Quality | defaultToValue }}</td>
+										<td>
+											{{item._source.properties.Quality | defaultToValue }} 
+											<a
+												data-sort-key="properties.Quality"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												+{{20-(item._source.properties.Quality)}}
+											</a>
+										</td>
 									</tr>
 									<tr>
 										<td>Gem Level</td>
-										<td>{{item._source.properties.Gem.Level}}</td>
+										<td>
+											<a
+												data-sort-key="properties.Gem.Level"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Gem.Level}}
+											</a>
+										</td>
 									</tr>
 									<tr>
 										<td>Gem Experience</td>
-										<td>{{item._source.properties.Gem.Experience.PercentLeveled}}%</td>
+										<td>
+											<a
+												data-sort-key="properties.Gem.Experience.PercentLeveled"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Gem.Experience.PercentLeveled}}%
+											</a>
+										</td>
 									</tr>
 									</tbody>
 								</table>
@@ -389,39 +478,103 @@
 									<tbody>
 									<tr>
 										<td>Quality</td>
-										<td>{{item._source.properties.Quality | defaultToValue }} <span>+{{20-(item._source.properties.Quality)}}</span></td>
+										<td>
+											{{item._source.properties.Quality | defaultToValue }} 
+											<a
+												data-sort-key="properties.Quality"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												+{{20-(item._source.properties.Quality)}}
+											</a>
+										</td>
 									</tr>
 									<tr>
 										<td>APS</td>
-										<td>{{item._source.properties.Weapon['Attacks per Second']}}</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Attacks per Second"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Attacks per Second']}}
+											</a>
+										</td>
 									</tr>
 									<tr>
 										<td>Total DPS</td>
-										<td>{{item._source.properties.Weapon['Total DPS']}}</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Total DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Total DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Physical DPS']">
 										<td>pDPS</td>
-										<td>{{item._source.properties.Weapon['Physical DPS']}}</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Physical DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Physical DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Elemental DPS']">
 										<td>eDPS</td>
-										<td>{{item._source.properties.Weapon['Elemental DPS']}}</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Elemental DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Elemental DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Fire DPS']">
-										<td>fDPS</td>
-										<td>{{item._source.properties.Weapon['Fire DPS']}}</td>
+										<td>Fire DPS</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Fire DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Fire DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Cold DPS']">
-										<td>cDPS</td>
-										<td>{{item._source.properties.Weapon['Cold DPS']}}</td>
+										<td>Cold DPS</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Cold DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Cold DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Lightning DPS']">
-										<td>lDPS</td>
-										<td>{{item._source.properties.Weapon['Lightning DPS']}}</td>
+										<td>Lightning DPS</td>
+										<td>
+											<a
+												data-sort-key="properties.Weapon.Lightning DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Lightning DPS']}}
+											</a>
+										</td>
 									</tr>
 									<tr ng-if="item._source.properties.Weapon['Chaos DPS']">
-										<td>chDPS</td>
-										<td>{{item._source.properties.Weapon['Chaos DPS']}}</td>
+										<td>Chaos DPS</td>
+										<td>
+											<a
+												data-sort-key="properties.Chaos DPS"
+												data-sort-order="desc"
+												ng-click="doSearchWithSort($event)">
+												{{item._source.properties.Weapon['Chaos DPS']}}
+											</a>
+										</td>
 									</tr>
 									</tbody>
 								</table>
