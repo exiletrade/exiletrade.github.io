@@ -6569,6 +6569,15 @@ img.pageLogo {
   .searchField hr {
     margin-top: 5px; }
 
+.badSearchInputTerms .accordion-title, .badSearchInputTerms .accordion-content {
+  padding: 0.5rem;
+  font-size: 0.75rem; }
+
+.badSearchInputTerms ul {
+  font-size: 0.875rem;
+  margin-bottom: 0px;
+  font-family: monospace; }
+
 .openOptions, .openSaves {
   width: 30px;
   height: 30px;
