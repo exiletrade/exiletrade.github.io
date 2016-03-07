@@ -6733,7 +6733,8 @@ img.gitter-badge {
     cursor: pointer; }
 
 .search-results .item-box-left {
-  position: relative; }
+  position: relative;
+  padding-right: 15px; }
 
 .search-results .item-box-right {
   -webkit-flex-direction: column;
@@ -6741,7 +6742,7 @@ img.gitter-badge {
           flex-direction: column; }
 
 .search-results .grid-block.item-info {
-  min-height: 190px;
+  min-height: 170px;
   margin-left: 114px; }
 
 .search-results .item-info .grid-block {
@@ -6830,7 +6831,7 @@ img.gitter-badge {
   margin-bottom: 5px; }
   .search-results .mods ul a, .search-results .modsPseudo ul a {
     display: inline-block;
-    max-width: 350px; }
+    max-width: 300px; }
 
 .search-results .mods .firstExplicit, .search-results .modsPseudo .firstExplicit {
   border-top: 1px dotted #008ee8; }
@@ -6862,7 +6863,7 @@ img.gitter-badge {
   position: absolute;
   background-position: right 10px; }
   .search-results .image-container img {
-    max-height: 190px;
+    max-height: 170px;
     margin: 0 auto; }
   .search-results .image-container:hover .socket, .search-results .image-container:hover .socketLink {
     opacity: 0; }
