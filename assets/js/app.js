@@ -18312,6 +18312,7 @@ function determineBaseType(name) {
 
 var terms = {};
 function parseSearchInput(_terms, input) {
+	console.trace('parseSearchInput: ' + input);
 	terms = _terms;
 	// capture literal search terms (LST) like name="veil of the night"
 	var regex = /([^\s]*[:=]\".*?\")/g;
@@ -18341,6 +18342,7 @@ function expandLsts(lsts) {
 
 function parseSearchInputTokens(input) {
 	var tokens = input.split(" ");
+	console.trace(tokens);
 	var queryTokens = [];
 	var badTokens = [];
 	for (i in tokens) {
@@ -18601,7 +18603,10 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 				case "Status: Gone": searchPrefix += " gone"; break;
 			}
 			options['searchPrefixInputs'].forEach(function(e){
-				searchPrefix += " " + e['value'];
+				var prefix = e['value'];
+				if (prefix) {
+					searchPrefix += " " + prefix;	
+				}
 			});
 			return searchPrefix;		
 		}
@@ -18700,6 +18705,19 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			if (item.mods) createForgottenMods(item);
 			if (item.mods) createImplicitMods(item);
 			if (item.mods) createCraftedMods(item);
+			if (item.shop) {
+				var added = new Date(item.shop.added);
+				var updated = new Date(item.shop.updated);
+				var modified = new Date(item.shop.modified);
+				item.shop['addedHuman'] = added.toLocaleString();
+				item.shop['udpatedHuman'] = updated.toLocaleString();
+				item.shop['modifiedHuman'] = modified.toLocaleString();
+				var now = new Date();
+				var hourInMillis = 3600000;
+				item.shop['addedHoursAgo'] = (Math.abs(now.getTime() - added.getTime()) / hourInMillis).toFixed(2);
+				item.shop['modifiedHoursAgo'] = (Math.abs(now.getTime() - modified.getTime()) / hourInMillis).toFixed(2);
+				item.shop['udpatedHoursAgo'] = (Math.abs(now.getTime() - updated.getTime()) / hourInMillis).toFixed(2);
+			}
 		}
 
 		function createForgottenMods(item) {

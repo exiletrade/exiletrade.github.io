@@ -6601,7 +6601,7 @@ img.pageLogo {
   overflow: scroll;
   overflow-x: hidden; }
 
-#showSearchTermsDocModal aside {
+.wide-json-dialog aside {
   max-width: 740px; }
 
 .rowOdd {
@@ -6648,7 +6648,7 @@ img.gitter-badge {
 .code {
   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
   font-weight: 100;
-  font-size: 13px; }
+  font-size: 14px; }
 
 .search-results .item {
   min-width: 600px;
@@ -6725,6 +6725,11 @@ img.gitter-badge {
 
 .search-results .item-box-left {
   position: relative; }
+
+.search-results .item-box-right {
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
 
 .search-results .grid-block.item-info {
   min-height: 210px;
@@ -6804,6 +6809,9 @@ img.gitter-badge {
 
 .search-results .requirements span {
   line-height: 15px; }
+
+.search-results .sell-infos {
+  padding-left: 3px; }
 
 .search-results .mods ul, .search-results .modsPseudo ul {
   margin-top: 10px;
@@ -6893,8 +6901,7 @@ img.gitter-badge {
       left: -1px; }
 
 .search-results .item-stats {
-  font-size: 0.75rem;
-  margin-top: 36px; }
+  font-size: 0.75rem; }
   .search-results .item-stats table {
     min-width: 150px; }
   .search-results .item-stats td {
