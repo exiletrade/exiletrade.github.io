@@ -6732,7 +6732,7 @@ img.gitter-badge {
           flex-direction: column; }
 
 .search-results .grid-block.item-info {
-  min-height: 210px;
+  min-height: 190px;
   margin-left: 114px; }
 
 .search-results .item-info .grid-block {
@@ -6741,6 +6741,8 @@ img.gitter-badge {
   -webkit-flex-grow: 0; }
   .search-results .item-info .grid-block .seperator:before {
     content: " · "; }
+  .search-results .item-info .grid-block .item-mod-affix {
+    color: #000; }
 
 .search-results .requirements, .search-results .sell-infos {
   font-size: 0.75rem; }
@@ -6844,12 +6846,15 @@ img.gitter-badge {
 .search-results .image-container {
   max-width: 114px;
   width: 100%;
-  min-height: 210px;
+  max-height: 170px;
   background-size: contain;
   padding: 10px;
   background-repeat: no-repeat;
   position: absolute;
   background-position: right 10px; }
+  .search-results .image-container img {
+    max-height: 190px;
+    margin: 0 auto; }
   .search-results .image-container:hover .socket, .search-results .image-container:hover .socketLink {
     opacity: 0; }
   .search-results .image-container .socket {
