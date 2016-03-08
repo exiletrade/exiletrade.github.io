@@ -6536,6 +6536,20 @@ img.pageLogo {
   padding: 0.13333rem 0.5rem;
   background-color: grey; }
 
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Chrome/Safari/Opera */
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE/Edge */
+  user-select: none;
+  /* non-prefixed version, currently
+                                  not supported by any browser */ }
+
 .app-header {
   color: white;
   background-color: #00558b;
@@ -6818,6 +6832,8 @@ img.gitter-badge {
       background-position: right -660px; }
     .search-results .requirements span.currency.Chance, .search-results .sell-infos span.currency.Chance {
       background-position: right -690px; }
+    .search-results .requirements span.currency.Coin, .search-results .sell-infos span.currency.Coin {
+      background-position: right -720px; }
 
 .search-results .requirements span {
   line-height: 15px; }

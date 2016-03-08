@@ -21,8 +21,7 @@
 					</a>
 					<input id="searchField" ng-model="searchInput" placeholder="Search Input" my-enter="doSearch()" size="150" type="text">
 					<a href="#" ng-click="saveLastSearch()" class="button small saveSearchNotificationLink" title="Save Search"
-					   content="Saved: {{searchInput}}" color="success" autoclose="2500" zf-notify="save-notification-search"
-							>
+					   content="Saved: {{searchInput}}" color="success" autoclose="2500" zf-notify="save-notification-search">
 						<img zf-iconic="" icon="circle-check" size="small">Save
 					</a>
 					<div class="searchStats" title="{{queryString}}" ng-if="Response.took" zf-open="showElasticJsonRequestModal">
@@ -34,7 +33,9 @@
 		</div>
 		<zf-notification-set id="save-notification-search" position="top-left"></zf-notification-set>
 		<zf-notification-set id="save-notification-options" position="top-right"></zf-notification-set>
-
+		<zf-notification-static id="save-notification-whisper" color="success" zf-advise="" title="Whisper message copied." autoclose=2000>
+		</zf-notification-static>
+		
 		<a href="#" zf-toggle="savedSearchesPanel" class="button small absoluteNavBtn savedSearches">Show saved Searches/Items</a>
 		<a href="#" zf-toggle="savedSearchesPanel" class="button small absoluteNavBtn scrollTop">Scroll Top</a>
 
@@ -195,8 +196,9 @@
 			<h3>About</h3>
 			<p>This site is fan-made and not affiliated with Grinding Gear Games in any way. ExileTrade is fully open source under GNU General Public License v2.0.</p>
 			<p>ExileTrade is powered by <a href="https://github.com/trackpete/exiletools-indexer">ExileTools Indexer Public API</a>.</p>
-			<h5>Support Us!</h5>
-			<p>Found this tool useful? Feel free to Donate:</p>
+			<p>Visit our official forum thread at <a href="https://www.pathofexile.com/forum/view-thread/1602257">view-thread/1602257</a>.</p>
+			<h5>Support Us</h5>
+			<p>Buy us a couple of beer!</p>
 			<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=3BULCX8UDSN9S&lc=PH&item_name=Durian%20Open%20Source%20Project&currency_code=USD&bn=PP%2dDonationsBF%3aO6Y32pY%2epng%3aNonHosted">
 				<img src="http://i.imgur.com/O6Y32pY.png" />
 			</a>
@@ -216,6 +218,19 @@
 	<!-- Searchresults -->
 	<div class="grid-content search-results">
 		<div class="grid-block search-items large-up-2">
+			<div ng-if="!Response">
+				<h4>Sample Search:</h4>
+				<ol>
+					<li>(gloves or helm) 50life 60eleres
+					<li>350pdps mace -voidhome 10c
+					<li>ring 20-30fireres 20manaregen 20str
+					<li>sword 300pdps -flatacc 1ex
+					<li>((25fireres 25coldres 25lightres 80res) OR (50res 20int)) -unique
+					<li>voidmanipulation
+					<li>pureev 5l chest
+					<li>24leveling
+				<ol>
+			</div>
 			<div class="grid-content item" ng-repeat="item in Response.hits.hits" ng-style="options.switchItemsPerRow"
 				 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
 
@@ -626,7 +641,7 @@
 												data-sort-key="shop.updated"
 												data-sort-order="desc"
 												ng-click="doSearchWithSort($event)">
-												{{item._source.shop.udpatedHoursAgo}} hours ago
+												{{item._source.shop.updatedHoursAgo}} hours ago
 											</a>
 										</td>
 									</tr>
@@ -694,9 +709,14 @@
 								IGN: {{item._source.shop.lastCharacterName}}
 								<i class="seperator"></i>
 							</span>
-
-							<span>
-								<a ngclipboard class="click small hollow whisper-btn" data-clipboard-text="{{copyWhisperToClipboard(item)}}">Whisper</a>
+							<span ng-init="counter = 0">
+								<a ngclipboard class="click small hollow whisper-btn noselect" 
+								   data-clipboard-text="{{copyWhisperToClipboard(item)}}"
+								   ng-click="counter = counter + 1"
+								   color="success" autoclose="2000" zf-open="save-notification-whisper">
+								   Whisper<span ng-if="counter > 0"> ({{counter}})</span>
+								</a>
+								<span ng-if="item._source.shop.note">Note: {{item._source.shop.note}}</span>
 							</span>
 						</div>
 					</div>
