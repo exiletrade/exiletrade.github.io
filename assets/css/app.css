@@ -6583,11 +6583,11 @@ img.pageLogo {
   .searchField hr {
     margin-top: 5px; }
 
-.badSearchInputTerms .accordion-title, .badSearchInputTerms .accordion-content {
+.badSearchInputTerms .accordion-title, .badSearchInputTerms .accordion-content, .sampleSearches .accordion-title, .sampleSearches .accordion-content {
   padding: 0.5rem;
   font-size: 0.75rem; }
 
-.badSearchInputTerms ul {
+.badSearchInputTerms ul, .badSearchInputTerms ol, .sampleSearches ul, .sampleSearches ol {
   font-size: 0.875rem;
   margin-bottom: 0px;
   font-family: monospace; }
@@ -6832,7 +6832,7 @@ img.gitter-badge {
       background-position: right -660px; }
     .search-results .requirements span.currency.Chance, .search-results .sell-infos span.currency.Chance {
       background-position: right -690px; }
-    .search-results .requirements span.currency.Coin, .search-results .sell-infos span.currency.Coin {
+    .search-results .requirements span.currency.Coins, .search-results .sell-infos span.currency.Coins {
       background-position: right -720px; }
 
 .search-results .requirements span {

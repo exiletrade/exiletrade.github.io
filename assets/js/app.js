@@ -18309,10 +18309,31 @@ function determineBaseType(name) {
 }
 
 
+var debug = true;
+
+function debugOutput(input, outputType){
+	if (!debug) return;
+	try {
+		if (outputType == "log") {
+			console.log(input);
+		}
+		else if (outputType == "trace") {
+			console.trace(input);
+		}
+		else if (outputType == "info") {
+			console.info(input);
+		}
+		else if (outputType == "error") {
+			console.error(input);
+		}
+	} catch(err) {
+
+	}
+}
 
 var terms = {};
 function parseSearchInput(_terms, input) {
-	console.trace('parseSearchInput: ' + input);
+	debugOutput('parseSearchInput: ' + input, 'trace');
 	terms = _terms;
 	// capture literal search terms (LST) like name="veil of the night"
 	var regex = /([^\s]*[:=]\".*?\")/g;
@@ -18320,7 +18341,7 @@ function parseSearchInput(_terms, input) {
 	lsts = expandLsts(lsts);
 	var _input = input.replace(regex, 'LST');
 	var parseResult = parseSearchInputTokens(_input);
-	console.info(parseResult)
+	debugOutput(parseResult, 'info');
 	var i = 0;
 	parseResult.queryString = parseResult.queryString.replace('LST', function (match) {
 		var lst = lsts[i];
@@ -18342,7 +18363,7 @@ function expandLsts(lsts) {
 
 function parseSearchInputTokens(input) {
 	var tokens = input.split(" ");
-	console.trace(tokens);
+	debugOutput(tokens, 'trace');
 	var queryTokens = [];
 	var badTokens = [];
 	for (i in tokens) {
@@ -18356,8 +18377,7 @@ function parseSearchInputTokens(input) {
 			if (isNegation) evaluatedToken = evaluatedToken.substring(1);
 
 			evaluatedToken = evalSearchTerm(evaluatedToken);
-			console.trace(token + '=' + evaluatedToken);
-
+			debugOutput(token + '=' + evaluatedToken, 'trace');
 			if (evaluatedToken) {
 				if (isNegation) {
 					evaluatedToken = createMissingQuery(evaluatedToken);
@@ -18376,7 +18396,6 @@ function parseSearchInputTokens(input) {
 
 function evalSearchTerm(token) {
 	var result = "";
-	//console.trace(token)
 	for (regex in terms) {
 		if (terms.hasOwnProperty(regex)) {
 			var rgexTest = new RegExp('^(' + regex + ')$', 'i');
@@ -18384,7 +18403,6 @@ function evalSearchTerm(token) {
 			var cleanToken = removeParensAndBackTick(token);
 			var isNegation = hasNegation(cleanToken);
 			if (isNegation) cleanToken = cleanToken.substring(1);
-			//console.trace(regex)
 			var foundMatch = rgexTest.test(cleanToken);
 			if (foundMatch) {
 				result = terms[regex].query;
@@ -18406,7 +18424,7 @@ function evalSearchTerm(token) {
 				if (isNegation)  result = '-' + result;
 				if (hasOpenParen(token))  result = /\(+/.exec(token)[0] + result;
 				if (hasCloseParen(token)) result = result + /\)+/.exec(token)[0];
-				console.trace(cleanToken + ' + ' + rgex + '=' + result);
+				debugOutput(cleanToken + ' + ' + rgex + '=' + result, 'trace');
 				break;
 			}
 		}
@@ -18471,8 +18489,8 @@ function modToDisplay(value, mod) {
 	} else if ( typeof value === "boolean" ) {
 		mod = mod;
 	} else {
-		console.error("Mod value is neither a number or an object, maybe ExileTools has a recent change? mod = " +
-			mod + ", value = " + value);
+		debugOutput("Mod value is neither a number or an object, maybe ExileTools has a recent change? mod = " +
+		mod + ", value = " + value, 'error');
 	}
 	return mod;
 }
@@ -18537,13 +18555,13 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 	});
 
 	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', 'es', function($q, $scope, $http, $location, es) {
-		console.info('controller');
+		debugOutput('controller', 'info');
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
 		$scope.elasticJsonRequest = "";
 
 		var httpParams = $location.search();
-		console.trace('httpParams:' + angular.toJson(httpParams, true));
+		debugOutput('httpParams:' + angular.toJson(httpParams, true), 'trace');
 		var sortKeyDefault = 'shop.chaosEquiv';
 		var sortOrderDefault = 'asc';
 		var limitDefault = 50;
@@ -18660,7 +18678,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		};
 
 		$scope.stateChanged = function() {
-			console.log('stateChanged');
+			debugOutput('stateChanged', 'log')
 		};
 
 		/*
@@ -18682,15 +18700,15 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			finalSearchInput = finalSearchInput.trim();
 			$location.search({'q' : searchInput, 'sortKey': sortKey, 'sortOrder': sortOrder, 'limit' : limit});
 			$location.replace();
-			console.trace('changed location to: ' + $location.absUrl());
+			debugOutput('changed location to: ' + $location.absUrl(), 'trace')
 			var parseResult = parseSearchInput($scope.termsMap, finalSearchInput);
 			var searchQuery = parseResult.queryString;
 			$scope.badSearchInputTerms = parseResult.badTokens;
-			console.log("searchQuery=" + searchQuery);
+			debugOutput("searchQuery=" + searchQuery, 'log');
 			
 			var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder);
 			$scope.elasticJsonRequest = angular.toJson(esBody, true);
-			console.info("Final search json: " +  $scope.elasticJsonRequest);
+			debugOutput("Final search json: " +  $scope.elasticJsonRequest, 'info');
 			
 			es.search({
 				index: 'index',
@@ -18701,9 +18719,8 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 					addCustomFields(value._source.properties);
 				});
 				$scope.Response = response;
-				// console.trace(JSON.stringify(response, null, 2));
 			}, function (err) {
-				console.trace(err.message);
+				debugOutput(err.message, 'trace');
 			});
 		}
 
@@ -18860,9 +18877,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Add input Fields (search Prefixes)
 		*/
 		$scope.addInputField = function() {
-			console.log($scope.options.searchPrefixInputs);
 			$scope.options.searchPrefixInputs.push({"value":""});
-			console.log($scope.options.searchPrefixInputs);
 		};
 
 		/*
@@ -18874,18 +18889,6 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 
 		$scope.removeInputFromList = function(x){
 			var savedOptions = JSON.parse(localStorage.getItem("savedOptions"));
-			/*
-			console.log($scope.options.searchPrefixInputs);
-			//savedOptions = savedOptions.searchPrefixInputs
-			$scope.options.searchPrefixInputs.filter(function (el) {
-					return el.value !== x.value;
-				}
-			);
-
-			console.log($scope.options.searchPrefixInputs);
-			//$scope.searchPrefixInputs = savedOptions.reverse();
-			localStorage.setItem("savedOptions", JSON.stringify(savedOptions));
-			*/
 		};
 
 		/*
@@ -18906,7 +18909,6 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			$scope.searchInput = x;
 			$scope.doSearch();
 		};
-
 
 		/*
 			Prepare Whisper Message
