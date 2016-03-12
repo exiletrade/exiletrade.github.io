@@ -18395,6 +18395,7 @@ function parseSearchInputTokens(input) {
 		queryTokens.push(evaluatedToken);
 	}
 	var queryString = queryTokens.join(" ");
+	ga('send', 'event', 'Button', 'Bad Tokens', badTokens.toString());
 	return {'queryString' : queryString, 'badTokens' : badTokens};
 }
 
