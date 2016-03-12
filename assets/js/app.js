@@ -18364,7 +18364,8 @@ function parseSearchInput(_terms, input) {
 	return parseResult;
 }
 
-function parseSearchInputTokens(input, rerun = false) {
+function parseSearchInputTokens(input, rerun) {
+	var rerun = typeof rerun !== 'undefined' ?  rerun : false;
 	var tokens = input.split(" ");
 	debugOutput(tokens, 'trace');
 	var queryTokens = [];
