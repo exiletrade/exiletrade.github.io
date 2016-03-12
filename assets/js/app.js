@@ -18679,6 +18679,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		*/		
 		$scope.doSearch = function() {
 			doActualSearch($scope.searchInput, limitDefault, sortKeyDefault, sortOrderDefault);
+			ga('send', 'event', 'Button', 'Search', $scope.searchInput);
 		};
 
 		$scope.stateChanged = function() {
