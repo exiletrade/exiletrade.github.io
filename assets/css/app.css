@@ -6940,6 +6940,26 @@ img.gitter-badge {
     text-align: left; }
     .search-results .item-stats td:nth-of-type(2) {
       text-align: right; }
+    .search-results .item-stats td a.quality {
+      color: green; }
+
+.search-results a.mod-fire-res, .search-results a.mod-fire-dmg {
+  color: #ff0000; }
+
+.search-results a.mod-cold-res, .search-results a.mod-cold-dmg {
+  color: #00b8e6; }
+
+.search-results a.mod-lightning-res, .search-results a.mod-lightning-dmg {
+  color: #cccc00; }
+
+.search-results a.mod-chaos-res, .search-results a.mod-chaos-dmg {
+  color: #006600; }
+
+.search-results a.mod-life {
+  color: #800000; }
+
+.search-results a.mod-mana {
+  color: #0000cc; }
 
 .panel {
   width: 400px; }
