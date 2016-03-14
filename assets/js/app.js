@@ -18523,13 +18523,20 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 	sortObj[sortKey] = { "order": sortOrder };
 	var esBody = {
 					"sort": [ sortObj ],
-					"filter" : {
-						"query": {
-							"query_string": {
-								"default_operator": "AND",
-								"query": searchQuery
-							}
-						}	
+					"query" : {
+						"filtered" : {
+							//"filter" : {
+							//	"terms" : { "shop.sellerAccount" : [
+									// https://github.com/trackpete/exiletools-indexer/issues/123
+							//	]}
+							//},
+							"query": {
+								"query_string": {
+									"default_operator": "AND",
+									"query": searchQuery
+								}
+							}	
+						}
 					},
 					size:_size
 				};
@@ -18549,7 +18556,8 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		'foundation',
 		'foundation.dynamicRouting',
 		'foundation.dynamicRouting.animations',
-		'ngclipboard'
+		'ngclipboard',
+		'duScroll'
 	]);
 
 	appModule.config(config);
@@ -18717,6 +18725,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
 			$scope.Response = null;
 			if (limit > 999) limit = 999; // deny power overwhelming
+			ga('send', 'event', 'Button', 'PreFix', createSearchPrefix($scope.options))
 			var finalSearchInput = searchInput + ' ' + createSearchPrefix($scope.options);
 			finalSearchInput = finalSearchInput.trim();
 			$location.search({'q' : searchInput, 'sortKey': sortKey, 'sortOrder': sortOrder, 'limit' : limit});
@@ -18726,6 +18735,10 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			var searchQuery = parseResult.queryString;
 			$scope.badSearchInputTerms = parseResult.badTokens;
 			debugOutput("searchQuery=" + searchQuery, 'log');
+
+			if (parseResult.badTokens.length > 0) {
+				return;
+			}
 			
 			var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder);
 			$scope.elasticJsonRequest = angular.toJson(esBody, true);
@@ -18855,6 +18868,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Save the current/last search terms to HTML storage
 		*/
 		$scope.saveLastSearch = function(){
+			ga('send', 'event', 'Save', 'Last Search',$scope.searchInput);
 			var search = $scope.searchInput;
 			var savedSearches = [];
 
@@ -18948,12 +18962,18 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Save options to HTML storage
 		*/
 		$scope.saveOptions = function(){
+			ga('send', 'event', 'Save', 'Options',$scope.options);
 			localStorage.setItem("savedOptions", JSON.stringify($scope.options));
 		};
 
 		$scope.removeInputFromList = function(x){
 			var savedOptions = JSON.parse(localStorage.getItem("savedOptions"));
 		};
+
+		$scope.scrollToTop = function() {
+			ga('send', 'event', 'Button', 'Scroll To Top');
+			angular.element(mainGrid).scrollTo(0,0,350);
+		}
 
 		/*
 			Find Object by id in Array
@@ -18962,7 +18982,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			return list.filter(function( obj ) {
 				// coerce both obj.id and id to numbers
 				// for val & type comparison
-				return +obj.id === +id;
+				return obj.itemId === id;
 			})[ 0 ];
 		}
 
@@ -18978,6 +18998,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Prepare Whisper Message
 		*/
         $scope.copyWhisperToClipboard = function(item) {
+			ga('send', 'event', 'Click', 'Whisper');
 			var message = item._source.shop.defaultMessage;
 			var seller = item._source.shop.lastCharacterName;
 			var itemName = item._source.info.fullName;

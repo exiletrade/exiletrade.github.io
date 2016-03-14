@@ -81,6 +81,8 @@
   query: info.name:"The Screaming Eagle"
 (The)?SearingTouch:
   query: info.name:"The Searing Touch"
+(The)?Sorrow(of)?(the)?Divine:
+  query: info.name:"The Sorrow of the Divine"
 (The)?Stormheart:
   query: info.name:"The Stormheart"
 (The)?SupremeTruth:
@@ -131,7 +133,7 @@ AnatomicalKnowledge:
   query: info.name:"Anatomical Knowledge"
 AncientWaystones:
   query: info.name:"Ancient Waystones"
-Andvarius:
+Anda?varius:
   query: info.name:"Andvarius"
 Apep'?s?Rage:
   query: info.name:"Apep's Rage"
@@ -161,6 +163,8 @@ Aurumvorax:
   query: info.name:"Aurumvorax"
 Auxium:
   query: info.name:"Auxium"
+AxiomPerpetuum:
+  query: info.name:"Axiom Perpetuum"
 BatedBreath:
   query: info.name:"Bated Breath"
 Belly(of)?(the)?Beast:
@@ -471,6 +475,8 @@ Heatshiver:
   query: info.name:"Heatshiver"
 Hegemony'?s?Era:
   query: info.name:"Hegemony's Era"
+hereticsveil:
+  query: info.name:"hereticsveil"
 Hezmana'?sBloodlust:
   query: info.name:"Hezmana's Bloodlust"
 HiddenPotential:
@@ -675,10 +681,12 @@ Oro'?s?Sacrifice:
   query: info.name:"Oro's Sacrifice"
 Pacifism:
   query: info.name:"Pacifism"
-PerandusBlazon:
+(Perandus)?Blazon:
   query: info.name:"Perandus Blazon"
-PerandusSignet:
+(Perandus)?Signet:
   query: info.name:"Perandus Signet"
+(The)?PerandusManor:
+  query: info.name:"Perandus Manor"
 Pillar(of)?(the)?CagedGod:
   query: info.name:"Pillar of the Caged God"
 Piscator'?s?Vigil:
@@ -763,6 +771,8 @@ Rive:
   query: info.name:"Rive"
 Romira'?s?Banquet:
   query: info.name:"Romira's Banquet"
+RollingFlames:
+  query: info.name:"Rolling Flames"  
 Rotgut:
   query: info.name:"Rotgut"
 Roth'?s?Reach:
@@ -787,6 +797,8 @@ ShadowsandDust:
   query: info.name:"Shadows and Dust"
 Shaper'?s?Seed:
   query: info.name:"Shaper's Seed"
+ShatteredChains:
+  query: info.name:"Shattered Chains"
 Shav(ronne'?s?Wrappings|s):
   query: info.name:"Shavronne's Wrappings"
 Shavronne'?s?Pace:
@@ -859,7 +871,7 @@ SurvivalSecrets:
   query: info.name:"Survival Secrets"
 SurvivalSkills:
   query: info.name:"Survival Skills"
-tabula|TabulaRasa:
+(tabula|rasa)+:
   query: info.name:"Tabula Rasa"
 Talisman(of)?(the)?Victor:
   query: info.name:"Talisman of the Victor"
@@ -931,6 +943,8 @@ Voideye:
   query: info.name:"Voideye"
 Voidhome:
   query: info.name:"Voidhome"
+VolleyFire:
+  query: info.name:"Volley Fire"
 (Voll'?s?)?Devotion:
   query: info.name:"Voll's Devotion"
 (Voll'?s?)?Protector:
@@ -973,13 +987,13 @@ Wyrmsign:
   query: info.name:"Wyrmsign"
 Ylfeban'?s?Trickery:
   query: info.name:"Ylfeban's Trickery"
-Zahndethus'?Cassock:
-  query: info.name:"Zahndethus' Cassock"
-Zerphi'?s?Last Breath:
-  query: info.name:"Zerphi's Last Breath"
 Trypanon:
   query: info.name:"Trypanon"
 Viper'?s?Scales:
   query: info.name:"Viper's Scales"
 Xirgil'?s?Crank:
   query: info.name:"Xirgil's Crank"
+Zahndethus'?Cassock:
+  query: info.name:"Zahndethus' Cassock"
+Zerphi'?s?LastBreath:
+  query: info.name:"Zerphi's Last Breath"
