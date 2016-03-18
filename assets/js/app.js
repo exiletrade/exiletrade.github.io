@@ -18330,11 +18330,91 @@ function debugOutput(input, outputType){
 
 	}
 }
+// expects array
+//returns {'corrected', 'unCorrectable'
+function badUserInput(badTokens){
+	if(badTokens.length == 0) return;
+	var successArr = [];
+	debugOutput("bad Tokens: " + badTokens.join(" "),'log');
+	//attempt 1 User copy pasted RegEx 
 
-var terms = {};
+	for (i = 0; i < badTokens.length; i++){
+		badTokens[i] = badTokens[i].replace(/\w\?/gi,"");
+		while(badTokens[i].indexOf(")?")>-1){
+			badTokens[i] = badTokens[i].replace(/\([^\(\)]*\)\?/,"")			
+		}
+	}
+	for (i = 0; i < badTokens.length; i++){
+		var evaluatedToken = evalSearchTerm(badTokens[i]);
+		debugOutput(badTokens[i] + '=' + evaluatedToken,'log');
+		if(evaluatedToken){
+			successArr.push(evaluatedToken);
+			badTokens.splice(i,1);
+			i--;
+		}
+	}
+	
+	debugOutput("bad Tokens attmept 2: " + badTokens.join(" "),'log');
+	//attempt 2 removing spaces
+	if(badTokens.length > 0){ 
+		//all spaces
+		var attmpt = badTokens.join("");
+		var evaluatedToken = evalSearchTerm(attmpt);
+		debugOutput(attmpt + '=' + evaluatedToken,'log');
+		if(evaluatedToken){
+			successArr.push(evaluatedToken);
+			badTokens = [];
+		}
+	}
+	
+	if(badTokens.length > 0){ 
+		//groups of two
+		var attempt = [];
+		for(i = 0; i < badTokens.length; i++){
+			if (!(/^(of|the)$/i.test(badTokens[i]))) {
+				attempt.push(badTokens[i]);
+			}
+		}
+		debugOutput("after filtering",'log');
+		debugOutput(attempt,'log');
+		if((attempt.length>=2)){		
+			for (i = 0; i < attempt.length-1; i++){
+				for (j = i+1; j < attempt.length; j++){
+					var evaluatedToken = evalSearchTerm(attempt[i] + attempt[j]);
+					if(evaluatedToken){
+						successArr.push(evaluatedToken);
+						attempt.splice(j,1);
+						attempt.splice(i,1);
+						i--;
+						break;
+					}
+					evaluatedToken = evalSearchTerm(attempt[j] + attempt[i]);
+					if(evaluatedToken){
+						successArr.push(evaluatedToken);
+						attempt.splice(j,1);
+						attempt.splice(i,1);
+						i--;
+						break;
+					}
+				}
+			}
+		}	
+		badTokens = attempt;
+	}
+
+	debugOutput("Result",'log');
+	debugOutput(successArr,'log');
+	debugOutput("Failure",'log');
+	debugOutput(badTokens,'log');
+	return {'corrected' : successArr, 'unCorrectable' : badTokens};
+}
+
+
+
+// var terms = {};
 function parseSearchInput(_terms, input) {
 	debugOutput('parseSearchInput: ' + input, 'trace');
-	terms = _terms;
+// 	terms = _terms;
 	
 	// special search term handling
 	if (/\bfree\b/i.test(input) && /\bbo\b/i.test(input)) {
@@ -18398,21 +18478,10 @@ function parseSearchInputTokens(input, rerun) {
 	var queryString = queryTokens.join(" ");
 
 	//rerun bad tokens
-	debugOutput("bad Tokens: " + badTokens.join(""),"info");
-	if(badTokens.length > 0 && !rerun){	
-		var rerun = parseSearchInputTokens(badTokens.join(""),true)
-		if(rerun['badTokens'].length>0){
-			ga('send', 'event', 'Button', 'Bad Tokens', badTokens.toString());
-		}
-		var badTok = badTokens.slice(0);
-		queryString += " " + rerun['queryString'];
-		for( ind in badTok){
-			var i = badTok[ind];
-			console.log("i suck: " + i);
-			if(rerun['badTokens'].toString().indexOf(i) == -1){
-				badTokens.splice(badTokens.indexOf(i), 1);
-			}
-		}
+	var correction = badUserInput(badTokens);
+	if(correction){
+		badTokens = correction['unCorrectable'];
+		queryString += " " +  correction['corrected'].join(" ");
 	}
 	return {'queryString' : queryString, 'badTokens' : badTokens};
 }
@@ -18491,7 +18560,7 @@ function escapeField(result) {
 	var delimIdx = result.indexOf(':');
 	if (delimIdx != -1) {
 		var field = res.substr(0, delimIdx);
-		res = res.replace(field, field.replace(/\s/g, '\\ '));
+		res = res.replace(field, field.replace(/(\s|\*)/g, '\\$1'));
 	}
 	return res;
 }
@@ -18518,24 +18587,82 @@ function modToDisplay(value, mod) {
 	return mod;
 }
 
-function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
+function buildPlayerStashOnlineElasticJSONRequestBody() {
+	return {
+		"aggs" : {
+			"filtered" : {
+				"filter" : {
+					"bool" : {
+						"should" : [{
+								"range" : {
+									"shop.updated" : {
+										"gte" : 'now-1h'
+									}
+								}
+							}, {
+								"range" : {
+									"shop.modified" : {
+										"gte" : 'now-1h'
+									}
+								}
+							}, {
+								"range" : {
+									"shop.added" : {
+										"gte" : 'now-1h'
+									}
+								}
+							}
+						]
+					}
+				},
+				"aggs" : {
+					"sellers" : {
+						"terms" : {
+							"field" : "shop.sellerAccount",
+							size : 100000
+						}
+					}
+				}
+			}
+		},
+		"size" : 0
+	};
+}
+
+function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
+	var players = Object.keys(onlineplayersLadder).map(function(key) { 
+	    var accName = key.split('.')[1];
+	    return accName; 
+	});
+	debugOutput('Number of online players in ladder: ' + players.length, 'trace');
+	debugOutput('Number of online players in stash:  ' + onlineplayersStash.length, 'trace');
+
+	$.each(onlineplayersStash, function(playerBucket) {
+		var accountName = onlineplayersStash[playerBucket].key;
+		if ($.inArray(players, accountName) == -1) {
+			players.push(accountName);
+		}
+	});
+	debugOutput('Number of online players merged: ' + players.length, 'trace');
+	return players;
+}
+
+function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onlinePlayers) {
 	var sortObj = {}
 	sortObj[sortKey] = { "order": sortOrder };
 	var esBody = {
 					"sort": [ sortObj ],
-					"query" : {
-						"filtered" : {
-							//"filter" : {
-							//	"terms" : { "shop.sellerAccount" : [
-									// https://github.com/trackpete/exiletools-indexer/issues/123
-							//	]}
-							//},
-							"query": {
-								"query_string": {
+					"query": {
+						"bool" : {
+							"filter" : { 
+								"terms" : { "shop.sellerAccount" : onlinePlayers } 
+							},
+							"filter" : { 
+								"query_string" : {
 									"default_operator": "AND",
 									"query": searchQuery
 								}
-							}	
+							}
 						}
 					},
 					size:_size
@@ -18557,7 +18684,9 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		'foundation.dynamicRouting',
 		'foundation.dynamicRouting.animations',
 		'ngclipboard',
-		'duScroll'
+		'duScroll',
+		'angular-cache',
+		'angularSpinner'
 	]);
 
 	appModule.config(config);
@@ -18585,11 +18714,66 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		return esFactory({ host: 'http://apikey:07e669ae1b2a4f517d68068a8e24cfe4@api.exiletools.com' }); // poeblackmarketweb@gmail.com
 	});
 
-	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', 'es', function($q, $scope, $http, $location, es) {
+	appModule.service('playerOnlineService', function ($q, $http, CacheFactory) {
+	  var ladderOnlinePlayerCache;
+	  var stashOnlinePlayerCache;
+
+	  // Check to make sure the cache doesn't already exist
+// 	  if (!CacheFactory.get('ladderOnlinePlayerCache')) {
+// 		ladderOnlinePlayerCache = CacheFactory('ladderOnlinePlayerCache', {
+// 			maxAge: 15 * 60 * 1000,
+//   			deleteOnExpire: 'aggressive'
+// 		});
+// 	  }
+	  if (!CacheFactory.get('stashOnlinePlayerCache')) {
+		stashOnlinePlayerCache = CacheFactory('stashOnlinePlayerCache', {
+			maxAge: 15 * 60 * 1000,
+  			deleteOnExpire: 'aggressive'
+		});
+	  }
+
+      return {
+        getLadderOnlinePlayers: function (league) {
+        	debugOutput("Loading up online players from league: " + league, 'trace')
+			var ladderLeagues = {
+				"Perandus SC" : "perandus", 
+				"Perandus HC" : "perandushc", 
+				"Standard" : "standard", 
+				"Hardcore" : "hardcore"
+			};
+			var ladderLeague = ladderLeagues[league];
+			var url = "http://api.exiletools.com/ladder?showAllOnline=1&league=" + ladderLeague;
+			return $http.get(url, { cache: ladderOnlinePlayerCache });
+        },
+        getStashOnlinePlayers: function (es) {
+        	debugOutput("Loading up online players from indexer", 'trace')
+        	var stashOnlinePlayers = stashOnlinePlayerCache.get('stashOnlinePlayers');
+        	var promise;
+        	if (stashOnlinePlayers) {
+        		promise = $q.resolve(stashOnlinePlayers);
+        	} else {
+				promise = es.search({
+					  index: 'index',
+						  body: buildPlayerStashOnlineElasticJSONRequestBody()
+				  		});
+        	}
+        	return promise;
+        },
+        cacheStashOnlinePlayers: function(stashOnlinePlayers) {
+        	var e = stashOnlinePlayerCache.get('stashOnlinePlayers');
+        	if (!e) {
+        		stashOnlinePlayerCache.put('stashOnlinePlayers', stashOnlinePlayers);
+        	}
+        }
+      };
+	});
+
+	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', 'es', 'playerOnlineService', function($q, $scope, $http, $location, es, playerOnlineService) {
 		debugOutput('controller', 'info');
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
 		$scope.elasticJsonRequest = "";
+		$scope.showSpinner = false;
 
 		var httpParams = $location.search();
 		debugOutput('httpParams:' + angular.toJson(httpParams, true), 'trace');
@@ -18667,35 +18851,35 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			return searchPrefix;		
 		}
 
-		$scope.termsMap = {};
+// 		$scope.termsMap = {};
 
-		var mergeIntoTermsMap = function(res){
-			var ymlData = jsyaml.load(res.data);
-			jQuery.extend($scope.termsMap, ymlData);
-		};
+// 		var mergeIntoTermsMap = function(res){
+// 			var ymlData = jsyaml.load(res.data);
+// 			jQuery.extend($scope.termsMap, ymlData);
+// 		};
 
-		$q.all([
-			$http.get('assets/terms/itemtypes.yml'),
-			$http.get('assets/terms/gems.yml'),
-			$http.get('assets/terms/mod-ofs.yml'),
-			$http.get('assets/terms/mod-def.yml'),
-			$http.get('assets/terms/mod-vaal.yml'),
-			$http.get('assets/terms/attributes.yml'),
-			$http.get('assets/terms/sockets.yml'),
-			$http.get('assets/terms/buyout.yml'),
-			$http.get('assets/terms/uniques.yml'),
-			$http.get('assets/terms/basetypes.yml'),
-			$http.get('assets/terms/currencies.yml'),
-			$http.get('assets/terms/leagues.yml'),
-			$http.get('assets/terms/seller.yml'),
-			$http.get('assets/terms/mod-jewels.yml'),
-			$http.get('assets/terms/mod-groups.yml')
-		]).then(function (results) {
-			for (var i = 0; i < results.length; i++) {
-				mergeIntoTermsMap(results[i]);
-			}
-			if (typeof httpParams['q'] !== 'undefined') $scope.doSearch();
-		});
+// 		$q.all([
+// 			$http.get('assets/terms/itemtypes.yml'),
+// 			$http.get('assets/terms/gems.yml'),
+// 			$http.get('assets/terms/mod-ofs.yml'),
+// 			$http.get('assets/terms/mod-def.yml'),
+// 			$http.get('assets/terms/mod-vaal.yml'),
+// 			$http.get('assets/terms/attributes.yml'),
+// 			$http.get('assets/terms/sockets.yml'),
+// 			$http.get('assets/terms/buyout.yml'),
+// 			$http.get('assets/terms/uniques.yml'),
+// 			$http.get('assets/terms/basetypes.yml'),
+// 			$http.get('assets/terms/currencies.yml'),
+// 			$http.get('assets/terms/leagues.yml'),
+// 			$http.get('assets/terms/seller.yml'),
+// 			$http.get('assets/terms/mod-jewels.yml'),
+// 			$http.get('assets/terms/mod-groups.yml')
+// 		]).then(function (results) {
+// 			for (var i = 0; i < results.length; i++) {
+// 				mergeIntoTermsMap(results[i]);
+// 			}
+// 			if (typeof httpParams['q'] !== 'undefined') $scope.doSearch();
+// 		});
 
 		
 		/*
@@ -18703,7 +18887,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		*/		
 		$scope.doSearch = function() {
 			doActualSearch($scope.searchInput, limitDefault, sortKeyDefault, sortOrderDefault);
-			ga('send', 'event', 'Button', 'Search', $scope.searchInput);
+			ga('send', 'event', 'Search', 'User Input', $scope.searchInput);
 		};
 
 		$scope.stateChanged = function() {
@@ -18723,9 +18907,10 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		};
 
 		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
+			$scope.showSpinner = true;
 			$scope.Response = null;
 			if (limit > 999) limit = 999; // deny power overwhelming
-			ga('send', 'event', 'Button', 'PreFix', createSearchPrefix($scope.options))
+			ga('send', 'event', 'Search', 'PreFix', createSearchPrefix($scope.options))
 			var finalSearchInput = searchInput + ' ' + createSearchPrefix($scope.options);
 			finalSearchInput = finalSearchInput.trim();
 			$location.search({'q' : searchInput, 'sortKey': sortKey, 'sortOrder': sortOrder, 'limit' : limit});
@@ -18737,24 +18922,38 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			debugOutput("searchQuery=" + searchQuery, 'log');
 
 			if (parseResult.badTokens.length > 0) {
+				$scope.showSpinner = false;
 				return;
 			}
 			
-			var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder);
-			$scope.elasticJsonRequest = angular.toJson(esBody, true);
-			debugOutput("Final search json: " +  $scope.elasticJsonRequest, 'info');
-			
-			es.search({
-				index: 'index',
-				body: esBody
-			}).then(function (response) {
-				$.each(response.hits.hits, function( index, value ) {
-					addCustomFields(value._source);
-					addCustomFields(value._source.properties);
+			//var onlineplayersLadderPromise = playerOnlineService.getLadderOnlinePlayers($scope.options.leagueSelect.value);
+			var onlineplayersStashPromise = playerOnlineService.getStashOnlinePlayers(es);
+
+			$q.all({
+			  //onlineplayersLadder: onlineplayersLadderPromise,
+			  onlineplayersStash: onlineplayersStashPromise
+			}).then(function(results) {
+				//var onlineplayersLadder = results.onlineplayersLadder.data;
+				var onlineplayersStash  = results.onlineplayersStash.aggregations.filtered.sellers.buckets;
+				playerOnlineService.cacheStashOnlinePlayers(results.onlineplayersStash)
+				$scope.onlinePlayers = buildListOfOnlinePlayers([], onlineplayersStash);
+				
+			   	var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder, $scope.onlinePlayers);
+			   	$scope.elasticJsonRequest = angular.toJson(esBody, true);
+			   	return es.search({
+					index: 'index',
+					body: esBody
+				}).then(function (response) {
+					$.each(response.hits.hits, function( index, value ) {
+						addCustomFields(value._source);
+						addCustomFields(value._source.properties);
+					});
+					$scope.Response = response;
+					$scope.showSpinner = false;
+				}, function (err) {
+					debugOutput(err.message, 'trace');
+					$scope.showSpinner = false;
 				});
-				$scope.Response = response;
-			}, function (err) {
-				debugOutput(err.message, 'trace');
 			});
 		}
 
@@ -18962,7 +19161,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Save options to HTML storage
 		*/
 		$scope.saveOptions = function(){
-			ga('send', 'event', 'Save', 'Options',$scope.options);
+			ga('send', 'event', 'Save', 'Options',createSearchPrefix($scope.options));
 			localStorage.setItem("savedOptions", JSON.stringify($scope.options));
 		};
 
@@ -18971,7 +19170,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 		};
 
 		$scope.scrollToTop = function() {
-			ga('send', 'event', 'Button', 'Scroll To Top');
+			ga('send', 'event', 'Feature', 'Scroll To Top');
 			angular.element(mainGrid).scrollTo(0,0,350);
 		}
 
@@ -18998,7 +19197,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 			Prepare Whisper Message
 		*/
         $scope.copyWhisperToClipboard = function(item) {
-			ga('send', 'event', 'Click', 'Whisper');
+			//ga('send', 'event', 'Feature', 'Whisper', 'item._source.info.fullName');
 			var message = item._source.shop.defaultMessage;
 			var seller = item._source.shop.lastCharacterName;
 			var itemName = item._source.info.fullName;
@@ -19112,6 +19311,9 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder) {
 
 			return blacklist.indexOf(type) == -1;
 		};
+
+		console.info("Loaded " + Object.keys(terms).length + " terms.")
+		if (typeof httpParams['q'] !== 'undefined') $scope.doSearch();
 	}]);
 
 

@@ -611,7 +611,7 @@ MaoKun:
   query: info.name:"Mao Kun"
 Mark(of)?(the)?DoubtingKnight:
   query: info.name:"Mark of the Doubting Knight"
-MarohiErqi:
+(Marohi|Erqi)+:
   query: info.name:"Marohi Erqi"
 MartialArtistry:
   query: info.name:"Martial Artistry"
@@ -799,7 +799,7 @@ Shaper'?s?Seed:
   query: info.name:"Shaper's Seed"
 ShatteredChains:
   query: info.name:"Shattered Chains"
-Shav(ronne'?s?Wrappings|s):
+Shav(ronne'?s?Wrappings?|s):
   query: info.name:"Shavronne's Wrappings"
 Shavronne'?s?Pace:
   query: info.name:"Shavronne's Pace"
