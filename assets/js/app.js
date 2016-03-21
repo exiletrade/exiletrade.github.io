@@ -18652,15 +18652,19 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 	sortObj[sortKey] = { "order": sortOrder };
 	var esBody = {
 					"sort": [ sortObj ],
-					"query": {
-						"bool" : {
-							"filter" : { 
-								"terms" : { "shop.sellerAccount" : onlinePlayers } 
-							},
-							"filter" : { 
-								"query_string" : {
-									"default_operator": "AND",
-									"query": searchQuery
+					 "query": {
+						"filtered" : {
+							"filter" : {
+								 "bool" : {
+									"must" : [
+										{ "terms" : { "shop.sellerAccount" : onlinePlayers } }, 
+										{ 
+										  "query_string" : {
+												"default_operator": "AND",
+												"query": searchQuery
+											}
+										} 
+									]
 								}
 							}
 						}
@@ -18668,6 +18672,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 					size:_size
 				};
 	if(!searchQuery) delete esBody['query'];
+	if(searchQuery && onlinePlayers.length < 1) esBody.query.filtered.filter.bool.must.shift();
 	return esBody;
 }
 
@@ -18773,6 +18778,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
 		$scope.elasticJsonRequest = "";
+		$scope.switchOnlinePlayersOnly = true;
 		$scope.showSpinner = false;
 
 		var httpParams = $location.search();
@@ -18892,6 +18898,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 
 		$scope.stateChanged = function() {
 			debugOutput('stateChanged', 'log')
+			$scope.switchOnlinePlayersOnly = !$scope.switchOnlinePlayersOnly;
 		};
 
 		/*
@@ -18907,6 +18914,7 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 		};
 
 		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
+			console.info("$scope.switchOnlinePlayersOnly = " + $scope.switchOnlinePlayersOnly)
 			$scope.showSpinner = true;
 			$scope.Response = null;
 			if (limit > 999) limit = 999; // deny power overwhelming
@@ -18925,18 +18933,24 @@ function buildElasticJSONRequestBody(searchQuery, _size, sortKey, sortOrder, onl
 				$scope.showSpinner = false;
 				return;
 			}
+
+			// TODO, this is a bit messy here
 			
 			//var onlineplayersLadderPromise = playerOnlineService.getLadderOnlinePlayers($scope.options.leagueSelect.value);
-			var onlineplayersStashPromise = playerOnlineService.getStashOnlinePlayers(es);
+			var onlineplayersStashPromise = $scope.switchOnlinePlayersOnly ? playerOnlineService.getStashOnlinePlayers(es) : $q.when([]);
 
 			$q.all({
 			  //onlineplayersLadder: onlineplayersLadderPromise,
 			  onlineplayersStash: onlineplayersStashPromise
 			}).then(function(results) {
-				//var onlineplayersLadder = results.onlineplayersLadder.data;
-				var onlineplayersStash  = results.onlineplayersStash.aggregations.filtered.sellers.buckets;
-				playerOnlineService.cacheStashOnlinePlayers(results.onlineplayersStash)
-				$scope.onlinePlayers = buildListOfOnlinePlayers([], onlineplayersStash);
+				$scope.onlinePlayers = [];
+
+				if ($scope.switchOnlinePlayersOnly) {
+					//var onlineplayersLadder = results.onlineplayersLadder.data;
+					var onlineplayersStash  = results.onlineplayersStash.aggregations.filtered.sellers.buckets;
+					playerOnlineService.cacheStashOnlinePlayers(results.onlineplayersStash)
+					$scope.onlinePlayers = buildListOfOnlinePlayers([], onlineplayersStash);
+				}
 				
 			   	var esBody = buildElasticJSONRequestBody(searchQuery, limit, sortKey, sortOrder, $scope.onlinePlayers);
 			   	$scope.elasticJsonRequest = angular.toJson(esBody, true);
