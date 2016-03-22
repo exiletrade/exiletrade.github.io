@@ -6699,207 +6699,207 @@ img.gitter-badge {
   font-weight: 100;
   font-size: 14px; }
 
-.search-results .item {
+.search-results .item, #showItemModal .item {
   min-width: 600px;
   margin: 5px 0;
   padding: 0;
   color: #868585; }
-  .search-results .item h5 {
+  .search-results .item h5, #showItemModal .item h5 {
     margin: 0; }
-  .search-results .item a.name.Normal {
+  .search-results .item a.name.Normal, #showItemModal .item a.name.Normal {
     color: #adadad; }
-  .search-results .item a.name.Magic {
+  .search-results .item a.name.Magic, #showItemModal .item a.name.Magic {
     color: #6688ff; }
-  .search-results .item a.name.Rare {
+  .search-results .item a.name.Rare, #showItemModal .item a.name.Rare {
     color: #a3a314; }
-  .search-results .item a.name.Unique {
+  .search-results .item a.name.Unique, #showItemModal .item a.name.Unique {
     color: #af6025; }
-  .search-results .item a.name.Gem {
+  .search-results .item a.name.Gem, #showItemModal .item a.name.Gem {
     color: #1ba29b; }
-  .search-results .item a.name.Currency {
+  .search-results .item a.name.Currency, #showItemModal .item a.name.Currency {
     color: #9c7e38; }
-  .search-results .item a.name.Card {
+  .search-results .item a.name.Card, #showItemModal .item a.name.Card {
     color: #dcd3c3; }
-  .search-results .item .item-border {
+  .search-results .item .item-border, #showItemModal .item .item-border {
     margin: 0 5px;
     border-top: transparent; }
-  .search-results .item .item-inner-border {
+  .search-results .item .item-inner-border, #showItemModal .item .item-inner-border {
     border: 1px solid #2b2b2b;
     padding: 5px 5px 0px 5px;
     background-color: #1D1D1D; }
-  .search-results .item .item-header {
+  .search-results .item .item-header, #showItemModal .item .item-header {
     line-height: 30px;
     height: 27px;
     color: #adadad;
     border-bottom: 1px solid #2b2b2b;
     background-color: #2b2b2b;
     width: 100%; }
-    .search-results .item .item-header .controls {
+    .search-results .item .item-header .controls, #showItemModal .item .item-header .controls {
       padding: 0 8px;
       border: 1px;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       width: 100%; }
-      .search-results .item .item-header .controls h5 {
+      .search-results .item .item-header .controls h5, #showItemModal .item .item-header .controls h5 {
         display: inline; }
-      .search-results .item .item-header .controls svg {
+      .search-results .item .item-header .controls svg, #showItemModal .item .item-header .controls svg {
         width: 25px !important;
         height: 18px !important;
         margin-top: 4px;
         margin-left: 8px; }
-        .search-results .item .item-header .controls svg:hover {
+        .search-results .item .item-header .controls svg:hover, #showItemModal .item .item-header .controls svg:hover {
           cursor: pointer; }
-      .search-results .item .item-header .controls .button {
+      .search-results .item .item-header .controls .button, #showItemModal .item .item-header .controls .button {
         margin: 0;
         padding: 0; }
-        .search-results .item .item-header .controls .button:hover {
+        .search-results .item .item-header .controls .button:hover, #showItemModal .item .item-header .controls .button:hover {
           background-color: inherit; }
-      .search-results .item .item-header .controls .switch.small {
+      .search-results .item .item-header .controls .switch.small, #showItemModal .item .item-header .controls .switch.small {
         width: 2.2rem;
         height: 1.325rem;
         vertical-align: middle;
         margin-top: 3px; }
-      .search-results .item .item-header .controls .switch.small > label::after {
+      .search-results .item .item-header .controls .switch.small > label::after, #showItemModal .item .item-header .controls .switch.small > label::after {
         width: 1.325rem;
         height: 1.325rem; }
-      .search-results .item .item-header .controls .switch input:checked + label {
+      .search-results .item .item-header .controls .switch input:checked + label, #showItemModal .item .item-header .controls .switch input:checked + label {
         background-color: #43AC6A; }
-        .search-results .item .item-header .controls .switch input:checked + label:after {
+        .search-results .item .item-header .controls .switch input:checked + label:after, #showItemModal .item .item-header .controls .switch input:checked + label:after {
           border-color: #43AC6A; }
-      .search-results .item .item-header .controls .saveNotificationLink {
+      .search-results .item .item-header .controls .saveNotificationLink, #showItemModal .item .item-header .controls .saveNotificationLink {
         color: white; }
-  .search-results .item span {
+  .search-results .item span, #showItemModal .item span {
     display: inline;
     line-height: 1em; }
-  .search-results .item .sortable:hover {
+  .search-results .item .sortable:hover, #showItemModal .item .sortable:hover {
     cursor: default; }
-  .search-results .item .click {
+  .search-results .item .click, #showItemModal .item .click {
     cursor: pointer; }
 
-.search-results .item-box-left {
+.search-results .item-box-left, #showItemModal .item-box-left {
   position: relative;
   padding-right: 15px; }
 
-.search-results .item-box-right {
+.search-results .item-box-right, #showItemModal .item-box-right {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column; }
 
-.search-results .grid-block.item-info {
+.search-results .grid-block.item-info, #showItemModal .grid-block.item-info {
   min-height: 170px;
   margin-left: 114px; }
 
-.search-results .item-info .grid-block {
+.search-results .item-info .grid-block, #showItemModal .item-info .grid-block {
   -ms-flex-positive: 0;
       flex-grow: 0;
   -webkit-flex-grow: 0; }
-  .search-results .item-info .grid-block .seperator:before {
+  .search-results .item-info .grid-block .seperator:before, #showItemModal .item-info .grid-block .seperator:before {
     content: " · "; }
-  .search-results .item-info .grid-block .item-mod-affix {
+  .search-results .item-info .grid-block .item-mod-affix, #showItemModal .item-info .grid-block .item-mod-affix {
     color: #868585; }
 
-.search-results .requirements, .search-results .sell-infos {
+.search-results .requirements, .search-results .sell-infos, #showItemModal .requirements, #showItemModal .sell-infos {
   font-size: 0.75rem; }
-  .search-results .requirements span, .search-results .sell-infos span {
+  .search-results .requirements span, .search-results .sell-infos span, #showItemModal .requirements span, #showItemModal .sell-infos span {
     padding-right: 5px;
     line-height: 30px; }
-    .search-results .requirements span.amount, .search-results .sell-infos span.amount {
+    .search-results .requirements span.amount, .search-results .sell-infos span.amount, #showItemModal .requirements span.amount, #showItemModal .sell-infos span.amount {
       padding-right: 0; }
-  .search-results .requirements .price:hover, .search-results .sell-infos .price:hover {
+  .search-results .requirements .price:hover, .search-results .sell-infos .price:hover, #showItemModal .requirements .price:hover, #showItemModal .sell-infos .price:hover {
     cursor: help; }
-  .search-results .requirements span.currency, .search-results .sell-infos span.currency {
+  .search-results .requirements span.currency, .search-results .sell-infos span.currency, #showItemModal .requirements span.currency, #showItemModal .sell-infos span.currency {
     width: 30px;
     height: 30px;
     display: inline-block;
     background-size: 30px;
     padding-right: 35px;
     background: url("../img/currency_icons.png") no-repeat; }
-    .search-results .requirements span.currency.Regal, .search-results .sell-infos span.currency.Regal {
+    .search-results .requirements span.currency.Regal, .search-results .sell-infos span.currency.Regal, #showItemModal .requirements span.currency.Regal, #showItemModal .sell-infos span.currency.Regal {
       background-position: right 0; }
-    .search-results .requirements span.currency.Augmentation, .search-results .sell-infos span.currency.Augmentation {
+    .search-results .requirements span.currency.Augmentation, .search-results .sell-infos span.currency.Augmentation, #showItemModal .requirements span.currency.Augmentation, #showItemModal .sell-infos span.currency.Augmentation {
       background-position: right -30px; }
-    .search-results .requirements span.currency.Wisdom, .search-results .sell-infos span.currency.Wisdom {
+    .search-results .requirements span.currency.Wisdom, .search-results .sell-infos span.currency.Wisdom, #showItemModal .requirements span.currency.Wisdom, #showItemModal .sell-infos span.currency.Wisdom {
       background-position: right -60px; }
-    .search-results .requirements span.currency.Portal, .search-results .sell-infos span.currency.Portal {
+    .search-results .requirements span.currency.Portal, .search-results .sell-infos span.currency.Portal, #showItemModal .requirements span.currency.Portal, #showItemModal .sell-infos span.currency.Portal {
       background-position: right -90px; }
-    .search-results .requirements span.currency.Alchemy, .search-results .sell-infos span.currency.Alchemy {
+    .search-results .requirements span.currency.Alchemy, .search-results .sell-infos span.currency.Alchemy, #showItemModal .requirements span.currency.Alchemy, #showItemModal .sell-infos span.currency.Alchemy {
       background-position: right -120px; }
-    .search-results .requirements span.currency.Mirror, .search-results .sell-infos span.currency.Mirror {
+    .search-results .requirements span.currency.Mirror, .search-results .sell-infos span.currency.Mirror, #showItemModal .requirements span.currency.Mirror, #showItemModal .sell-infos span.currency.Mirror {
       background-position: right -150px; }
-    .search-results .requirements span.currency.Blessed, .search-results .sell-infos span.currency.Blessed {
+    .search-results .requirements span.currency.Blessed, .search-results .sell-infos span.currency.Blessed, #showItemModal .requirements span.currency.Blessed, #showItemModal .sell-infos span.currency.Blessed {
       background-position: right -180px; }
-    .search-results .requirements span.currency.Whetstone, .search-results .sell-infos span.currency.Whetstone {
+    .search-results .requirements span.currency.Whetstone, .search-results .sell-infos span.currency.Whetstone, #showItemModal .requirements span.currency.Whetstone, #showItemModal .sell-infos span.currency.Whetstone {
       background-position: right -210px; }
-    .search-results .requirements span.currency.Scrap, .search-results .sell-infos span.currency.Scrap {
+    .search-results .requirements span.currency.Scrap, .search-results .sell-infos span.currency.Scrap, #showItemModal .requirements span.currency.Scrap, #showItemModal .sell-infos span.currency.Scrap {
       background-position: right -240px; }
-    .search-results .requirements span.currency.Vaal, .search-results .sell-infos span.currency.Vaal {
+    .search-results .requirements span.currency.Vaal, .search-results .sell-infos span.currency.Vaal, #showItemModal .requirements span.currency.Vaal, #showItemModal .sell-infos span.currency.Vaal {
       background-position: right -270px; }
-    .search-results .requirements span.currency.Bauble, .search-results .sell-infos span.currency.Bauble {
+    .search-results .requirements span.currency.Bauble, .search-results .sell-infos span.currency.Bauble, #showItemModal .requirements span.currency.Bauble, #showItemModal .sell-infos span.currency.Bauble {
       background-position: right -300px; }
-    .search-results .requirements span.currency.Chaos, .search-results .sell-infos span.currency.Chaos {
+    .search-results .requirements span.currency.Chaos, .search-results .sell-infos span.currency.Chaos, #showItemModal .requirements span.currency.Chaos, #showItemModal .sell-infos span.currency.Chaos {
       background-position: right -330px; }
-    .search-results .requirements span.currency.Chisel, .search-results .sell-infos span.currency.Chisel {
+    .search-results .requirements span.currency.Chisel, .search-results .sell-infos span.currency.Chisel, #showItemModal .requirements span.currency.Chisel, #showItemModal .sell-infos span.currency.Chisel {
       background-position: right -360px; }
-    .search-results .requirements span.currency.Chromatic, .search-results .sell-infos span.currency.Chromatic {
+    .search-results .requirements span.currency.Chromatic, .search-results .sell-infos span.currency.Chromatic, #showItemModal .requirements span.currency.Chromatic, #showItemModal .sell-infos span.currency.Chromatic {
       background-position: right -390px; }
-    .search-results .requirements span.currency.Divine, .search-results .sell-infos span.currency.Divine {
+    .search-results .requirements span.currency.Divine, .search-results .sell-infos span.currency.Divine, #showItemModal .requirements span.currency.Divine, #showItemModal .sell-infos span.currency.Divine {
       background-position: right -420px; }
-    .search-results .requirements span.currency.Exalted, .search-results .sell-infos span.currency.Exalted {
+    .search-results .requirements span.currency.Exalted, .search-results .sell-infos span.currency.Exalted, #showItemModal .requirements span.currency.Exalted, #showItemModal .sell-infos span.currency.Exalted {
       background-position: right -450px; }
-    .search-results .requirements span.currency.Transmutation, .search-results .sell-infos span.currency.Transmutation {
+    .search-results .requirements span.currency.Transmutation, .search-results .sell-infos span.currency.Transmutation, #showItemModal .requirements span.currency.Transmutation, #showItemModal .sell-infos span.currency.Transmutation {
       background-position: right -480px; }
-    .search-results .requirements span.currency.Scouring, .search-results .sell-infos span.currency.Scouring {
+    .search-results .requirements span.currency.Scouring, .search-results .sell-infos span.currency.Scouring, #showItemModal .requirements span.currency.Scouring, #showItemModal .sell-infos span.currency.Scouring {
       background-position: right -510px; }
-    .search-results .requirements span.currency.Regret, .search-results .sell-infos span.currency.Regret {
+    .search-results .requirements span.currency.Regret, .search-results .sell-infos span.currency.Regret, #showItemModal .requirements span.currency.Regret, #showItemModal .sell-infos span.currency.Regret {
       background-position: right -540px; }
-    .search-results .requirements span.currency.Fusing, .search-results .sell-infos span.currency.Fusing {
+    .search-results .requirements span.currency.Fusing, .search-results .sell-infos span.currency.Fusing, #showItemModal .requirements span.currency.Fusing, #showItemModal .sell-infos span.currency.Fusing {
       background-position: right -570px; }
-    .search-results .requirements span.currency.Prism, .search-results .sell-infos span.currency.Prism {
+    .search-results .requirements span.currency.Prism, .search-results .sell-infos span.currency.Prism, #showItemModal .requirements span.currency.Prism, #showItemModal .sell-infos span.currency.Prism {
       background-position: right -600px; }
-    .search-results .requirements span.currency.Jewellers, .search-results .sell-infos span.currency.Jewellers {
+    .search-results .requirements span.currency.Jewellers, .search-results .sell-infos span.currency.Jewellers, #showItemModal .requirements span.currency.Jewellers, #showItemModal .sell-infos span.currency.Jewellers {
       background-position: right -630px; }
-    .search-results .requirements span.currency.Alteration, .search-results .sell-infos span.currency.Alteration {
+    .search-results .requirements span.currency.Alteration, .search-results .sell-infos span.currency.Alteration, #showItemModal .requirements span.currency.Alteration, #showItemModal .sell-infos span.currency.Alteration {
       background-position: right -660px; }
-    .search-results .requirements span.currency.Chance, .search-results .sell-infos span.currency.Chance {
+    .search-results .requirements span.currency.Chance, .search-results .sell-infos span.currency.Chance, #showItemModal .requirements span.currency.Chance, #showItemModal .sell-infos span.currency.Chance {
       background-position: right -690px; }
-    .search-results .requirements span.currency.Coins, .search-results .sell-infos span.currency.Coins {
+    .search-results .requirements span.currency.Coins, .search-results .sell-infos span.currency.Coins, #showItemModal .requirements span.currency.Coins, #showItemModal .sell-infos span.currency.Coins {
       background-position: right -720px; }
 
-.search-results .requirements span {
+.search-results .requirements span, #showItemModal .requirements span {
   line-height: 15px; }
 
-.search-results .sell-infos {
+.search-results .sell-infos, #showItemModal .sell-infos {
   padding-left: 3px; }
 
-.search-results .mods ul, .search-results .modsPseudo ul {
+.search-results .mods ul, .search-results .modsPseudo ul, #showItemModal .mods ul, #showItemModal .modsPseudo ul {
   margin-top: 10px;
   font-size: 0.75rem;
   margin-bottom: 5px; }
-  .search-results .mods ul a, .search-results .modsPseudo ul a {
+  .search-results .mods ul a, .search-results .modsPseudo ul a, #showItemModal .mods ul a, #showItemModal .modsPseudo ul a {
     display: inline-block;
     max-width: 300px; }
 
-.search-results .mods .firstExplicit, .search-results .modsPseudo .firstExplicit {
+.search-results .mods .firstExplicit, .search-results .modsPseudo .firstExplicit, #showItemModal .mods .firstExplicit, #showItemModal .modsPseudo .firstExplicit {
   border-top: 1px dotted #adadad; }
 
-.search-results .mods .unidentified, .search-results .modsPseudo .unidentified {
+.search-results .mods .unidentified, .search-results .modsPseudo .unidentified, #showItemModal .mods .unidentified, #showItemModal .modsPseudo .unidentified {
   color: #C22626;
   font-weight: 700; }
 
-.search-results .modsPseudo {
+.search-results .modsPseudo, #showItemModal .modsPseudo {
   opacity: .8; }
 
-.search-results .whisper-btn {
+.search-results .whisper-btn, #showItemModal .whisper-btn {
   margin-bottom: 10px; }
 
-.search-results .grid-block.item-info {
+.search-results .grid-block.item-info, #showItemModal .grid-block.item-info {
   -ms-flex-wrap: initial;
       flex-wrap: initial;
   -webkit-flex-wrap: initial; }
-  .search-results .grid-block.item-info > .grid-block {
+  .search-results .grid-block.item-info > .grid-block, #showItemModal .grid-block.item-info > .grid-block {
     padding-left: 10px; }
 
-.search-results .image-container {
+.search-results .image-container, #showItemModal .image-container {
   max-width: 114px;
   width: 100%;
   max-height: 170px;
@@ -6907,14 +6907,14 @@ img.gitter-badge {
   padding: 10px;
   position: absolute;
   background: no-repeat right 10px; }
-  .search-results .image-container img {
+  .search-results .image-container img, #showItemModal .image-container img {
     max-height: 170px;
     margin: 0 auto;
     object-fit: contain;
     object-position: 50% 0; }
-  .search-results .image-container:hover .socket, .search-results .image-container:hover .socketLink {
+  .search-results .image-container:hover .socket, .search-results .image-container:hover .socketLink, #showItemModal .image-container:hover .socket, #showItemModal .image-container:hover .socketLink {
     opacity: 0; }
-  .search-results .image-container .socket {
+  .search-results .image-container .socket, #showItemModal .image-container .socket {
     position: absolute;
     height: 47px;
     width: 47px;
@@ -6922,20 +6922,20 @@ img.gitter-badge {
     top: 0;
     left: 0;
     margin: 10px; }
-    .search-results .image-container .socket.middle {
+    .search-results .image-container .socket.middle, #showItemModal .image-container .socket.middle {
       top: 47px; }
-    .search-results .image-container .socket.bottom {
+    .search-results .image-container .socket.bottom, #showItemModal .image-container .socket.bottom {
       top: 94px; }
-    .search-results .image-container .socket.socketRight {
+    .search-results .image-container .socket.socketRight, #showItemModal .image-container .socket.socketRight {
       right: 0;
       left: initial; }
-    .search-results .image-container .socket.socketBlue {
+    .search-results .image-container .socket.socketBlue, #showItemModal .image-container .socket.socketBlue {
       background-position: 0 -47px; }
-    .search-results .image-container .socket.socketGreen {
+    .search-results .image-container .socket.socketGreen, #showItemModal .image-container .socket.socketGreen {
       background-position: 0 -94px; }
-    .search-results .image-container .socket.socketWhite {
+    .search-results .image-container .socket.socketWhite, #showItemModal .image-container .socket.socketWhite {
       background-position: 0 -235px; }
-  .search-results .image-container .socketLink {
+  .search-results .image-container .socketLink, #showItemModal .image-container .socketLink {
     position: absolute;
     height: 47px;
     width: 47px;
@@ -6943,54 +6943,63 @@ img.gitter-badge {
     top: 0;
     left: 0;
     margin: 10px; }
-    .search-results .image-container .socketLink.socketLinkCenter {
+    .search-results .image-container .socketLink.socketLinkCenter, #showItemModal .image-container .socketLink.socketLinkCenter {
       background-position: 0 -188px;
       left: 23px; }
-      .search-results .image-container .socketLink.socketLinkCenter.middle {
+      .search-results .image-container .socketLink.socketLinkCenter.middle, #showItemModal .image-container .socketLink.socketLinkCenter.middle {
         top: 48px; }
-      .search-results .image-container .socketLink.socketLinkCenter.bottom {
+      .search-results .image-container .socketLink.socketLinkCenter.bottom, #showItemModal .image-container .socketLink.socketLinkCenter.bottom {
         top: 95px; }
-    .search-results .image-container .socketLink.socketLinkLeft, .search-results .image-container .socketLink.socketLinkRight {
+    .search-results .image-container .socketLink.socketLinkLeft, .search-results .image-container .socketLink.socketLinkRight, #showItemModal .image-container .socketLink.socketLinkLeft, #showItemModal .image-container .socketLink.socketLinkRight {
       background-position: 0 -141px;
       top: 24px; }
-      .search-results .image-container .socketLink.socketLinkLeft.middle, .search-results .image-container .socketLink.socketLinkRight.middle {
+      .search-results .image-container .socketLink.socketLinkLeft.middle, .search-results .image-container .socketLink.socketLinkRight.middle, #showItemModal .image-container .socketLink.socketLinkLeft.middle, #showItemModal .image-container .socketLink.socketLinkRight.middle {
         top: 71px; }
-    .search-results .image-container .socketLink.socketLinkRight {
+    .search-results .image-container .socketLink.socketLinkRight, #showItemModal .image-container .socketLink.socketLinkRight {
       background-position: 0 -141px;
       left: 46px; }
-    .search-results .image-container .socketLink.socketLinkLeft {
+    .search-results .image-container .socketLink.socketLinkLeft, #showItemModal .image-container .socketLink.socketLinkLeft {
       background-position: 0 -141px;
       left: -1px; }
 
-.search-results .item-stats {
+.search-results .item-stats, #showItemModal .item-stats {
   font-size: 0.75rem; }
-  .search-results .item-stats table {
+  .search-results .item-stats table, #showItemModal .item-stats table {
     min-width: 150px; }
-  .search-results .item-stats td {
+  .search-results .item-stats td, #showItemModal .item-stats td {
     padding: 3px 3px;
     text-align: left; }
-    .search-results .item-stats td:nth-of-type(2) {
+    .search-results .item-stats td:nth-of-type(2), #showItemModal .item-stats td:nth-of-type(2) {
       text-align: right; }
-    .search-results .item-stats td a.quality {
+    .search-results .item-stats td a.quality, #showItemModal .item-stats td a.quality {
       color: #56AB56; }
 
-.search-results a.mod-fire-res, .search-results a.mod-fire-dmg {
+.search-results a.mod-fire-res, .search-results a.mod-fire-dmg, #showItemModal a.mod-fire-res, #showItemModal a.mod-fire-dmg {
   color: #D01D1D; }
 
-.search-results a.mod-cold-res, .search-results a.mod-cold-dmg {
+.search-results a.mod-cold-res, .search-results a.mod-cold-dmg, #showItemModal a.mod-cold-res, #showItemModal a.mod-cold-dmg {
   color: #00b8e6; }
 
-.search-results a.mod-lightning-res, .search-results a.mod-lightning-dmg {
+.search-results a.mod-lightning-res, .search-results a.mod-lightning-dmg, #showItemModal a.mod-lightning-res, #showItemModal a.mod-lightning-dmg {
   color: #cccc00; }
 
-.search-results a.mod-chaos-res, .search-results a.mod-chaos-dmg {
+.search-results a.mod-chaos-res, .search-results a.mod-chaos-dmg, #showItemModal a.mod-chaos-res, #showItemModal a.mod-chaos-dmg {
   color: #d02090; }
 
-.search-results a.mod-life {
+.search-results a.mod-life, #showItemModal a.mod-life {
   color: #F10A0A; }
 
-.search-results a.mod-mana {
+.search-results a.mod-mana, #showItemModal a.mod-mana {
   color: #9898FF; }
+
+#showItemModal .modal {
+  max-width: 95%; }
+
+#showItemModal .item {
+  margin-top: 50px; }
+
+#showItemModal .switch, #showItemModal .saveNotificationLink {
+  display: none; }
 
 .panel {
   width: 400px; }
