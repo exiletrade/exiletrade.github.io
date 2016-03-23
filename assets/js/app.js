@@ -18309,10 +18309,13 @@ function determineBaseType(name) {
 }
 
 
-var debug = true;
-
+/*
+Sets debug to true (used in function "debugOutput"), the gulpfile excludes this file when building the production
+version, therefore disabling all debug output (console).
+* */
+var debugDevBuild = true;
 function debugOutput(input, outputType) {
-	if (!debug) return;
+	if (typeof debugDevBuild === 'undefined') return;
 	try {
 		if (outputType == "log") {
 			console.log(input);
@@ -18898,7 +18901,7 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 		 - http://stackoverflow.com/questions/20607313/angularjs-promise-with-recursive-function
 		 */
 		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
-			console.info("$scope.switchOnlinePlayersOnly = " + $scope.switchOnlinePlayersOnly);
+			debugOutput("$scope.switchOnlinePlayersOnly = " + $scope.switchOnlinePlayersOnly, 'info');
 			$scope.showSpinner = true;
 			$scope.Response = null;
 			limit = Number(limit);
@@ -18938,7 +18941,7 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 					body: esBody
 				};
 				$scope.elasticJsonRequest = angular.toJson(esPayload, true);
-				debugOutput("Gonna run elastic: " + $scope.elasticJsonRequest, 'info');
+				debugOutput("Gonna run elastic: " + $scope.elasticJsonRequest, 'trace');
 				return es.search(esPayload)
 			}
 
@@ -18980,7 +18983,6 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 
 							$.each(response.hits.hits, function (index, value) {
 								addCustomFields(value._source);
-								addCustomFields(value._source.properties);
 							});
 
 							$scope.showSpinner = false;
@@ -19158,7 +19160,34 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 		};
 
 		$scope.requestSavedItem = function (itemId) {
-			$scope.lastRequestedSavedItem = {};
+			var esPayload = {
+				index: 'index',
+				body: {
+					"filter": {
+						"term": {
+						  "_id": itemId
+						}
+					  }
+				}
+			};
+			debugOutput("Gonna run elastic: " + angular.toJson(esPayload, true), 'trace');
+			es.search(esPayload).then(function (response) {
+				debugOutput("itemId: " + itemId + ". Found " + response.hits.total + " hits.", 'info');
+				if (response.hits.total == 1) addCustomFields(response.hits.hits[0]);
+				$scope.lastRequestedSavedItem = response.hits.hits;
+			});
+		};
+
+		$scope.resizeGridFrame = function (opened) {
+			if ( opened === true ){
+				jQuery('#mainGrid').animate({
+					marginRight: "400px"
+				}, 500, 'swing');
+			} else {
+				jQuery('#mainGrid').animate({
+					marginRight: "0px"
+				}, 380, 'swing');
+			}
 		};
 
 		/*
@@ -19369,8 +19398,7 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 
 			return blacklist.indexOf(type) == -1;
 		};
-
-		console.info("Loaded " + Object.keys(terms).length + " terms.")
+		debugOutput("Loaded " + Object.keys(terms).length + " terms.", "info");
 		if (typeof httpParams['q'] !== 'undefined') $scope.doSearch();
 	}]);
 
