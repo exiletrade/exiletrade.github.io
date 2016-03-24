@@ -18746,7 +18746,7 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
 		$scope.elasticJsonRequest = "";
-		$scope.switchOnlinePlayersOnly = false;
+		$scope.switchOnlinePlayersOnly = true;
 		$scope.showSpinner = false;
 
 		var httpParams = $location.search();
@@ -18924,11 +18924,17 @@ function buildListOfOnlinePlayers(onlineplayersLadder, onlineplayersStash) {
 
 			function doElasticSearch(searchQuery, _from, _size, sortKey, sortOrder) {
 				var esBody = {
-					"filter": {
-						"query": {
-							"query_string": {
-								"default_operator": "AND",
-								"query": searchQuery
+					"query": {
+						"filtered": {
+							"filter": {
+								"bool": {
+									"must": {
+										"query_string": {
+											"default_operator": "AND",
+											"query": searchQuery
+										}
+									}
+								}
 							}
 						}
 					}
