@@ -4288,9 +4288,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
     .service('FoundationAdapter', FoundationAdapter)
     .factory('Utils', Utils)
     .run(Setup);
-  ;
-
-  FoundationApi.$inject = ['FoundationAnimation'];
+	FoundationApi.$inject = ['FoundationAnimation'];
 
   function FoundationApi(FoundationAnimation) {
     var listeners  = {};
@@ -4338,7 +4336,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
         cb(msg);
       });
 
-      return;
+
     }
 
     function getSettings() {
@@ -4510,7 +4508,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
 
         if (fromState.animation) {
           if (!fromState.animation.leave && !toState.animation.leave) {
-            return;
+
           }
           else {
              animationRouter(event, toState, fromState);
@@ -4859,7 +4857,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
         head.append('<meta class="' + classArray[i] + '" />');
       }
 
-      return;
+
     }
 
     function getStyle(selector, styleName) {
@@ -5282,262 +5280,6 @@ angular.module('markdown', [])
 (function() {
   'use strict';
 
-  angular.module('foundation.actionsheet', ['foundation.core'])
-    .controller('ZfActionSheetController', zfActionSheetController)
-    .directive('zfActionSheet', zfActionSheet)
-    .directive('zfAsContent', zfAsContent)
-    .directive('zfAsButton', zfAsButton)
-    .service('FoundationActionSheet', FoundationActionSheet)
-  ;
-
-  FoundationActionSheet.$inject = ['FoundationApi'];
-
-  function FoundationActionSheet(foundationApi) {
-    var service    = {};
-
-    service.activate = activate;
-    service.deactivate = deactivate;
-
-    return service;
-
-    //target should be element ID
-    function activate(target) {
-      foundationApi.publish(target, 'show');
-    }
-
-    //target should be element ID
-    function deactivate(target) {
-      foundationApi.publish(target, 'hide');
-    }
-  }
-
-  zfActionSheetController.$inject = ['$scope', 'FoundationApi'];
-
-  function zfActionSheetController($scope, foundationApi) {
-    var controller = this;
-    var content = controller.content = $scope.content;
-    var container = controller.container = $scope.container;
-    var body = angular.element(document.body);
-
-    controller.registerContent = function(scope) {
-      content = scope;
-      content.active = false;
-    };
-
-    controller.registerContainer = function(scope) {
-      container = scope;
-      container.active = false;
-    };
-
-    controller.toggle = toggle;
-    controller.hide = hide;
-    controller.show = show;
-
-    controller.registerListener = function() {
-      document.body.addEventListener('click', listenerLogic);
-    };
-
-    controller.deregisterListener = function() {
-      document.body.removeEventListener('click', listenerLogic);
-    }
-
-    function listenerLogic(e) {
-      var el = e.target;
-      var insideActionSheet = false;
-
-      do {
-        if(el.classList && el.classList.contains('action-sheet-container')) {
-          insideActionSheet = true;
-          break;
-        }
-
-      } while ((el = el.parentNode));
-
-      if(!insideActionSheet) {
-        // if the element has a toggle attribute, do nothing
-        if (e.target.attributes['zf-toggle'] || e.target.attributes['zf-hard-toggle']) {
-          return;
-        };
-        // if the element is outside the action sheet and is NOT a toggle element, hide
-        hide();
-      }
-    }
-
-    function hide() {
-      content.hide();
-      container.hide();
-
-      if (!$scope.$$phase) {
-        content.$apply();
-        container.$apply();
-      }
-    }
-
-    function toggle() {
-      content.toggle();
-      container.toggle();
-
-      if (!$scope.$$phase) {
-        content.$apply();
-        container.$apply();
-      }
-    }
-
-    function show() {
-      content.show();
-      container.show();
-
-      if (!$scope.$$phase) {
-        content.$apply();
-        container.$apply();
-      }
-    }
-  }
-
-  zfActionSheet.$inject = ['FoundationApi'];
-
-  function zfActionSheet(foundationApi) {
-    var directive = {
-      restrict: 'EA',
-      transclude: true,
-      replace: true,
-      templateUrl: 'components/actionsheet/actionsheet.html',
-      controller: 'ZfActionSheetController',
-      compile: compile
-    };
-
-    return directive;
-
-    function compile() {
-
-      return {
-        pre: preLink,
-        post: postLink
-      };
-
-      function preLink(scope, iElement, iAttrs) {
-        iAttrs.$set('zf-closable', 'actionsheet');
-      }
-
-      function postLink(scope, element, attrs, controller) {
-        var id = attrs.id || foundationApi.generateUuid();
-        attrs.$set('id', id);
-
-        scope.active = false;
-
-        foundationApi.subscribe(id, function(msg) {
-          if (msg === 'toggle') {
-            controller.toggle();
-          }
-
-          if (msg === 'hide' || msg === 'close') {
-            controller.hide();
-          }
-
-          if (msg === 'show' || msg === 'open') {
-            controller.show();
-          }
-        });
-
-        controller.registerContainer(scope);
-
-        scope.toggle = function() {
-          scope.active = !scope.active;
-          return;
-        };
-
-        scope.hide = function() {
-          scope.active = false;
-          return;
-        };
-
-        scope.show = function() {
-          scope.active = true;
-          return;
-        };
-      }
-    }
-  }
-
-  zfAsContent.$inject = ['FoundationApi'];
-
-  function zfAsContent(foundationApi) {
-    var directive = {
-      restrict: 'EA',
-      transclude: true,
-      replace: true,
-      templateUrl: 'components/actionsheet/actionsheet-content.html',
-      require: '^zfActionSheet',
-      scope: {
-        position: '@?'
-      },
-      link: link
-    };
-
-    return directive;
-
-    function link(scope, element, attrs, controller) {
-      scope.active = false;
-      scope.position = scope.position || 'bottom';
-      controller.registerContent(scope);
-
-      scope.toggle = function() {
-        scope.active = !scope.active;
-        if(scope.active) {
-          controller.registerListener();
-        } else {
-          controller.deregisterListener();
-        }
-
-        return;
-      };
-
-      scope.hide = function() {
-        scope.active = false;
-        controller.deregisterListener();
-        return;
-      };
-
-      scope.show = function() {
-        scope.active = true;
-        controller.registerListener();
-        return;
-      };
-    }
-  }
-
-  zfAsButton.$inject = ['FoundationApi'];
-
-  function zfAsButton(foundationApi) {
-    var directive = {
-      restrict: 'EA',
-      transclude: true,
-      replace: true,
-      templateUrl: 'components/actionsheet/actionsheet-button.html',
-      require: '^zfActionSheet',
-      scope: {
-        title: '@?'
-      },
-      link: link
-    }
-
-    return directive;
-
-    function link(scope, element, attrs, controller) {
-
-      element.on('click', function(e) {
-        controller.toggle();
-        e.preventDefault();
-      });
-
-    }
-  }
-
-})();
-
-(function() {
-  'use strict';
-
   angular.module('foundation.common', ['foundation.core'])
     .directive('zfClose', zfClose)
     .directive('zfOpen', zfOpen)
@@ -5610,7 +5352,7 @@ angular.module('markdown', [])
     var directive = {
       restrict: 'A',
       link: link
-    }
+    };
 
     return directive;
 
@@ -5734,7 +5476,7 @@ angular.module('markdown', [])
             foundationApi.publish(activeElements[0].id, 'close');
           }
         }
-        return;
+
       });
     }
     /** special thanks to Chris Ferdinandi for this solution.
@@ -5750,6 +5492,262 @@ angular.module('markdown', [])
       return false;
     }
   }
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('foundation.actionsheet', ['foundation.core'])
+    .controller('ZfActionSheetController', zfActionSheetController)
+    .directive('zfActionSheet', zfActionSheet)
+    .directive('zfAsContent', zfAsContent)
+    .directive('zfAsButton', zfAsButton)
+    .service('FoundationActionSheet', FoundationActionSheet)
+  ;
+
+  FoundationActionSheet.$inject = ['FoundationApi'];
+
+  function FoundationActionSheet(foundationApi) {
+    var service    = {};
+
+    service.activate = activate;
+    service.deactivate = deactivate;
+
+    return service;
+
+    //target should be element ID
+    function activate(target) {
+      foundationApi.publish(target, 'show');
+    }
+
+    //target should be element ID
+    function deactivate(target) {
+      foundationApi.publish(target, 'hide');
+    }
+  }
+
+  zfActionSheetController.$inject = ['$scope', 'FoundationApi'];
+
+  function zfActionSheetController($scope, foundationApi) {
+    var controller = this;
+    var content = controller.content = $scope.content;
+    var container = controller.container = $scope.container;
+    var body = angular.element(document.body);
+
+    controller.registerContent = function(scope) {
+      content = scope;
+      content.active = false;
+    };
+
+    controller.registerContainer = function(scope) {
+      container = scope;
+      container.active = false;
+    };
+
+    controller.toggle = toggle;
+    controller.hide = hide;
+    controller.show = show;
+
+    controller.registerListener = function() {
+      document.body.addEventListener('click', listenerLogic);
+    };
+
+    controller.deregisterListener = function() {
+      document.body.removeEventListener('click', listenerLogic);
+    };
+
+    function listenerLogic(e) {
+      var el = e.target;
+      var insideActionSheet = false;
+
+      do {
+        if(el.classList && el.classList.contains('action-sheet-container')) {
+          insideActionSheet = true;
+          break;
+        }
+
+      } while ((el = el.parentNode));
+
+      if(!insideActionSheet) {
+        // if the element has a toggle attribute, do nothing
+        if (e.target.attributes['zf-toggle'] || e.target.attributes['zf-hard-toggle']) {
+          return;
+		}
+		  // if the element is outside the action sheet and is NOT a toggle element, hide
+        hide();
+      }
+    }
+
+    function hide() {
+      content.hide();
+      container.hide();
+
+      if (!$scope.$$phase) {
+        content.$apply();
+        container.$apply();
+      }
+    }
+
+    function toggle() {
+      content.toggle();
+      container.toggle();
+
+      if (!$scope.$$phase) {
+        content.$apply();
+        container.$apply();
+      }
+    }
+
+    function show() {
+      content.show();
+      container.show();
+
+      if (!$scope.$$phase) {
+        content.$apply();
+        container.$apply();
+      }
+    }
+  }
+
+  zfActionSheet.$inject = ['FoundationApi'];
+
+  function zfActionSheet(foundationApi) {
+    var directive = {
+      restrict: 'EA',
+      transclude: true,
+      replace: true,
+      templateUrl: 'components/actionsheet/actionsheet.html',
+      controller: 'ZfActionSheetController',
+      compile: compile
+    };
+
+    return directive;
+
+    function compile() {
+
+      return {
+        pre: preLink,
+        post: postLink
+      };
+
+      function preLink(scope, iElement, iAttrs) {
+        iAttrs.$set('zf-closable', 'actionsheet');
+      }
+
+      function postLink(scope, element, attrs, controller) {
+        var id = attrs.id || foundationApi.generateUuid();
+        attrs.$set('id', id);
+
+        scope.active = false;
+
+        foundationApi.subscribe(id, function(msg) {
+          if (msg === 'toggle') {
+            controller.toggle();
+          }
+
+          if (msg === 'hide' || msg === 'close') {
+            controller.hide();
+          }
+
+          if (msg === 'show' || msg === 'open') {
+            controller.show();
+          }
+        });
+
+        controller.registerContainer(scope);
+
+        scope.toggle = function() {
+          scope.active = !scope.active;
+
+        };
+
+        scope.hide = function() {
+          scope.active = false;
+
+        };
+
+        scope.show = function() {
+          scope.active = true;
+
+        };
+      }
+    }
+  }
+
+  zfAsContent.$inject = ['FoundationApi'];
+
+  function zfAsContent(foundationApi) {
+    var directive = {
+      restrict: 'EA',
+      transclude: true,
+      replace: true,
+      templateUrl: 'components/actionsheet/actionsheet-content.html',
+      require: '^zfActionSheet',
+      scope: {
+        position: '@?'
+      },
+      link: link
+    };
+
+    return directive;
+
+    function link(scope, element, attrs, controller) {
+      scope.active = false;
+      scope.position = scope.position || 'bottom';
+      controller.registerContent(scope);
+
+      scope.toggle = function() {
+        scope.active = !scope.active;
+        if(scope.active) {
+          controller.registerListener();
+        } else {
+          controller.deregisterListener();
+        }
+
+
+      };
+
+      scope.hide = function() {
+        scope.active = false;
+        controller.deregisterListener();
+
+      };
+
+      scope.show = function() {
+        scope.active = true;
+        controller.registerListener();
+
+      };
+    }
+  }
+
+  zfAsButton.$inject = ['FoundationApi'];
+
+  function zfAsButton(foundationApi) {
+    var directive = {
+      restrict: 'EA',
+      transclude: true,
+      replace: true,
+      templateUrl: 'components/actionsheet/actionsheet-button.html',
+      require: '^zfActionSheet',
+      scope: {
+        title: '@?'
+      },
+      link: link
+    };
+
+    return directive;
+
+    function link(scope, element, attrs, controller) {
+
+      element.on('click', function(e) {
+        controller.toggle();
+        e.preventDefault();
+      });
+
+    }
+  }
+
 })();
 
 (function () {
@@ -6361,7 +6359,7 @@ angular.module('markdown', [])
         scope.hide = function() {
           scope.active = false;
           animate();
-          return;
+
         };
 
         scope.show = function() {
@@ -6369,13 +6367,13 @@ angular.module('markdown', [])
           animate();
           dialog.tabIndex = -1;
           dialog[0].focus();
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animate();
-          return;
+
         };
 
         init();
@@ -6394,7 +6392,7 @@ angular.module('markdown', [])
             scope.$apply();
           }
 
-          return;
+
         });
 
         function animate() {
@@ -6603,6 +6601,109 @@ angular.module('markdown', [])
 (function() {
   'use strict';
 
+  angular.module('foundation.offcanvas', ['foundation.core'])
+    .directive('zfOffcanvas', zfOffcanvas)
+    .service('FoundationOffcanvas', FoundationOffcanvas)
+  ;
+
+  FoundationOffcanvas.$inject = ['FoundationApi'];
+
+  function FoundationOffcanvas(foundationApi) {
+    var service    = {};
+
+    service.activate = activate;
+    service.deactivate = deactivate;
+
+    return service;
+
+    //target should be element ID
+    function activate(target) {
+      foundationApi.publish(target, 'show');
+    }
+
+    //target should be element ID
+    function deactivate(target) {
+      foundationApi.publish(target, 'hide');
+    }
+
+    function toggle(target) {
+      foundationApi.publish(target, 'toggle');
+    }
+  }
+
+  zfOffcanvas.$inject = ['FoundationApi'];
+
+  function zfOffcanvas(foundationApi) {
+    var directive = {
+      restrict: 'EA',
+      templateUrl: 'components/offcanvas/offcanvas.html',
+      transclude: true,
+      scope: {
+        position: '@'
+      },
+      replace: true,
+      compile: compile
+    };
+
+    return directive;
+
+    function compile(tElement, tAttrs, transclude) {
+      var type = 'offcanvas';
+
+      return {
+        pre: preLink,
+        post: postLink
+      };
+
+      function preLink(scope, iElement, iAttrs, controller) {
+        iAttrs.$set('zf-closable', type);
+        document.body.classList.add('has-off-canvas');
+      }
+
+      function postLink(scope, element, attrs) {
+        scope.position = scope.position || 'left';
+
+        scope.active = false;
+        //setup
+        foundationApi.subscribe(attrs.id, function(msg) {
+          if(msg === 'show' || msg === 'open') {
+            scope.show();
+          } else if (msg === 'close' || msg === 'hide') {
+            scope.hide();
+          } else if (msg === 'toggle') {
+            scope.toggle();
+          }
+
+          if (!scope.$root.$$phase) {
+            scope.$apply();
+          }
+
+
+        });
+
+        scope.hide = function() {
+          scope.active = false;
+
+        };
+
+        scope.show = function() {
+          scope.active = true;
+
+        };
+
+        scope.toggle = function() {
+          scope.active = !scope.active;
+
+        };
+      }
+    }
+  }
+
+})();
+
+(function() {
+  'use strict';
+
   angular.module('foundation.notification', ['foundation.core'])
     .controller('ZfNotificationController', ZfNotificationController)
     .directive('zfNotificationSet', zfNotificationSet)
@@ -6773,9 +6874,8 @@ angular.module('markdown', [])
               scope.hide();
             }
           }, parseInt(scope.autoclose));
-        };
-
-        // close on swipe
+		}
+		  // close on swipe
         if (typeof(Hammer) !== 'undefined') {
           hammerElem = new Hammer(element[0]);
           // set the options for swipe (to make them a bit more forgiving in detection)
@@ -6849,8 +6949,8 @@ angular.module('markdown', [])
                   scope.hide();
                 }
               }, parseInt(scope.autoclose));
-            };
-          } else if (msg == 'close' || msg == 'hide') {
+			}
+		  } else if (msg == 'close' || msg == 'hide') {
             scope.hide();
           } else if (msg == 'toggle') {
             scope.toggle();
@@ -6863,25 +6963,25 @@ angular.module('markdown', [])
               }, parseInt(scope.autoclose));
             }
           }
-          return;
+
         });
 
         scope.hide = function() {
           scope.active = false;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
         scope.show = function() {
           scope.active = true;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
       }
@@ -7030,109 +7130,6 @@ angular.module('markdown', [])
 (function() {
   'use strict';
 
-  angular.module('foundation.offcanvas', ['foundation.core'])
-    .directive('zfOffcanvas', zfOffcanvas)
-    .service('FoundationOffcanvas', FoundationOffcanvas)
-  ;
-
-  FoundationOffcanvas.$inject = ['FoundationApi'];
-
-  function FoundationOffcanvas(foundationApi) {
-    var service    = {};
-
-    service.activate = activate;
-    service.deactivate = deactivate;
-
-    return service;
-
-    //target should be element ID
-    function activate(target) {
-      foundationApi.publish(target, 'show');
-    }
-
-    //target should be element ID
-    function deactivate(target) {
-      foundationApi.publish(target, 'hide');
-    }
-
-    function toggle(target) {
-      foundationApi.publish(target, 'toggle');
-    }
-  }
-
-  zfOffcanvas.$inject = ['FoundationApi'];
-
-  function zfOffcanvas(foundationApi) {
-    var directive = {
-      restrict: 'EA',
-      templateUrl: 'components/offcanvas/offcanvas.html',
-      transclude: true,
-      scope: {
-        position: '@'
-      },
-      replace: true,
-      compile: compile
-    };
-
-    return directive;
-
-    function compile(tElement, tAttrs, transclude) {
-      var type = 'offcanvas';
-
-      return {
-        pre: preLink,
-        post: postLink
-      };
-
-      function preLink(scope, iElement, iAttrs, controller) {
-        iAttrs.$set('zf-closable', type);
-        document.body.classList.add('has-off-canvas');
-      }
-
-      function postLink(scope, element, attrs) {
-        scope.position = scope.position || 'left';
-
-        scope.active = false;
-        //setup
-        foundationApi.subscribe(attrs.id, function(msg) {
-          if(msg === 'show' || msg === 'open') {
-            scope.show();
-          } else if (msg === 'close' || msg === 'hide') {
-            scope.hide();
-          } else if (msg === 'toggle') {
-            scope.toggle();
-          }
-
-          if (!scope.$root.$$phase) {
-            scope.$apply();
-          }
-
-          return;
-        });
-
-        scope.hide = function() {
-          scope.active = false;
-          return;
-        };
-
-        scope.show = function() {
-          scope.active = true;
-          return;
-        };
-
-        scope.toggle = function() {
-          scope.active = !scope.active;
-          return;
-        };
-      }
-    }
-  }
-
-})();
-
-(function() {
-  'use strict';
-
   angular.module('foundation.panel', ['foundation.core'])
     .directive('zfPanel', zfPanel)
     .service('FoundationPanel', FoundationPanel)
@@ -7251,7 +7248,7 @@ angular.module('markdown', [])
             scope.$apply();
           }
 
-          return;
+
         });
 
         // function finish(el)
@@ -7262,7 +7259,7 @@ angular.module('markdown', [])
             animate(element, scope.active, animationIn, animationOut);
           }
 
-          return;
+
         };
 
         scope.show = function() {
@@ -7271,14 +7268,14 @@ angular.module('markdown', [])
             animate(element, scope.active, animationIn, animationOut);
           }
 
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animate(element, scope.active, animationIn, animationOut);
 
-          return;
+
         };
 
         element.on('click', function(e) {
@@ -7380,7 +7377,7 @@ angular.module('markdown', [])
 
           scope.$apply();
 
-          return;
+
         });
 
 
@@ -7388,7 +7385,7 @@ angular.module('markdown', [])
           scope.active = false;
           tetherElement();
           tether.disable();
-          return;
+
         };
 
         scope.show = function(newTarget) {
@@ -7396,7 +7393,7 @@ angular.module('markdown', [])
           tetherElement(newTarget);
           tether.enable();
 
-          return;
+
         };
 
         scope.toggle = function(newTarget) {
@@ -7409,7 +7406,7 @@ angular.module('markdown', [])
             tether.disable();
           }
 
-          return;
+
         };
 
         function tetherElement(target) {
@@ -7681,7 +7678,7 @@ angular.module('markdown', [])
       restrict: 'A',
       replace: false,
       link: link
-    }
+    };
 
     return directive;
 
