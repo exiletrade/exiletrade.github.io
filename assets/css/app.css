@@ -6843,8 +6843,6 @@ img.gitter-badge {
       background-position: right 0; }
     .search-results .requirements span.currency.augmentation, .search-results .sell-infos span.currency.augmentation, #showItemModal .requirements span.currency.augmentation, #showItemModal .sell-infos span.currency.augmentation, .panel .requirements span.currency.augmentation, .panel .sell-infos span.currency.augmentation {
       background-position: right -30px; }
-    .search-results .requirements span.currency.aug, .search-results .sell-infos span.currency.aug, #showItemModal .requirements span.currency.aug, #showItemModal .sell-infos span.currency.aug, .panel .requirements span.currency.aug, .panel .sell-infos span.currency.aug {
-      background-position: right -30px; }
     .search-results .requirements span.currency.wisdom, .search-results .sell-infos span.currency.wisdom, #showItemModal .requirements span.currency.wisdom, #showItemModal .sell-infos span.currency.wisdom, .panel .requirements span.currency.wisdom, .panel .sell-infos span.currency.wisdom {
       background-position: right -60px; }
     .search-results .requirements span.currency.portal, .search-results .sell-infos span.currency.portal, #showItemModal .requirements span.currency.portal, #showItemModal .sell-infos span.currency.portal, .panel .requirements span.currency.portal, .panel .sell-infos span.currency.portal {
@@ -6892,10 +6890,6 @@ img.gitter-badge {
     .search-results .requirements span.currency.chance, .search-results .sell-infos span.currency.chance, #showItemModal .requirements span.currency.chance, #showItemModal .sell-infos span.currency.chance, .panel .requirements span.currency.chance, .panel .sell-infos span.currency.chance {
       background-position: right -690px; }
     .search-results .requirements span.currency.coins, .search-results .sell-infos span.currency.coins, #showItemModal .requirements span.currency.coins, #showItemModal .sell-infos span.currency.coins, .panel .requirements span.currency.coins, .panel .sell-infos span.currency.coins {
-      background-position: right -720px; }
-    .search-results .requirements span.currency.pc, .search-results .sell-infos span.currency.pc, #showItemModal .requirements span.currency.pc, #showItemModal .sell-infos span.currency.pc, .panel .requirements span.currency.pc, .panel .sell-infos span.currency.pc {
-      background-position: right -720px; }
-    .search-results .requirements span.currency.per, .search-results .sell-infos span.currency.per, #showItemModal .requirements span.currency.per, #showItemModal .sell-infos span.currency.per, .panel .requirements span.currency.per, .panel .sell-infos span.currency.per {
       background-position: right -720px; }
 
 .search-results .requirements span, #showItemModal .requirements span, .panel .requirements span {

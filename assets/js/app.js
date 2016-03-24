@@ -19339,7 +19339,6 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 		 Prepare Whisper Message
 		 */
 		$scope.copyWhisperToClipboard = function (item) {
-			//ga('send', 'event', 'Feature', 'Whisper', 'item._source.info.fullName');
 			var message = item._source.shop.defaultMessage;
 			var seller = item._source.shop.lastCharacterName;
 			var itemName = item._source.info.fullName;
@@ -19347,6 +19346,12 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			var stashTab = item._source.shop.stash.stashName;
 			var x = item._source.shop.stash.xLocation;
 			var y = item._source.shop.stash.yLocation;
+
+			//removing the "Unknown" tag from currency
+			var n = message.indexOf('Unknown (');
+			if (n > -1 ) {
+				message = message.replace('Unknown ', '');
+			}
 
 			if (message === undefined) {
 				message = '@' + seller + " Hi, I'd like to buy your "
@@ -19524,7 +19529,32 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			if (typeof str === 'undefined') {
 				return
 			}
-			return str.replace(/[^\w\s]/gi, '').replace(/[0-9]/g, '').toLowerCase();
+			str =  str.replace(/[^\w\s]/gi, '').replace(/[0-9]/g, '').toLowerCase();
+
+			var currencyMap = new Map([
+				["unknown shekel", "coins"],
+				["unknown pc", "coins"],
+				["unknown p", "coins"],
+				["unknown perandus", "coins"],
+				["unknown perandus coin", "coins"],
+				["unknown perandus coins", "coins"],
+				["unknown peranduscoins", "coins"],
+				["unknown per", "coins"],
+				["unknown exa", "exalted"],
+				["unknown fuse", "fusing"],
+				["unknown alt", "alteration"],
+				["unknown aug", "augmentation"],
+				["unknown jewel", "jewellers"],
+				["unknown cartographer", "chisel"],
+				["unknown scour", "scouring"],
+				["unknown gemcutter", "gcp"],
+				["unknown transmute", "transmutation"],
+				["unknown alch", "alchemy"]
+			]);
+			var result = currencyMap.get(str);
+			if (!result) result = str;
+
+			return result;
 		}
 	}]);
 
