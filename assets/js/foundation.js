@@ -4288,9 +4288,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
     .service('FoundationAdapter', FoundationAdapter)
     .factory('Utils', Utils)
     .run(Setup);
-  ;
-
-  FoundationApi.$inject = ['FoundationAnimation'];
+	FoundationApi.$inject = ['FoundationAnimation'];
 
   function FoundationApi(FoundationAnimation) {
     var listeners  = {};
@@ -4338,7 +4336,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
         cb(msg);
       });
 
-      return;
+
     }
 
     function getSettings() {
@@ -4510,7 +4508,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
 
         if (fromState.animation) {
           if (!fromState.animation.leave && !toState.animation.leave) {
-            return;
+
           }
           else {
              animationRouter(event, toState, fromState);
@@ -4859,7 +4857,7 @@ var duScrollDefaultEasing=function(e){"use strict";return.5>e?Math.pow(2*e,2)/2:
         head.append('<meta class="' + classArray[i] + '" />');
       }
 
-      return;
+
     }
 
     function getStyle(selector, styleName) {
@@ -5339,7 +5337,7 @@ angular.module('markdown', [])
 
     controller.deregisterListener = function() {
       document.body.removeEventListener('click', listenerLogic);
-    }
+    };
 
     function listenerLogic(e) {
       var el = e.target;
@@ -5357,8 +5355,8 @@ angular.module('markdown', [])
         // if the element has a toggle attribute, do nothing
         if (e.target.attributes['zf-toggle'] || e.target.attributes['zf-hard-toggle']) {
           return;
-        };
-        // if the element is outside the action sheet and is NOT a toggle element, hide
+		}
+		  // if the element is outside the action sheet and is NOT a toggle element, hide
         hide();
       }
     }
@@ -5443,17 +5441,17 @@ angular.module('markdown', [])
 
         scope.toggle = function() {
           scope.active = !scope.active;
-          return;
+
         };
 
         scope.hide = function() {
           scope.active = false;
-          return;
+
         };
 
         scope.show = function() {
           scope.active = true;
-          return;
+
         };
       }
     }
@@ -5489,19 +5487,19 @@ angular.module('markdown', [])
           controller.deregisterListener();
         }
 
-        return;
+
       };
 
       scope.hide = function() {
         scope.active = false;
         controller.deregisterListener();
-        return;
+
       };
 
       scope.show = function() {
         scope.active = true;
         controller.registerListener();
-        return;
+
       };
     }
   }
@@ -5519,7 +5517,7 @@ angular.module('markdown', [])
         title: '@?'
       },
       link: link
-    }
+    };
 
     return directive;
 
@@ -5610,7 +5608,7 @@ angular.module('markdown', [])
     var directive = {
       restrict: 'A',
       link: link
-    }
+    };
 
     return directive;
 
@@ -5734,7 +5732,7 @@ angular.module('markdown', [])
             foundationApi.publish(activeElements[0].id, 'close');
           }
         }
-        return;
+
       });
     }
     /** special thanks to Chris Ferdinandi for this solution.
@@ -6361,7 +6359,7 @@ angular.module('markdown', [])
         scope.hide = function() {
           scope.active = false;
           animate();
-          return;
+
         };
 
         scope.show = function() {
@@ -6369,13 +6367,13 @@ angular.module('markdown', [])
           animate();
           dialog.tabIndex = -1;
           dialog[0].focus();
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animate();
-          return;
+
         };
 
         init();
@@ -6394,7 +6392,7 @@ angular.module('markdown', [])
             scope.$apply();
           }
 
-          return;
+
         });
 
         function animate() {
@@ -6773,9 +6771,8 @@ angular.module('markdown', [])
               scope.hide();
             }
           }, parseInt(scope.autoclose));
-        };
-
-        // close on swipe
+		}
+		  // close on swipe
         if (typeof(Hammer) !== 'undefined') {
           hammerElem = new Hammer(element[0]);
           // set the options for swipe (to make them a bit more forgiving in detection)
@@ -6849,8 +6846,8 @@ angular.module('markdown', [])
                   scope.hide();
                 }
               }, parseInt(scope.autoclose));
-            };
-          } else if (msg == 'close' || msg == 'hide') {
+			}
+		  } else if (msg == 'close' || msg == 'hide') {
             scope.hide();
           } else if (msg == 'toggle') {
             scope.toggle();
@@ -6863,25 +6860,25 @@ angular.module('markdown', [])
               }, parseInt(scope.autoclose));
             }
           }
-          return;
+
         });
 
         scope.hide = function() {
           scope.active = false;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
         scope.show = function() {
           scope.active = true;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animateFn(element, scope.active, animationIn, animationOut);
-          return;
+
         };
 
       }
@@ -7107,22 +7104,22 @@ angular.module('markdown', [])
             scope.$apply();
           }
 
-          return;
+
         });
 
         scope.hide = function() {
           scope.active = false;
-          return;
+
         };
 
         scope.show = function() {
           scope.active = true;
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
-          return;
+
         };
       }
     }
@@ -7251,7 +7248,7 @@ angular.module('markdown', [])
             scope.$apply();
           }
 
-          return;
+
         });
 
         // function finish(el)
@@ -7262,7 +7259,7 @@ angular.module('markdown', [])
             animate(element, scope.active, animationIn, animationOut);
           }
 
-          return;
+
         };
 
         scope.show = function() {
@@ -7271,14 +7268,14 @@ angular.module('markdown', [])
             animate(element, scope.active, animationIn, animationOut);
           }
 
-          return;
+
         };
 
         scope.toggle = function() {
           scope.active = !scope.active;
           animate(element, scope.active, animationIn, animationOut);
 
-          return;
+
         };
 
         element.on('click', function(e) {
@@ -7380,7 +7377,7 @@ angular.module('markdown', [])
 
           scope.$apply();
 
-          return;
+
         });
 
 
@@ -7388,7 +7385,7 @@ angular.module('markdown', [])
           scope.active = false;
           tetherElement();
           tether.disable();
-          return;
+
         };
 
         scope.show = function(newTarget) {
@@ -7396,7 +7393,7 @@ angular.module('markdown', [])
           tetherElement(newTarget);
           tether.enable();
 
-          return;
+
         };
 
         scope.toggle = function(newTarget) {
@@ -7409,7 +7406,7 @@ angular.module('markdown', [])
             tether.disable();
           }
 
-          return;
+
         };
 
         function tetherElement(target) {
@@ -7681,7 +7678,7 @@ angular.module('markdown', [])
       restrict: 'A',
       replace: false,
       link: link
-    }
+    };
 
     return directive;
 

@@ -6837,57 +6837,65 @@ img.gitter-badge {
     background-size: 30px;
     padding-right: 35px;
     background: url("../img/currency_icons.png") no-repeat; }
-    .search-results .requirements span.currency.Unknown, .search-results .sell-infos span.currency.Unknown, #showItemModal .requirements span.currency.Unknown, #showItemModal .sell-infos span.currency.Unknown, .panel .requirements span.currency.Unknown, .panel .sell-infos span.currency.Unknown {
+    .search-results .requirements span.currency.unknown, .search-results .sell-infos span.currency.unknown, #showItemModal .requirements span.currency.unknown, #showItemModal .sell-infos span.currency.unknown, .panel .requirements span.currency.unknown, .panel .sell-infos span.currency.unknown {
       background-position: right -750px; }
-    .search-results .requirements span.currency.Regal, .search-results .sell-infos span.currency.Regal, #showItemModal .requirements span.currency.Regal, #showItemModal .sell-infos span.currency.Regal, .panel .requirements span.currency.Regal, .panel .sell-infos span.currency.Regal {
+    .search-results .requirements span.currency.regal, .search-results .sell-infos span.currency.regal, #showItemModal .requirements span.currency.regal, #showItemModal .sell-infos span.currency.regal, .panel .requirements span.currency.regal, .panel .sell-infos span.currency.regal {
       background-position: right 0; }
-    .search-results .requirements span.currency.Augmentation, .search-results .sell-infos span.currency.Augmentation, #showItemModal .requirements span.currency.Augmentation, #showItemModal .sell-infos span.currency.Augmentation, .panel .requirements span.currency.Augmentation, .panel .sell-infos span.currency.Augmentation {
+    .search-results .requirements span.currency.augmentation, .search-results .sell-infos span.currency.augmentation, #showItemModal .requirements span.currency.augmentation, #showItemModal .sell-infos span.currency.augmentation, .panel .requirements span.currency.augmentation, .panel .sell-infos span.currency.augmentation {
       background-position: right -30px; }
-    .search-results .requirements span.currency.Wisdom, .search-results .sell-infos span.currency.Wisdom, #showItemModal .requirements span.currency.Wisdom, #showItemModal .sell-infos span.currency.Wisdom, .panel .requirements span.currency.Wisdom, .panel .sell-infos span.currency.Wisdom {
+    .search-results .requirements span.currency.aug, .search-results .sell-infos span.currency.aug, #showItemModal .requirements span.currency.aug, #showItemModal .sell-infos span.currency.aug, .panel .requirements span.currency.aug, .panel .sell-infos span.currency.aug {
+      background-position: right -30px; }
+    .search-results .requirements span.currency.wisdom, .search-results .sell-infos span.currency.wisdom, #showItemModal .requirements span.currency.wisdom, #showItemModal .sell-infos span.currency.wisdom, .panel .requirements span.currency.wisdom, .panel .sell-infos span.currency.wisdom {
       background-position: right -60px; }
-    .search-results .requirements span.currency.Portal, .search-results .sell-infos span.currency.Portal, #showItemModal .requirements span.currency.Portal, #showItemModal .sell-infos span.currency.Portal, .panel .requirements span.currency.Portal, .panel .sell-infos span.currency.Portal {
+    .search-results .requirements span.currency.portal, .search-results .sell-infos span.currency.portal, #showItemModal .requirements span.currency.portal, #showItemModal .sell-infos span.currency.portal, .panel .requirements span.currency.portal, .panel .sell-infos span.currency.portal {
       background-position: right -90px; }
-    .search-results .requirements span.currency.Alchemy, .search-results .sell-infos span.currency.Alchemy, #showItemModal .requirements span.currency.Alchemy, #showItemModal .sell-infos span.currency.Alchemy, .panel .requirements span.currency.Alchemy, .panel .sell-infos span.currency.Alchemy {
+    .search-results .requirements span.currency.alchemy, .search-results .sell-infos span.currency.alchemy, #showItemModal .requirements span.currency.alchemy, #showItemModal .sell-infos span.currency.alchemy, .panel .requirements span.currency.alchemy, .panel .sell-infos span.currency.alchemy {
       background-position: right -120px; }
-    .search-results .requirements span.currency.Mirror, .search-results .sell-infos span.currency.Mirror, #showItemModal .requirements span.currency.Mirror, #showItemModal .sell-infos span.currency.Mirror, .panel .requirements span.currency.Mirror, .panel .sell-infos span.currency.Mirror {
+    .search-results .requirements span.currency.mirror, .search-results .sell-infos span.currency.mirror, #showItemModal .requirements span.currency.mirror, #showItemModal .sell-infos span.currency.mirror, .panel .requirements span.currency.mirror, .panel .sell-infos span.currency.mirror {
       background-position: right -150px; }
-    .search-results .requirements span.currency.Blessed, .search-results .sell-infos span.currency.Blessed, #showItemModal .requirements span.currency.Blessed, #showItemModal .sell-infos span.currency.Blessed, .panel .requirements span.currency.Blessed, .panel .sell-infos span.currency.Blessed {
+    .search-results .requirements span.currency.blessed, .search-results .sell-infos span.currency.blessed, #showItemModal .requirements span.currency.blessed, #showItemModal .sell-infos span.currency.blessed, .panel .requirements span.currency.blessed, .panel .sell-infos span.currency.blessed {
       background-position: right -180px; }
-    .search-results .requirements span.currency.Whetstone, .search-results .sell-infos span.currency.Whetstone, #showItemModal .requirements span.currency.Whetstone, #showItemModal .sell-infos span.currency.Whetstone, .panel .requirements span.currency.Whetstone, .panel .sell-infos span.currency.Whetstone {
+    .search-results .requirements span.currency.whetstone, .search-results .sell-infos span.currency.whetstone, #showItemModal .requirements span.currency.whetstone, #showItemModal .sell-infos span.currency.whetstone, .panel .requirements span.currency.whetstone, .panel .sell-infos span.currency.whetstone {
       background-position: right -210px; }
-    .search-results .requirements span.currency.Scrap, .search-results .sell-infos span.currency.Scrap, #showItemModal .requirements span.currency.Scrap, #showItemModal .sell-infos span.currency.Scrap, .panel .requirements span.currency.Scrap, .panel .sell-infos span.currency.Scrap {
+    .search-results .requirements span.currency.scrap, .search-results .sell-infos span.currency.scrap, #showItemModal .requirements span.currency.scrap, #showItemModal .sell-infos span.currency.scrap, .panel .requirements span.currency.scrap, .panel .sell-infos span.currency.scrap {
       background-position: right -240px; }
-    .search-results .requirements span.currency.Vaal, .search-results .sell-infos span.currency.Vaal, #showItemModal .requirements span.currency.Vaal, #showItemModal .sell-infos span.currency.Vaal, .panel .requirements span.currency.Vaal, .panel .sell-infos span.currency.Vaal {
+    .search-results .requirements span.currency.vaal, .search-results .sell-infos span.currency.vaal, #showItemModal .requirements span.currency.vaal, #showItemModal .sell-infos span.currency.vaal, .panel .requirements span.currency.vaal, .panel .sell-infos span.currency.vaal {
       background-position: right -270px; }
-    .search-results .requirements span.currency.Bauble, .search-results .sell-infos span.currency.Bauble, #showItemModal .requirements span.currency.Bauble, #showItemModal .sell-infos span.currency.Bauble, .panel .requirements span.currency.Bauble, .panel .sell-infos span.currency.Bauble {
+    .search-results .requirements span.currency.bauble, .search-results .sell-infos span.currency.bauble, #showItemModal .requirements span.currency.bauble, #showItemModal .sell-infos span.currency.bauble, .panel .requirements span.currency.bauble, .panel .sell-infos span.currency.bauble {
       background-position: right -300px; }
-    .search-results .requirements span.currency.Chaos, .search-results .sell-infos span.currency.Chaos, #showItemModal .requirements span.currency.Chaos, #showItemModal .sell-infos span.currency.Chaos, .panel .requirements span.currency.Chaos, .panel .sell-infos span.currency.Chaos {
+    .search-results .requirements span.currency.chaos, .search-results .sell-infos span.currency.chaos, #showItemModal .requirements span.currency.chaos, #showItemModal .sell-infos span.currency.chaos, .panel .requirements span.currency.chaos, .panel .sell-infos span.currency.chaos {
       background-position: right -330px; }
-    .search-results .requirements span.currency.Chisel, .search-results .sell-infos span.currency.Chisel, #showItemModal .requirements span.currency.Chisel, #showItemModal .sell-infos span.currency.Chisel, .panel .requirements span.currency.Chisel, .panel .sell-infos span.currency.Chisel {
+    .search-results .requirements span.currency.chisel, .search-results .sell-infos span.currency.chisel, #showItemModal .requirements span.currency.chisel, #showItemModal .sell-infos span.currency.chisel, .panel .requirements span.currency.chisel, .panel .sell-infos span.currency.chisel {
       background-position: right -360px; }
-    .search-results .requirements span.currency.Chromatic, .search-results .sell-infos span.currency.Chromatic, #showItemModal .requirements span.currency.Chromatic, #showItemModal .sell-infos span.currency.Chromatic, .panel .requirements span.currency.Chromatic, .panel .sell-infos span.currency.Chromatic {
+    .search-results .requirements span.currency.chromatic, .search-results .sell-infos span.currency.chromatic, #showItemModal .requirements span.currency.chromatic, #showItemModal .sell-infos span.currency.chromatic, .panel .requirements span.currency.chromatic, .panel .sell-infos span.currency.chromatic {
       background-position: right -390px; }
-    .search-results .requirements span.currency.Divine, .search-results .sell-infos span.currency.Divine, #showItemModal .requirements span.currency.Divine, #showItemModal .sell-infos span.currency.Divine, .panel .requirements span.currency.Divine, .panel .sell-infos span.currency.Divine {
+    .search-results .requirements span.currency.divine, .search-results .sell-infos span.currency.divine, #showItemModal .requirements span.currency.divine, #showItemModal .sell-infos span.currency.divine, .panel .requirements span.currency.divine, .panel .sell-infos span.currency.divine {
       background-position: right -420px; }
-    .search-results .requirements span.currency.Exalted, .search-results .sell-infos span.currency.Exalted, #showItemModal .requirements span.currency.Exalted, #showItemModal .sell-infos span.currency.Exalted, .panel .requirements span.currency.Exalted, .panel .sell-infos span.currency.Exalted {
+    .search-results .requirements span.currency.exalted, .search-results .sell-infos span.currency.exalted, #showItemModal .requirements span.currency.exalted, #showItemModal .sell-infos span.currency.exalted, .panel .requirements span.currency.exalted, .panel .sell-infos span.currency.exalted {
       background-position: right -450px; }
-    .search-results .requirements span.currency.Transmutation, .search-results .sell-infos span.currency.Transmutation, #showItemModal .requirements span.currency.Transmutation, #showItemModal .sell-infos span.currency.Transmutation, .panel .requirements span.currency.Transmutation, .panel .sell-infos span.currency.Transmutation {
+    .search-results .requirements span.currency.transmutation, .search-results .sell-infos span.currency.transmutation, #showItemModal .requirements span.currency.transmutation, #showItemModal .sell-infos span.currency.transmutation, .panel .requirements span.currency.transmutation, .panel .sell-infos span.currency.transmutation {
       background-position: right -480px; }
-    .search-results .requirements span.currency.Scouring, .search-results .sell-infos span.currency.Scouring, #showItemModal .requirements span.currency.Scouring, #showItemModal .sell-infos span.currency.Scouring, .panel .requirements span.currency.Scouring, .panel .sell-infos span.currency.Scouring {
+    .search-results .requirements span.currency.scouring, .search-results .sell-infos span.currency.scouring, #showItemModal .requirements span.currency.scouring, #showItemModal .sell-infos span.currency.scouring, .panel .requirements span.currency.scouring, .panel .sell-infos span.currency.scouring {
       background-position: right -510px; }
-    .search-results .requirements span.currency.Regret, .search-results .sell-infos span.currency.Regret, #showItemModal .requirements span.currency.Regret, #showItemModal .sell-infos span.currency.Regret, .panel .requirements span.currency.Regret, .panel .sell-infos span.currency.Regret {
+    .search-results .requirements span.currency.regret, .search-results .sell-infos span.currency.regret, #showItemModal .requirements span.currency.regret, #showItemModal .sell-infos span.currency.regret, .panel .requirements span.currency.regret, .panel .sell-infos span.currency.regret {
       background-position: right -540px; }
-    .search-results .requirements span.currency.Fusing, .search-results .sell-infos span.currency.Fusing, #showItemModal .requirements span.currency.Fusing, #showItemModal .sell-infos span.currency.Fusing, .panel .requirements span.currency.Fusing, .panel .sell-infos span.currency.Fusing {
+    .search-results .requirements span.currency.fusing, .search-results .sell-infos span.currency.fusing, #showItemModal .requirements span.currency.fusing, #showItemModal .sell-infos span.currency.fusing, .panel .requirements span.currency.fusing, .panel .sell-infos span.currency.fusing {
       background-position: right -570px; }
-    .search-results .requirements span.currency.Prism, .search-results .sell-infos span.currency.Prism, #showItemModal .requirements span.currency.Prism, #showItemModal .sell-infos span.currency.Prism, .panel .requirements span.currency.Prism, .panel .sell-infos span.currency.Prism {
+    .search-results .requirements span.currency.prism, .search-results .sell-infos span.currency.prism, #showItemModal .requirements span.currency.prism, #showItemModal .sell-infos span.currency.prism, .panel .requirements span.currency.prism, .panel .sell-infos span.currency.prism {
       background-position: right -600px; }
-    .search-results .requirements span.currency.Jewellers, .search-results .sell-infos span.currency.Jewellers, #showItemModal .requirements span.currency.Jewellers, #showItemModal .sell-infos span.currency.Jewellers, .panel .requirements span.currency.Jewellers, .panel .sell-infos span.currency.Jewellers {
+    .search-results .requirements span.currency.jewellers, .search-results .sell-infos span.currency.jewellers, #showItemModal .requirements span.currency.jewellers, #showItemModal .sell-infos span.currency.jewellers, .panel .requirements span.currency.jewellers, .panel .sell-infos span.currency.jewellers {
       background-position: right -630px; }
-    .search-results .requirements span.currency.Alteration, .search-results .sell-infos span.currency.Alteration, #showItemModal .requirements span.currency.Alteration, #showItemModal .sell-infos span.currency.Alteration, .panel .requirements span.currency.Alteration, .panel .sell-infos span.currency.Alteration {
+    .search-results .requirements span.currency.jeweller, .search-results .sell-infos span.currency.jeweller, #showItemModal .requirements span.currency.jeweller, #showItemModal .sell-infos span.currency.jeweller, .panel .requirements span.currency.jeweller, .panel .sell-infos span.currency.jeweller {
+      background-position: right -630px; }
+    .search-results .requirements span.currency.alteration, .search-results .sell-infos span.currency.alteration, #showItemModal .requirements span.currency.alteration, #showItemModal .sell-infos span.currency.alteration, .panel .requirements span.currency.alteration, .panel .sell-infos span.currency.alteration {
       background-position: right -660px; }
-    .search-results .requirements span.currency.Chance, .search-results .sell-infos span.currency.Chance, #showItemModal .requirements span.currency.Chance, #showItemModal .sell-infos span.currency.Chance, .panel .requirements span.currency.Chance, .panel .sell-infos span.currency.Chance {
+    .search-results .requirements span.currency.chance, .search-results .sell-infos span.currency.chance, #showItemModal .requirements span.currency.chance, #showItemModal .sell-infos span.currency.chance, .panel .requirements span.currency.chance, .panel .sell-infos span.currency.chance {
       background-position: right -690px; }
-    .search-results .requirements span.currency.Coins, .search-results .sell-infos span.currency.Coins, #showItemModal .requirements span.currency.Coins, #showItemModal .sell-infos span.currency.Coins, .panel .requirements span.currency.Coins, .panel .sell-infos span.currency.Coins {
+    .search-results .requirements span.currency.coins, .search-results .sell-infos span.currency.coins, #showItemModal .requirements span.currency.coins, #showItemModal .sell-infos span.currency.coins, .panel .requirements span.currency.coins, .panel .sell-infos span.currency.coins {
+      background-position: right -720px; }
+    .search-results .requirements span.currency.pc, .search-results .sell-infos span.currency.pc, #showItemModal .requirements span.currency.pc, #showItemModal .sell-infos span.currency.pc, .panel .requirements span.currency.pc, .panel .sell-infos span.currency.pc {
+      background-position: right -720px; }
+    .search-results .requirements span.currency.per, .search-results .sell-infos span.currency.per, #showItemModal .requirements span.currency.per, #showItemModal .sell-infos span.currency.per, .panel .requirements span.currency.per, .panel .sell-infos span.currency.per {
       background-position: right -720px; }
 
 .search-results .requirements span, #showItemModal .requirements span, .panel .requirements span {
