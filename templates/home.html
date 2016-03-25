@@ -1,5 +1,5 @@
 
-<div id="main" class="grid-container" ng-controller="SearchController" >
+<div id="main" class="grid-container" ng-controller="SearchController" exec-on-scroll-to-bottom="scrollNext()">
 	<!-- Spinner -->
 	<span us-spinner="{radius:30, width:8, length: 16}" spinner-on="showSpinner"></span>
 
@@ -305,7 +305,7 @@
 							<span>Online Players Only</span>
 							<div class="switch small">
 								<input type="checkbox" ng-model="switchOnlinePlayersOnly" id="switch-onlinePlayersOnly"
-									ng-change="stateChanged()">
+									ng-change="toggleOnlinePlayersOnly()">
 								<label for="switch-onlinePlayersOnly"></label>
 							</div>
 						</li>
@@ -341,23 +341,6 @@
 						</li>
 					</ul>
 				</section>
-			</div>
-		</div>
-
-		<div zf-modal="" id="advancedModal" class="collapse">
-			<div class="grid-block vertical">
-				<div class="primary title-bar">
-					<div class="center title">Title Bar</div>
-					<span zf-close="" class="left"><a>Close</a></span>
-					<span zf-close="" class="right"><a>Done</a></span>
-				</div>
-				<div class="grid-content padding" style="padding-top: 1rem;">
-					<p>
-						<img src="assets/img/mountain.jpg">
-					</p>
-					<a zf-close="" class="button">OK</a>
-					<a zf-close="" class="button">Cancel</a>
-				</div>
 			</div>
 		</div>
 
@@ -414,6 +397,7 @@
 				<!-- Inserting templates/directives/item.html -->
 				<div item></div>
 			</div>
+			<div ng-show='isScrollBusy'>Loading data...</div>
 		</div>
 	</div>
 </div>
