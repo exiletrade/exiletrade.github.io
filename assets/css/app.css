@@ -6607,6 +6607,12 @@ img.pageLogo {
 
 .badSearchInputTerms.accordion, .badSearchInputTerms .accordion, .sampleSearches.accordion, .sampleSearches .accordion, .termsGuide.accordion, .termsGuide .accordion, .spoiler.accordion, .spoiler .accordion, .panel.accordion, .panel .accordion {
   border-color: #2b2b2b; }
+  .badSearchInputTerms.accordion.showArrow .accordion-title::after, .badSearchInputTerms .accordion.showArrow .accordion-title::after, .sampleSearches.accordion.showArrow .accordion-title::after, .sampleSearches .accordion.showArrow .accordion-title::after, .termsGuide.accordion.showArrow .accordion-title::after, .termsGuide .accordion.showArrow .accordion-title::after, .spoiler.accordion.showArrow .accordion-title::after, .spoiler .accordion.showArrow .accordion-title::after, .panel.accordion.showArrow .accordion-title::after, .panel .accordion.showArrow .accordion-title::after {
+    content: "▼";
+    float: right;
+    font-size: 10px; }
+  .badSearchInputTerms.accordion.showArrow .is-active > .accordion-title::after, .badSearchInputTerms .accordion.showArrow .is-active > .accordion-title::after, .sampleSearches.accordion.showArrow .is-active > .accordion-title::after, .sampleSearches .accordion.showArrow .is-active > .accordion-title::after, .termsGuide.accordion.showArrow .is-active > .accordion-title::after, .termsGuide .accordion.showArrow .is-active > .accordion-title::after, .spoiler.accordion.showArrow .is-active > .accordion-title::after, .spoiler .accordion.showArrow .is-active > .accordion-title::after, .panel.accordion.showArrow .is-active > .accordion-title::after, .panel .accordion.showArrow .is-active > .accordion-title::after {
+    content: "▲"; }
 
 .badSearchInputTerms .accordion-title, .sampleSearches .accordion-title, .termsGuide .accordion-title, .spoiler .accordion-title, .panel .accordion-title {
   background-color: #2b2b2b;
@@ -6720,6 +6726,47 @@ img.gitter-badge {
   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
   font-weight: 100;
   font-size: 14px; }
+
+.search-results .scrollIndicator, #showItemModal .scrollIndicator, .panel .scrollIndicator {
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  vertical-align: middle; }
+  .search-results .scrollIndicator p, #showItemModal .scrollIndicator p, .panel .scrollIndicator p {
+    margin-top: 25px;
+    font-weight: 700; }
+  .search-results .scrollIndicator .loading span, #showItemModal .scrollIndicator .loading span, .panel .scrollIndicator .loading span {
+    font-weight: 700;
+    -webkit-animation-name: blink;
+            animation-name: blink;
+    -webkit-animation-duration: 1.4s;
+            animation-duration: 1.4s;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-fill-mode: both;
+            animation-fill-mode: both; }
+  .search-results .scrollIndicator .loading span:nth-child(2), #showItemModal .scrollIndicator .loading span:nth-child(2), .panel .scrollIndicator .loading span:nth-child(2) {
+    -webkit-animation-delay: .2s;
+            animation-delay: .2s; }
+  .search-results .scrollIndicator .loading span:nth-child(3), #showItemModal .scrollIndicator .loading span:nth-child(3), .panel .scrollIndicator .loading span:nth-child(3) {
+    -webkit-animation-delay: .4s;
+            animation-delay: .4s; }
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: .2; }
+  20% {
+    opacity: 1; }
+  100% {
+    opacity: .2; } }
+
+@keyframes blink {
+  0% {
+    opacity: .2; }
+  20% {
+    opacity: 1; }
+  100% {
+    opacity: .2; } }
 
 .search-results .item, #showItemModal .item, .panel .item {
   min-width: 600px;

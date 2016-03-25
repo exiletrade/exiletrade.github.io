@@ -18479,7 +18479,10 @@ function parseSearchInputTokens(input, rerun) {
 		badTokens = correction['unCorrectable'];
 		queryString += " " + correction['corrected'].join(" ");
 	}
-	ga('send', 'event', 'Search', 'Bad Tokens', badTokens);
+	
+	if(badTokens.length > 0) {
+		ga('send', 'event', 'Search', 'Bad Tokens', badTokens);
+	}
 	return {'queryString': queryString, 'badTokens': badTokens};
 }
 
@@ -18820,7 +18823,7 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
 		$scope.elasticJsonRequest = "";
-		$scope.switchOnlinePlayersOnly = true;
+		//$scope.options.switchOnlinePlayersOnly = true;
 		$scope.showSpinner = false;
 		$scope.disableScroll = true;
 		$scope.isScrollBusy = false;
@@ -18857,16 +18860,16 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			"verificationSelect": {
 				"type": "select",
 				"name": "Verified",
-				"value": 'Status: New',
-				"options": ["Status: New", "Status: All", "Status: Gone"]
+				"value": 'Status: Verified',
+				"options": ["Status: Verified", "Status: Gone", "Status: Either"]
 			},
-			"searchPrefixInputs": []
+			"searchPrefixInputs": [],
+			"switchOnlinePlayersOnly" : true
 		};
 
 		if ($scope.loadedOptions) checkDefaultOptions();
 
 		function checkDefaultOptions() {
-
 			if (typeof $scope.loadedOptions.leagueSelect !== 'undefined') {
 				$scope.options.leagueSelect.value = $scope.loadedOptions.leagueSelect.value;
 			}
@@ -18878,6 +18881,18 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			}
 			if (typeof $scope.loadedOptions.searchPrefixInputs !== 'undefined' && $scope.loadedOptions.searchPrefixInputs !== null) {
 				$scope.options.searchPrefixInputs = $scope.loadedOptions.searchPrefixInputs;
+			}
+			if (typeof $scope.loadedOptions.switchPseudoMods !== 'undefined' && $scope.loadedOptions.switchPseudoMods !== null) {
+				$scope.options.switchPseudoMods = $scope.loadedOptions.switchPseudoMods;
+			}
+			if (typeof $scope.loadedOptions.switchItemsPerRow !== 'undefined' && $scope.loadedOptions.switchItemsPerRow !== null) {
+				$scope.options.switchItemsPerRow = $scope.loadedOptions.switchItemsPerRow;
+			}
+			if (typeof $scope.loadedOptions.showAdvancedStats !== 'undefined' && $scope.loadedOptions.showAdvancedStats !== null) {
+				$scope.options.showAdvancedStats = $scope.loadedOptions.showAdvancedStats;
+			}
+			if (typeof $scope.loadedOptions.switchOnlinePlayersOnly !== 'undefined' && $scope.loadedOptions.switchOnlinePlayersOnly !== null) {
+				$scope.options.switchOnlinePlayersOnly = $scope.loadedOptions.switchOnlinePlayersOnly;
 			}
 		}
 
@@ -18896,10 +18911,13 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 					break;
 			}
 			switch (options['verificationSelect']['value']) {
+				case "Status: Verified":
+					searchPrefix += " new";
+					break;
 				case "Status: New":
 					searchPrefix += " new";
 					break;
-				case "Status: All":
+				case "Status: Either":
 					searchPrefix += "";
 					break;
 				case "Status: Gone":
@@ -18959,10 +18977,6 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			debugOutput('stateChanged', 'log');
 		};
 
-		$scope.toggleOnlinePlayersOnly = function () {
-			$scope.switchOnlinePlayersOnly = !$scope.switchOnlinePlayersOnly;
-		};
-
 		/*
 		 Runs the current searchInput with a custom sort
 		 */
@@ -18982,7 +18996,7 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 		 - http://stackoverflow.com/questions/20607313/angularjs-promise-with-recursive-function
 		 */
 		function doActualSearch(searchInput, limit, sortKey, sortOrder) {
-			debugOutput("$scope.switchOnlinePlayersOnly = " + $scope.switchOnlinePlayersOnly, 'info');
+			debugOutput("$scope.options.switchOnlinePlayersOnly = " + $scope.options.switchOnlinePlayersOnly, 'info');
 			$scope.Response = null;
 			$scope.disableScroll = true;
 			$scope.showSpinner = true;
@@ -19027,7 +19041,7 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 			$scope.disableScroll = true;
 			var actualSearchDuration = 0;
 			var limit = 20;
-			var fetchSize = $scope.switchOnlinePlayersOnly ? 50 : limit;
+			var fetchSize = $scope.options.switchOnlinePlayersOnly ? 50 : limit;
 			function fetch() {
 				doElasticSearch($scope.searchQuery, $scope.from, fetchSize, $scope.sortKey, $scope.sortOrder)
 					.then(function (response) {
@@ -19035,10 +19049,10 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 
 						var hitsItems = response.hits.hits.map(function(value) { return value._source; });
 						playerOnlineService.addCustomFieldLadderData($scope.options.leagueSelect.value, hitsItems).then(function () {
-							var accountNamesFilter = $scope.switchOnlinePlayersOnly ? $scope.onlinePlayers : [];
+							var accountNamesFilter = $scope.options.switchOnlinePlayersOnly ? $scope.onlinePlayers : [];
 							response.hits.hits = response.hits.hits.filter(function (item) {
 								var onlineInTheRiver = accountNamesFilter.indexOf(item._source.shop.sellerAccount) != -1;
-								return item._source.isOnline || onlineInTheRiver || !$scope.switchOnlinePlayersOnly;
+								return item._source.isOnline || onlineInTheRiver || !$scope.options.switchOnlinePlayersOnly;
 							});
 
 							$.each(response.hits.hits, function (index, value) {
@@ -19567,12 +19581,15 @@ function buildListOfOnlinePlayers(onlineplayersStash) {
 
 			var currencyMap = new Map([
 				["unknown shekel", "coins"],
+				["unknown shekels", "coins"],
 				["unknown pc", "coins"],
 				["unknown p", "coins"],
 				["unknown perandus", "coins"],
 				["unknown perandus coin", "coins"],
 				["unknown perandus coins", "coins"],
 				["unknown peranduscoins", "coins"],
+				["unknown pcoins", "coins"],
+				["unknown pcoin", "coins"],
 				["unknown per", "coins"],
 				["unknown exa", "exalted"],
 				["unknown fuse", "fusing"],
