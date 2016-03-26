@@ -6505,11 +6505,40 @@ blockquote p {
 .float-none {
   float: none; }
 
+/* A font by Jos Buivenga (exljbris) -> www.exljbris.com */
+@font-face {
+  font-family: 'fontinregular';
+  src: url("/font/fontin-regular-webfont.eot");
+  src: url("/font/fontin-regular-webfont.eot?#iefix") format("embedded-opentype"), url("/font/fontin-regular-webfont.woff2") format("woff2"), url("/font/fontin-regular-webfont.woff") format("woff"), url("/font/fontin-regular-webfont.ttf") format("truetype"), url("/font/fontin-regular-webfont.svg#fontinregular") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'fontinbold';
+  src: url("/font/fontin-bold-webfont.eot");
+  src: url("/font/fontin-bold-webfont.eot?#iefix") format("embedded-opentype"), url("/font/fontin-bold-webfont.woff2") format("woff2"), url("/font/fontin-bold-webfont.woff") format("woff"), url("/font/fontin-bold-webfont.ttf") format("truetype"), url("/font/fontin-bold-webfont.svg#fontinbold") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'fontinitalic';
+  src: url("/font/fontin-italic-webfont.eot");
+  src: url("/font/fontin-italic-webfont.eot?#iefix") format("embedded-opentype"), url("/font/fontin-italic-webfont.woff2") format("woff2"), url("/font/fontin-italic-webfont.woff") format("woff"), url("/font/fontin-italic-webfont.ttf") format("truetype"), url("/font/fontin-italic-webfont.svg#fontinitalic") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'fontin_smallcapssmallcaps';
+  src: url("/font/fontin-smallcaps-webfont.eot");
+  src: url("/font/fontin-smallcaps-webfont.eot?#iefix") format("embedded-opentype"), url("/font/fontin-smallcaps-webfont.woff2") format("woff2"), url("/font/fontin-smallcaps-webfont.woff") format("woff"), url("/font/fontin-smallcaps-webfont.ttf") format("truetype"), url("/font/fontin-smallcaps-webfont.svg#fontin_smallcapssmallcaps") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
 a {
-  color: #FFFCFC; }
+  color: #AAA9A9; }
 
 a:hover, a:focus {
-  color: #FFFCFC; }
+  color: #AAA9A9; }
 
 li {
   list-style-type: none; }
@@ -6618,7 +6647,7 @@ img.pageLogo {
     background-color: #262626; }
 
 .badSearchInputTerms ul, .badSearchInputTerms ol, .sampleSearches ul, .sampleSearches ol, .termsGuide ul, .termsGuide ol, .spoiler ul, .spoiler ol, .panel ul, .panel ol {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   margin-bottom: 0px; }
 
 .badSearchInputTerms p, .sampleSearches p, .termsGuide p, .spoiler p, .panel p {
@@ -6628,7 +6657,7 @@ img.pageLogo {
 .badSearchInputTerms code, .sampleSearches code, .termsGuide code, .spoiler code, .panel code {
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
-  color: #FFFCFC;
+  color: #AAA9A9;
   padding: 0; }
 
 .sampleSearches a {
@@ -7070,7 +7099,7 @@ img.gitter-badge {
   color: #cccc00; }
 
 .search-results a.mod-chaos-res, .search-results a.mod-chaos-dmg, #showItemModal a.mod-chaos-res, #showItemModal a.mod-chaos-dmg, .panel a.mod-chaos-res, .panel a.mod-chaos-dmg {
-  color: #d02090; }
+  color: #FF2DB3; }
 
 .search-results a.mod-life, #showItemModal a.mod-life, .panel a.mod-life {
   color: #F04124; }
@@ -7104,18 +7133,18 @@ img.gitter-badge {
   .panel .block-list li > a, .panel .block-list li > span, .panel .block-list li > label {
     font-size: 0.75rem; }
   .panel .block-list header {
-    color: #FFFCFC; }
+    color: #AAA9A9; }
   .panel .block-list input {
     background-color: rgba(0, 0, 0, 0.1); }
     .panel .block-list input:focus {
-      color: #FFFCFC; }
+      color: #AAA9A9; }
   .panel .block-list li {
     border-bottom: 1px solid #646464; }
   .panel .block-list li > a:hover, .panel .block-list li > label:hover, .panel .block-list li select:hover {
     background-color: #646464; }
   .panel .button.hollow {
     background-color: #646464;
-    color: #FFFCFC; }
+    color: #AAA9A9; }
     .panel .button.hollow:hover, .panel .button.hollow:focus {
       background: transparent; }
   .panel .search-options {
