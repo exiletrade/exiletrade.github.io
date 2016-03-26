@@ -18889,6 +18889,10 @@ function indexerLeagueToLadder(league) {
 		$scope.savedItemsList = JSON.parse(localStorage.getItem("savedItems"));
 		$scope.loadedOptions = JSON.parse(localStorage.getItem("savedOptions"));
 		$scope.lastRequestedSavedItem = {};
+		$scope.audioPath = './assets/sound/';
+		$scope.audioAlerts = [
+			'Tinkle-Lisa_Redfern-1916445296.mp3'
+		];
 
 		$scope.options = {
 			"leagueSelect": {
@@ -18919,11 +18923,10 @@ function indexerLeagueToLadder(league) {
 			if ($scope.savedAutomatedSearches && $scope.savedAutomatedSearches.length > 0) {
 				debugOutput('Gonna run counts on automated searches: ' + $scope.savedAutomatedSearches.length, 'trace');
 				var countPromises = $scope.savedAutomatedSearches.map(function (search) {
-					var finalSearchInput = buildSearchInputWithPrefixTerms(search.searchInput)
-					var parseResult = parseSearchInput($scope.termsMap, finalSearchInput);
+					var queryString = buildQueryString(search.searchInput);
 					var promise = es.count({
 					  index: 'index',
-					  body: buildEsBody(parseResult.queryString),
+					  body: buildEsBody(queryString),
 					  size: 0
 					}).then(function (response) {
 						var count = response.count;
@@ -18938,7 +18941,7 @@ function indexerLeagueToLadder(league) {
 					var total = results
 						.reduce(function (a, b) { return a + b; });
 					if (total > 0) {
-						var snd = new Audio("./assets/sound/Tinkle-Lisa_Redfern-1916445296.mp3"); // buffers automatically when created
+						var snd = new Audio($scope.audioPath+$scope.audioAlerts[0]); // buffers automatically when created
 						snd.play();
 					}
 				});
@@ -18949,7 +18952,7 @@ function indexerLeagueToLadder(league) {
 
 		$scope.playTestSound = function () {
 			console.log('play');
-			var snd = new Audio("./assets/sound/Tinkle-Lisa_Redfern-1916445296.mp3"); // buffers automatically when created
+			var snd = new Audio($scope.audioPath+$scope.audioAlerts[0]); // buffers automatically when created
 			snd.play();
 		};
 
@@ -18980,41 +18983,51 @@ function indexerLeagueToLadder(league) {
 			}
 		}
 
-		function createSearchPrefix(options) {
-			var searchPrefix = options['leagueSelect']['value'].replace(" ", "");
-			var buyout = options['buyoutSelect']['value'];
-			switch (buyout) {
-				case "Buyout: Yes":
-					searchPrefix += " bo";
-					break;
-				case "Buyout: No":
-					searchPrefix += " nobo";
-					break;
-				case "Buyout: Either":
-					searchPrefix += "";
-					break;
+		function createSearchPrefix(options, containsLeagueTerm = false, containsBuyoutTerm = false, containsVerifyTerm = false) {
+			var searchPrefix = "";
+			if (!containsLeagueTerm) {
+				searchPrefix = options['leagueSelect']['value'].replace(" ", "");
 			}
-			switch (options['verificationSelect']['value']) {
-				case "Status: Verified":
-					searchPrefix += " new";
-					break;
-				case "Status: New":
-					searchPrefix += " new";
-					break;
-				case "Status: Either":
-					searchPrefix += "";
-					break;
-				case "Status: Gone":
-					searchPrefix += " gone";
-					break;
+			
+			if (!containsBuyoutTerm) {
+				var buyout = options['buyoutSelect']['value'];
+				switch (buyout) {
+					case "Buyout: Yes":
+						searchPrefix += " bo";
+						break;
+					case "Buyout: No":
+						searchPrefix += " nobo";
+						break;
+					case "Buyout: Either":
+						searchPrefix += "";
+						break;
+				}
 			}
+
+			if (!containsVerifyTerm) {
+				switch (options['verificationSelect']['value']) {
+					case "Status: Verified":
+						searchPrefix += " new";
+						break;
+					case "Status: New":
+						searchPrefix += " new";
+						break;
+					case "Status: Either":
+						searchPrefix += "";
+						break;
+					case "Status: Gone":
+						searchPrefix += " gone";
+						break;
+				}
+			}
+
 			options['searchPrefixInputs'].forEach(function (e) {
 				var prefix = e['value'];
 				if (prefix) {
 					searchPrefix += " " + prefix;
 				}
 			});
-			return searchPrefix;
+			return searchPrefix.trim();
 		}
 
 // 		$scope.termsMap = {};
@@ -19086,17 +19099,15 @@ function indexerLeagueToLadder(league) {
 			$scope.showSpinner = true;
 			limit = Number(limit);
 			if (limit > 999) limit = 999; // deny power overwhelming
-			ga('send', 'event', 'Search', 'PreFix', createSearchPrefix($scope.options));
-			var finalSearchInput = buildSearchInputWithPrefixTerms(searchInput);
+			// ga('send', 'event', 'Search', 'PreFix', createSearchPrefix($scope.options));
 			$location.search({'q': searchInput, 'sortKey': sortKey, 'sortOrder': sortOrder, 'limit': limit});
 			$location.replace();
 			debugOutput('changed location to: ' + $location.absUrl(), 'trace');
-			var parseResult = parseSearchInput($scope.termsMap, finalSearchInput);
-			$scope.searchQuery = parseResult.queryString;
-			$scope.badSearchInputTerms = parseResult.badTokens;
+
+			$scope.searchQuery = buildQueryString(searchInput);
 			debugOutput("searchQuery=" + $scope.searchQuery, 'log');
 
-			if (parseResult.badTokens.length > 0) {
+			if ($scope.badSearchInputTerms.length > 0) {
 				$scope.showSpinner = false;
 				return;
 			}
@@ -19110,10 +19121,23 @@ function indexerLeagueToLadder(league) {
 			});
 		}
 
-		function buildSearchInputWithPrefixTerms(searchInput) {
-			var finalSearchInput = searchInput + ' ' + createSearchPrefix($scope.options);
-			finalSearchInput = finalSearchInput.trim();
-			return finalSearchInput;
+		function buildQueryString(searchInput) {
+			var parseResult = parseSearchInput($scope.termsMap, searchInput.trim());
+			$scope.badSearchInputTerms = parseResult.badTokens;
+			var inputQueryString = parseResult.queryString;
+
+			var containsLeagueTerm = inputQueryString.indexOf("attributes.league") != -1;
+			var containsBuyoutTerm = inputQueryString.indexOf("shop.hasPrice") != -1;
+			var containsVerifyTerm = inputQueryString.indexOf("shop.verified") != -1;
+			
+			var prefix = createSearchPrefix($scope.options, containsLeagueTerm, containsBuyoutTerm, containsVerifyTerm);
+			var prefixParseResult = parseSearchInput($scope.termsMap, prefix);
+
+			// // see also https://github.com/exiletrade/exiletrade/issues/63
+			if(inputQueryString.length > 0) inputQueryString = '(' + inputQueryString + ')';
+			// note that elastic will be faster if we put more specific filters first
+			var finalSearchInput = inputQueryString + ' ' + prefixParseResult.queryString;
+			return finalSearchInput.trim();
 		}
 
 		function loadOnlinePlayersIntoScope() {
@@ -19525,17 +19549,17 @@ function indexerLeagueToLadder(league) {
 			var x = item._source.shop.stash.xLocation;
 			var y = item._source.shop.stash.yLocation;
 
-			//removing the "Unknown" tag from currency
-			var n = message.indexOf('Unknown (');
-			if (n > -1 ) {
-				message = message.replace('Unknown ', '');
-			}
-
 			if (message === undefined) {
 				message = '@' + seller + " Hi, I'd like to buy your "
 				+ itemName + ' in ' + league
 				+ ' (Stash-Tab: "' + stashTab + '" [x' + x + ',y' + y + '])'
 				+ ', my offer is : ';
+			} else {
+				//removing the "Unknown" tag from currency
+				var n = message.indexOf('Unknown (');
+				if (n > -1 ) {
+					message = message.replace('Unknown ', '');
+				}
 			}
 			return message;
 		};
