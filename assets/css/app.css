@@ -6552,6 +6552,9 @@ em {
   text-decoration: underline;
   /* Makes underline */ }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit; }
+
 img.pageLogo {
   width: 40px;
   height: 40px;
@@ -6569,7 +6572,13 @@ img.pageLogo {
 
 .label.mirrored {
   padding: 0.13333rem 0.5rem;
-  background-color: grey; }
+  background-color: grey;
+  vertical-align: middle; }
+
+.label.mirrored, .label.corrupted {
+  vertical-align: middle;
+  display: inline-block !important;
+  margin-bottom: 4px; }
 
 .noselect {
   -webkit-touch-callout: none;
@@ -6585,12 +6594,16 @@ img.pageLogo {
   /* non-prefixed version, currently
                                   not supported by any browser */ }
 
+.button.small .iconic, .button .iconic, .button.medium .iconic {
+  margin-top: 0; }
+
 .app-header {
   color: white;
   background-color: #2b2b2b;
   border-bottom: 1px solid #CAC7C7;
   text-align: right;
-  font-size: 0.75rem; }
+  font-size: 0.75rem;
+  height: 30px; }
   .app-header span {
     display: inline-block;
     padding: 2px;
@@ -6599,11 +6612,27 @@ img.pageLogo {
     color: white; }
   .app-header .gitter {
     margin-right: 34px; }
-  .app-header .disclaimer, .app-header .repo {
+    @media only screen and (max-width: 768px) {
+      .app-header .gitter {
+        margin-right: 3px; } }
+  .app-header .disclaimer, .app-header .repo, .app-header .chromeExtension {
     color: white;
     border-color: white;
     padding: 4px;
     margin: 2px; }
+  .app-header .chromeExtension {
+    position: relative;
+    padding-left: 18px; }
+    .app-header .chromeExtension img {
+      position: absolute;
+      width: 14px;
+      top: 2px;
+      left: 2px; }
+  .app-header .button.hollow:hover {
+    color: #DCD7D7; }
+  @media only screen and (max-width: 450px) {
+    .app-header .gitter, .app-header .repo {
+      display: none; } }
 
 .menu-bar h1 {
   font-size: 2.5rem;
@@ -6616,65 +6645,98 @@ img.pageLogo {
 .menu-bar.primary {
   border-bottom: 1px solid #3c3f41; }
 
+@media only screen and (max-width: 768px) {
+  .menu-bar h1 {
+    font-size: 1.5rem;
+    line-height: 3.5rem; }
+  .menu-bar .wip {
+    display: none; } }
+
 .searchField {
   padding: 0 3rem; }
   .searchField hr {
     margin-top: 5px; }
+  .searchField .add-icon {
+    width: 13px;
+    margin-right: 5px; }
+  @media only screen and (max-width: 768px) {
+    .searchField {
+      padding: 0 0.5rem; } }
+  @media only screen and (max-width: 640px) {
+    .searchField div.grid-content {
+      padding: 0; } }
+  @media only screen and (max-width: 480px) {
+    .searchField a.saveSearchNotificationLink .desktop {
+      display: none; } }
 
 #searchField {
   background-color: rgba(0, 0, 0, 0.1);
   color: white;
   border-color: #2b2b2b; }
+  #searchField .button .iconic {
+    width: 13px;
+    height: 13px; }
 
-.badSearchInputTerms .accordion-title, .badSearchInputTerms .accordion-content, .sampleSearches .accordion-title, .sampleSearches .accordion-content, .termsGuide .accordion-title, .termsGuide .accordion-content, .spoiler .accordion-title, .spoiler .accordion-content, .panel .accordion-title, .panel .accordion-content {
+.badSearchInputTerms .accordion-title, .badSearchInputTerms .accordion-content, .sampleSearches .accordion-title, .sampleSearches .accordion-content, .termsGuide .accordion-title, .termsGuide .accordion-content, .spoiler .accordion-title, .spoiler .accordion-content, .panel .accordion-title, .panel .accordion-content, .modal .accordion-title, .modal .accordion-content {
   padding: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   border-color: #2b2b2b; }
 
-.badSearchInputTerms.accordion, .badSearchInputTerms .accordion, .sampleSearches.accordion, .sampleSearches .accordion, .termsGuide.accordion, .termsGuide .accordion, .spoiler.accordion, .spoiler .accordion, .panel.accordion, .panel .accordion {
+.badSearchInputTerms.accordion, .badSearchInputTerms .accordion, .sampleSearches.accordion, .sampleSearches .accordion, .termsGuide.accordion, .termsGuide .accordion, .spoiler.accordion, .spoiler .accordion, .panel.accordion, .panel .accordion, .modal.accordion, .modal .accordion {
   border-color: #2b2b2b; }
-  .badSearchInputTerms.accordion.showArrow .accordion-title::after, .badSearchInputTerms .accordion.showArrow .accordion-title::after, .sampleSearches.accordion.showArrow .accordion-title::after, .sampleSearches .accordion.showArrow .accordion-title::after, .termsGuide.accordion.showArrow .accordion-title::after, .termsGuide .accordion.showArrow .accordion-title::after, .spoiler.accordion.showArrow .accordion-title::after, .spoiler .accordion.showArrow .accordion-title::after, .panel.accordion.showArrow .accordion-title::after, .panel .accordion.showArrow .accordion-title::after {
+  .badSearchInputTerms.accordion.showArrow .accordion-title::after, .badSearchInputTerms .accordion.showArrow .accordion-title::after, .sampleSearches.accordion.showArrow .accordion-title::after, .sampleSearches .accordion.showArrow .accordion-title::after, .termsGuide.accordion.showArrow .accordion-title::after, .termsGuide .accordion.showArrow .accordion-title::after, .spoiler.accordion.showArrow .accordion-title::after, .spoiler .accordion.showArrow .accordion-title::after, .panel.accordion.showArrow .accordion-title::after, .panel .accordion.showArrow .accordion-title::after, .modal.accordion.showArrow .accordion-title::after, .modal .accordion.showArrow .accordion-title::after {
     content: "▼";
     float: right;
     font-size: 10px; }
-  .badSearchInputTerms.accordion.showArrow .is-active > .accordion-title::after, .badSearchInputTerms .accordion.showArrow .is-active > .accordion-title::after, .sampleSearches.accordion.showArrow .is-active > .accordion-title::after, .sampleSearches .accordion.showArrow .is-active > .accordion-title::after, .termsGuide.accordion.showArrow .is-active > .accordion-title::after, .termsGuide .accordion.showArrow .is-active > .accordion-title::after, .spoiler.accordion.showArrow .is-active > .accordion-title::after, .spoiler .accordion.showArrow .is-active > .accordion-title::after, .panel.accordion.showArrow .is-active > .accordion-title::after, .panel .accordion.showArrow .is-active > .accordion-title::after {
+  .badSearchInputTerms.accordion.showArrow .is-active > .accordion-title::after, .badSearchInputTerms .accordion.showArrow .is-active > .accordion-title::after, .sampleSearches.accordion.showArrow .is-active > .accordion-title::after, .sampleSearches .accordion.showArrow .is-active > .accordion-title::after, .termsGuide.accordion.showArrow .is-active > .accordion-title::after, .termsGuide .accordion.showArrow .is-active > .accordion-title::after, .spoiler.accordion.showArrow .is-active > .accordion-title::after, .spoiler .accordion.showArrow .is-active > .accordion-title::after, .panel.accordion.showArrow .is-active > .accordion-title::after, .panel .accordion.showArrow .is-active > .accordion-title::after, .modal.accordion.showArrow .is-active > .accordion-title::after, .modal .accordion.showArrow .is-active > .accordion-title::after {
     content: "▲"; }
 
-.badSearchInputTerms .accordion-title, .sampleSearches .accordion-title, .termsGuide .accordion-title, .spoiler .accordion-title, .panel .accordion-title {
+.badSearchInputTerms .accordion-title, .sampleSearches .accordion-title, .termsGuide .accordion-title, .spoiler .accordion-title, .panel .accordion-title, .modal .accordion-title {
   background-color: #2b2b2b;
   color: #CAC7C7; }
-  .badSearchInputTerms .accordion-title:hover, .sampleSearches .accordion-title:hover, .termsGuide .accordion-title:hover, .spoiler .accordion-title:hover, .panel .accordion-title:hover {
+  .badSearchInputTerms .accordion-title:hover, .sampleSearches .accordion-title:hover, .termsGuide .accordion-title:hover, .spoiler .accordion-title:hover, .panel .accordion-title:hover, .modal .accordion-title:hover {
     background-color: #262626; }
 
-.badSearchInputTerms ul, .badSearchInputTerms ol, .sampleSearches ul, .sampleSearches ol, .termsGuide ul, .termsGuide ol, .spoiler ul, .spoiler ol, .panel ul, .panel ol {
-  font-size: 0.75rem;
-  margin-bottom: 0px; }
+.badSearchInputTerms ul, .badSearchInputTerms ol, .sampleSearches ul, .sampleSearches ol, .termsGuide ul, .termsGuide ol, .spoiler ul, .spoiler ol, .panel ul, .panel ol, .modal ul, .modal ol {
+  font-size: 0.875rem;
+  margin-bottom: 0; }
 
-.badSearchInputTerms p, .sampleSearches p, .termsGuide p, .spoiler p, .panel p {
-  font-size: 0.75rem;
+.badSearchInputTerms p, .sampleSearches p, .termsGuide p, .spoiler p, .panel p, .modal p {
+  font-size: 0.875rem;
   margin-bottom: 0.5rem; }
 
-.badSearchInputTerms code, .sampleSearches code, .termsGuide code, .spoiler code, .panel code {
+.badSearchInputTerms code, .sampleSearches code, .termsGuide code, .spoiler code, .panel code, .modal code {
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
   color: #DCD7D7;
   padding: 0; }
 
-.sampleSearches a {
-  font-family: monospace; }
+.sampleSearches {
+  margin-bottom: 20px; }
+  .sampleSearches a {
+    font-family: monospace; }
+
+.modal {
+  background-color: #3c3f41;
+  box-shadow: 0 0 10px rgba(1, 1, 1, 0.4); }
 
 .guide {
   margin-bottom: 20px; }
-  .guide ol li {
-    list-style-type: decimal; }
-  .guide ul {
-    margin-left: 1.1rem; }
-    .guide ul li {
-      list-style-type: circle; }
-  .guide ul, .guide ol {
-    font-size: 0.75rem; }
-  .guide a {
-    color: #FFFCFC; }
+
+.modal h1, .modal h2, .modal h3, .modal h4, .modal h5, .modal h6, .guide h1, .guide h2, .guide h3, .guide h4, .guide h5, .guide h6 {
+  color: #CAC7C7; }
+
+.modal ol li, .guide ol li {
+  list-style-type: decimal; }
+
+.modal ul, .guide ul {
+  margin-left: 1.1rem; }
+  .modal ul li, .guide ul li {
+    list-style-type: disc; }
+
+.modal a:not(.close-button), .guide a:not(.close-button) {
+  color: #FFFCFC;
+  text-decoration: underline; }
 
 .accordion-title:hover {
   background-color: #262626; }
@@ -6688,14 +6750,39 @@ img.pageLogo {
   padding: 6px;
   box-shadow: 3px 0 10px rgba(1, 1, 1, 0.4);
   border: 1px solid #646464; }
+  @media only screen and (max-width: 768px) {
+    .openOptions, .openSaves {
+      margin-right: 0;
+      top: 43px !important; } }
+
+.openSaves {
+  box-shadow: -3px 0 10px rgba(1, 1, 1, 0.4); }
 
 .openOptions {
   left: 0; }
+  @media only screen and (max-width: 768px) {
+    .openOptions {
+      left: initial;
+      right: 76px; } }
 
 .openSaves {
   right: 5px; }
   .openSaves.bookmark {
     top: 136px; }
+  @media only screen and (max-width: 768px) {
+    .openSaves {
+      right: 4px; }
+      .openSaves.bookmark {
+        right: 40px; } }
+
+.external-link:after {
+  content: '';
+  background-image: url("../img/external.svg");
+  background-size: contain;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin: 0 3px; }
 
 .footer {
   max-height: 50px;
@@ -6746,11 +6833,24 @@ img.gitter-badge {
 
 .absoluteNavBtn {
   position: absolute;
-  top: 42px; }
-  .absoluteNavBtn.savedSearches {
-    right: 10px; }
+  top: 41px; }
   .absoluteNavBtn.scrollTop {
     right: 10px; }
+    .absoluteNavBtn.scrollTop .mobile {
+      display: none; }
+    @media only screen and (max-width: 768px) {
+      .absoluteNavBtn.scrollTop {
+        right: 112px;
+        margin-right: 0;
+        box-shadow: 3px 0 10px rgba(1, 1, 1, 0.4);
+        border: 1px solid #646464;
+        font-size: 0.675rem;
+        top: 43px; } }
+    @media only screen and (max-width: 370px) {
+      .absoluteNavBtn.scrollTop .desktop {
+        display: none; }
+      .absoluteNavBtn.scrollTop .mobile {
+        display: inline; } }
 
 .searchStats {
   font-size: 12px;
@@ -6762,6 +6862,9 @@ img.gitter-badge {
   .searchStats img, .searchStats span {
     display: inline-block;
     vertical-align: middle; }
+  @media only screen and (max-width: 640px) {
+    .searchStats {
+      display: none; } }
 
 .code {
   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
@@ -6814,6 +6917,9 @@ img.gitter-badge {
   margin: 5px 0;
   padding: 0;
   color: #adadad; }
+  @media only screen and (max-width: 768px) {
+    .search-results .item, #showItemModal .item, .panel .item {
+      min-width: initial; } }
   .search-results .item h5, #showItemModal .item h5, .panel .item h5 {
     margin: 0; }
   .search-results .item a.name.Normal, #showItemModal .item a.name.Normal, .panel .item a.name.Normal {
@@ -6833,11 +6939,27 @@ img.gitter-badge {
   .search-results .item .item-border, #showItemModal .item .item-border, .panel .item .item-border {
     margin: 0 5px;
     border-top: transparent; }
+    @media only screen and (max-width: 768px) {
+      .search-results .item .item-border, #showItemModal .item .item-border, .panel .item .item-border {
+        margin: 0; } }
   .search-results .item .item-inner-border, #showItemModal .item .item-inner-border, .panel .item .item-inner-border {
     border: 1px solid #2b2b2b;
     padding: 5px 5px 0px 5px;
     background-color: #1D1D1D;
     background-color: rgba(0, 0, 0, 0.1); }
+    @media only screen and (max-width: 768px) {
+      .search-results .item .item-inner-border, #showItemModal .item .item-inner-border, .panel .item .item-inner-border {
+        -webkit-flex-flow: row wrap;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+        overflow: visible;
+        list-style-type: none; }
+        .search-results .item .item-inner-border > div, #showItemModal .item .item-inner-border > div, .panel .item .item-inner-border > div {
+          padding: 0 1rem 1rem;
+          -webkit-flex: 0 0 100%;
+          -ms-flex: 0 0 100%;
+          flex: 0 0 100%;
+          max-width: 100%; } }
   .search-results .item .item-header, #showItemModal .item .item-header, .panel .item .item-header {
     line-height: 30px;
     height: 27px;
@@ -6845,14 +6967,28 @@ img.gitter-badge {
     border-bottom: 1px solid #2b2b2b;
     background-color: #2b2b2b;
     width: 100%; }
+    @media only screen and (max-width: 640px) {
+      .search-results .item .item-header, #showItemModal .item .item-header, .panel .item .item-header {
+        height: initial;
+        padding-bottom: 3px; } }
     .search-results .item .item-header .controls, #showItemModal .item .item-header .controls, .panel .item .item-header .controls {
       padding: 0 8px;
       border: 1px;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       width: 100%; }
+      @media only screen and (max-width: 640px) {
+        .search-results .item .item-header .controls:after, #showItemModal .item .item-header .controls:after, .panel .item .item-header .controls:after {
+          clear: both; }
+        .search-results .item .item-header .controls:before, .search-results .item .item-header .controls:after, #showItemModal .item .item-header .controls:before, #showItemModal .item .item-header .controls:after, .panel .item .item-header .controls:before, .panel .item .item-header .controls:after {
+          content: " ";
+          display: table; } }
       .search-results .item .item-header .controls h5, #showItemModal .item .item-header .controls h5, .panel .item .item-header .controls h5 {
         display: inline; }
+        @media only screen and (max-width: 640px) {
+          .search-results .item .item-header .controls h5, #showItemModal .item .item-header .controls h5, .panel .item .item-header .controls h5 {
+            float: left;
+            width: 100%; } }
       .search-results .item .item-header .controls svg, #showItemModal .item .item-header .controls svg, .panel .item .item-header .controls svg {
         width: 25px !important;
         height: 18px !important;
@@ -6860,6 +6996,8 @@ img.gitter-badge {
         margin-left: 8px; }
         .search-results .item .item-header .controls svg:hover, #showItemModal .item .item-header .controls svg:hover, .panel .item .item-header .controls svg:hover {
           cursor: pointer; }
+        .search-results .item .item-header .controls svg.iconic-cart, #showItemModal .item .item-header .controls svg.iconic-cart, .panel .item .item-header .controls svg.iconic-cart {
+          margin-top: 5px; }
       .search-results .item .item-header .controls .button, #showItemModal .item .item-header .controls .button, .panel .item .item-header .controls .button {
         margin: 0;
         padding: 0; }
@@ -6867,7 +7005,7 @@ img.gitter-badge {
           background-color: inherit; }
       .search-results .item .item-header .controls .switch.small, #showItemModal .item .item-header .controls .switch.small, .panel .item .item-header .controls .switch.small {
         width: 2.2rem;
-        height: 1.325rem;
+        height: 1.35rem;
         vertical-align: middle;
         margin-top: 3px; }
       .search-results .item .item-header .controls .switch.small > label::after, #showItemModal .item .item-header .controls .switch.small > label::after, .panel .item .item-header .controls .switch.small > label::after {
@@ -6889,16 +7027,13 @@ img.gitter-badge {
 
 .search-results .item-box-left, #showItemModal .item-box-left, .panel .item-box-left {
   position: relative;
-  padding-right: 15px; }
+  padding-right: 15px;
+  max-width: 550px; }
 
 .search-results .item-box-right, #showItemModal .item-box-right, .panel .item-box-right {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column; }
-
-.search-results .grid-block.item-info, #showItemModal .grid-block.item-info, .panel .grid-block.item-info {
-  min-height: 170px;
-  margin-left: 114px; }
 
 .search-results .item-info .grid-block, #showItemModal .item-info .grid-block, .panel .item-info .grid-block {
   -ms-flex-positive: 0;
@@ -6969,8 +7104,6 @@ img.gitter-badge {
       background-position: right -570px; }
     .search-results .requirements span.currency.prism, .search-results .sell-infos span.currency.prism, #showItemModal .requirements span.currency.prism, #showItemModal .sell-infos span.currency.prism, .panel .requirements span.currency.prism, .panel .sell-infos span.currency.prism {
       background-position: right -600px; }
-    .search-results .requirements span.currency.jewellers, .search-results .sell-infos span.currency.jewellers, #showItemModal .requirements span.currency.jewellers, #showItemModal .sell-infos span.currency.jewellers, .panel .requirements span.currency.jewellers, .panel .sell-infos span.currency.jewellers {
-      background-position: right -630px; }
     .search-results .requirements span.currency.jeweller, .search-results .sell-infos span.currency.jeweller, #showItemModal .requirements span.currency.jeweller, #showItemModal .sell-infos span.currency.jeweller, .panel .requirements span.currency.jeweller, .panel .sell-infos span.currency.jeweller {
       background-position: right -630px; }
     .search-results .requirements span.currency.alteration, .search-results .sell-infos span.currency.alteration, #showItemModal .requirements span.currency.alteration, #showItemModal .sell-infos span.currency.alteration, .panel .requirements span.currency.alteration, .panel .sell-infos span.currency.alteration {
@@ -6985,6 +7118,9 @@ img.gitter-badge {
 
 .search-results .sell-infos, #showItemModal .sell-infos, .panel .sell-infos {
   padding-left: 3px; }
+  @media only screen and (max-width: 768px) {
+    .search-results .sell-infos, #showItemModal .sell-infos, .panel .sell-infos {
+      padding-bottom: 0.25rem; } }
 
 .search-results .mods ul, .search-results .modsPseudo ul, #showItemModal .mods ul, #showItemModal .modsPseudo ul, .panel .mods ul, .panel .modsPseudo ul {
   margin-top: 10px;
@@ -7011,17 +7147,18 @@ img.gitter-badge {
   -ms-flex-wrap: initial;
       flex-wrap: initial;
   -webkit-flex-wrap: initial; }
-  .search-results .grid-block.item-info > .grid-block, #showItemModal .grid-block.item-info > .grid-block, .panel .grid-block.item-info > .grid-block {
-    padding-left: 10px; }
 
 .search-results .image-container, #showItemModal .image-container, .panel .image-container {
   max-width: 114px;
   width: 100%;
   max-height: 170px;
   background-size: contain;
-  padding: 10px;
-  position: absolute;
+  padding: 0 10px 5px 10px;
+  position: relative;
   background: no-repeat right 10px; }
+  @media only screen and (max-width: 768px) {
+    .search-results .image-container, #showItemModal .image-container, .panel .image-container {
+      padding-left: 0; } }
   .search-results .image-container img, #showItemModal .image-container img, .panel .image-container img {
     max-height: 170px;
     margin: 0 auto;
@@ -7036,7 +7173,7 @@ img.gitter-badge {
     background: url("../img/sockets.png");
     top: 0;
     left: 0;
-    margin: 10px; }
+    margin: 0 10px; }
     .search-results .image-container .socket.middle, #showItemModal .image-container .socket.middle, .panel .image-container .socket.middle {
       top: 47px; }
     .search-results .image-container .socket.bottom, #showItemModal .image-container .socket.bottom, .panel .image-container .socket.bottom {
@@ -7057,7 +7194,7 @@ img.gitter-badge {
     background: url("../img/sockets.png");
     top: 0;
     left: 0;
-    margin: 10px; }
+    margin: 0 10px; }
     .search-results .image-container .socketLink.socketLinkCenter, #showItemModal .image-container .socketLink.socketLinkCenter, .panel .image-container .socketLink.socketLinkCenter {
       background-position: 0 -188px;
       left: 23px; }
@@ -7078,9 +7215,12 @@ img.gitter-badge {
       left: -1px; }
 
 .search-results .item-stats, #showItemModal .item-stats, .panel .item-stats {
-  font-size: 0.75rem; }
+  font-size: 0.75rem;
+  margin-bottom: 10px; }
   .search-results .item-stats table, #showItemModal .item-stats table, .panel .item-stats table {
-    min-width: 150px; }
+    float: left;
+    min-width: 150px;
+    margin-right: 1rem; }
   .search-results .item-stats td, #showItemModal .item-stats td, .panel .item-stats td {
     padding: 3px 3px;
     text-align: left; }
@@ -7088,6 +7228,8 @@ img.gitter-badge {
       text-align: right; }
     .search-results .item-stats td a.quality, #showItemModal .item-stats td a.quality, .panel .item-stats td a.quality {
       color: #56AB56; }
+    .search-results .item-stats td:first-child, #showItemModal .item-stats td:first-child, .panel .item-stats td:first-child {
+      padding-left: 0; }
 
 .search-results a.mod-fire-res, .search-results a.mod-fire-dmg, #showItemModal a.mod-fire-res, #showItemModal a.mod-fire-dmg, .panel a.mod-fire-res, .panel a.mod-fire-dmg {
   color: #F04124; }
@@ -7107,6 +7249,10 @@ img.gitter-badge {
 .search-results a.mod-mana, #showItemModal a.mod-mana, .panel a.mod-mana {
   color: #9898FF; }
 
+@media only screen and (max-width: 768px) {
+  .search-results {
+    padding: 0.5rem; } }
+
 #showItemModal .modal {
   max-width: 95%; }
 
@@ -7118,6 +7264,9 @@ img.gitter-badge {
 
 .panel {
   width: 400px; }
+  @media only screen and (max-width: 640px) {
+    .panel {
+      width: 100%; } }
   .panel .saved-search.accordion {
     margin-top: 50px; }
     .panel .saved-search.accordion a {
@@ -7142,6 +7291,8 @@ img.gitter-badge {
     border-bottom: 1px solid #646464; }
   .panel .block-list li > a:hover, .panel .block-list li > label:hover, .panel .block-list li select:hover {
     background-color: #646464; }
+  .panel .block-list a.button {
+    margin: 10px; }
   .panel .button.hollow {
     background-color: #646464;
     color: #DCD7D7; }
@@ -7159,9 +7310,25 @@ img.gitter-badge {
     position: absolute;
     top: 10px;
     left: 10px; }
+  .panel .soundPreview {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-left: 10px;
+    cursor: pointer;
+    box-shadow: 0px 0 10px rgba(1, 1, 1, 0.4);
+    border: 1px solid #646464; }
+    .panel .soundPreview svg {
+      width: 9px !important;
+      height: 9px !important;
+      margin-left: 1px; }
+  .panel .prefixes {
+    margin-top: 15px; }
 
 #savedSearchesPanel {
   width: 400px; }
+  @media only screen and (max-width: 640px) {
+    #savedSearchesPanel {
+      width: 100%; } }
   #savedSearchesPanel .block-list li:first-child {
     border-top: none; }
   #savedSearchesPanel .accordion-content {
@@ -7173,8 +7340,11 @@ img.gitter-badge {
   margin-top: 87px; }
 
 #savedItemsPanel {
-  width: 650px;
+  width: 640px;
   padding-top: 50px; }
+  @media only screen and (max-width: 640px) {
+    #savedItemsPanel {
+      width: 100%; } }
   #savedItemsPanel .accordion .grid-content, #savedItemsPanel .accordion .accordion-content {
     padding: 0; }
   #savedItemsPanel .accordion .availablity {
@@ -7188,3 +7358,84 @@ img.gitter-badge {
     cursor: pointer; }
   #savedItemsPanel .controls .saveNotificationLink, #savedItemsPanel .controls .switch {
     display: none; }
+
+@media only screen and (max-width: 768px) {
+  #tabs .tab-contents {
+    padding: 0; } }
+
+#tabs .tab-headers {
+  padding: 0 1rem;
+  margin: 0 5px; }
+  #tabs .tab-headers div {
+    padding: 5px;
+    border: 1px solid #2b2b2b;
+    background-color: #2b2b2b;
+    cursor: pointer;
+    position: relative; }
+    #tabs .tab-headers div:hover {
+      background-color: #262626; }
+    #tabs .tab-headers div.active {
+      background-color: #303030;
+      cursor: default; }
+    #tabs .tab-headers div .tab-title {
+      width: 100%;
+      padding: 0 1rem; }
+    #tabs .tab-headers div .badge {
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      font-size: 0.625rem;
+      width: 1rem;
+      height: 1rem; }
+
+.panel .switch svg {
+  display: none; }
+
+.panel .switch label span, .panel .switch label svg {
+  display: none; }
+
+.panel .switch > label::after {
+  background-color: #BB2424;
+  border-color: #2b2b2b; }
+
+.panel .switch > label {
+  background-color: #2b2b2b; }
+
+.panel .switch input:checked + label::after {
+  background-color: #43AC6A; }
+
+.panel header.volume {
+  margin-right: 1rem; }
+
+.showLabelOnInput .checkboxLabel {
+  visibility: hidden; }
+
+.showLabelOnInput .switch {
+  right: initial;
+  left: 1rem;
+  width: auto; }
+  .showLabelOnInput .switch label {
+    color: #CAC7C7;
+    background-color: #2b2b2b; }
+    .showLabelOnInput .switch label:after {
+      display: none; }
+    .showLabelOnInput .switch label span {
+      padding: 0 1rem 0 0;
+      line-height: 1.625rem; }
+    .showLabelOnInput .switch label span, .showLabelOnInput .switch label svg {
+      display: inline-block; }
+  .showLabelOnInput .switch input:checked + label {
+    background-color: #2b2b2b; }
+  .showLabelOnInput .switch input {
+    margin: 0; }
+  .showLabelOnInput .switch input[type="checkbox"] + label, .showLabelOnInput .switch input[type="radio"] + label {
+    margin: 0; }
+  .showLabelOnInput .switch svg {
+    margin: 0 0.5rem; }
+
+.screenWidthCheck-640 {
+  display: none;
+  visibility: hidden; }
+  @media only screen and (max-width: 640px) {
+    .screenWidthCheck-640 {
+      display: block; } }

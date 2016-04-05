@@ -15,13 +15,13 @@
 					   ngclipboard
 					   data-clipboard-text="{{copyWhisperToClipboard(item)}}">{{item._source.info.fullName}}</a>
 				</h5>
-					<span>
-						<a class="saveNotificationLink button float-right" title="Save Item" content="Saved: {{item._source.info.fullName}}"
-						   color="success" autoclose="2000" zf-notify="save-notification-{{item._id}}">
-							<img zf-iconic="" icon="circle-check" size="medium" ng-click="saveItem(item._id, item._source.info.fullName, item._source.shop.lastCharacterName)"
-								 class="float-right">
-						</a>
-					</span>
+				<span>
+					<a class="saveNotificationLink button float-right" title="Bookmark Item" content="Saved: {{item._source.info.fullName}}"
+					   color="success" autoclose="2000" zf-notify="save-notification-{{item._id}}">
+						<img zf-iconic="" icon="cart" size="medium" ng-click="saveItem(item._id, item._source.info.fullName, item._source.shop.lastCharacterName)"
+							 class="float-right">
+					</a>
+				</span>
 				<div class="switch small float-right">
 					<input type="checkbox" id="switch-{{item._id}}"
 					   ng-model="switchValue"
@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<div class="grid-block item-inner-border" ng-style="switchValue">
-			<div class="grid-block item-box-left shrink">
+			<div class="grid-block item-box-left">
 
 				<div class="grid-block image-container"
 					 title="Stash Name: {{item._source.shop.stash.stashName}}"
@@ -144,7 +144,7 @@
 						</div>
 
 						<div class="grid-block modsPseudo">
-							<ul ng-show="options.switchPseudoMods==true" ng-if="!(item._source.modsPseudo | isEmpty)">
+							<ul ng-show="options.switchPseudoMods" ng-if="!(item._source.modsPseudo | isEmpty)">
 								<li>[Pseudo Mods]</li>
 								<li class="sortable" ng-repeat="mod in getItemMods(item._source.modsPseudo)"
 									data-mod="{{mod}}">
@@ -157,11 +157,8 @@
 			</div>
 
 			<div class="grid-block item-box-right shrink">
-				<div class="item-stats float-left" ng-if="!item._source.properties.Weapon" ng-repeat="itemType in item._source.propertiesPseudo">
-					<table>
-						<thead>
-						<th><td></td><td></td></th>
-						</thead>
+				<div class="item-stats float-left" >
+					<table ng-if="!item._source.properties.Weapon" ng-repeat="itemType in item._source.propertiesPseudo">
 						<tbody>
 						<tr>
 							<td>Quality</td>
@@ -199,12 +196,7 @@
 						</tr>
 						</tbody>
 					</table>
-				</div>
-				<div class="item-stats float-left" ng-if="item._source.properties.Gem !== undefinded">
-					<table>
-						<thead>
-						<th><td></td><td></td></th>
-						</thead>
+					<table ng-if="item._source.properties.Gem !== undefinded">
 						<tbody>
 						<tr>
 							<td>Quality</td>
@@ -242,12 +234,7 @@
 						</tr>
 						</tbody>
 					</table>
-				</div>
-				<div class="item-stats float-left shrink" ng-if="item._source.properties.Weapon">
-					<table>
-						<thead>
-						<th><td></td><td></td></th>
-						</thead>
+					<table ng-if="item._source.properties.Weapon">
 						<tbody>
 						<tr>
 							<td>Quality</td>
@@ -312,7 +299,8 @@
 								</a>
 							</td>
 							<td ng-show="options.showAdvancedStats==true">
-								| test
+								| {{item._source.properties.Weapon['Physical Damage'].min}}
+								- {{item._source.properties.Weapon['Physical Damage'].max}}
 							</td>
 						</tr>
 						<tr ng-if="item._source.properties.Weapon['Elemental DPS']">
@@ -324,6 +312,10 @@
 									ng-click="doSearchWithSort($event)">
 									{{item._source.properties.Weapon['Elemental DPS']}}
 								</a>
+							</td>
+							<td ng-show="options.showAdvancedStats==true">
+								| {{item._source.properties.Weapon['Elemental Damage'].min}}
+								- {{item._source.properties.Weapon['Elemental Damage'].max}}
 							</td>
 						</tr>
 						<tr ng-if="item._source.properties.Weapon['Fire DPS']">
@@ -337,7 +329,8 @@
 								</a>
 							</td>
 							<td ng-show="options.showAdvancedStats==true">
-								| test
+								| {{item._source.properties.Weapon['Fire Damage'].min}}
+								- {{item._source.properties.Weapon['Fire Damage'].max}}
 							</td>
 						</tr>
 						<tr ng-if="item._source.properties.Weapon['Cold DPS']">
@@ -351,7 +344,8 @@
 								</a>
 							</td>
 							<td ng-show="options.showAdvancedStats==true">
-								| test
+								| {{item._source.properties.Weapon['Cold Damage'].min}}
+								- {{item._source.properties.Weapon['Cold Damage'].max}}
 							</td>
 						</tr>
 						<tr ng-if="item._source.properties.Weapon['Lightning DPS']">
@@ -365,7 +359,8 @@
 								</a>
 							</td>
 							<td ng-show="options.showAdvancedStats==true">
-								| test
+								| {{item._source.properties.Weapon['Lightning Damage'].min}}
+								- {{item._source.properties.Weapon['Lightning Damage'].max}}
 							</td>
 						</tr>
 						<tr ng-if="item._source.properties.Weapon['Chaos DPS']">
@@ -379,60 +374,56 @@
 								</a>
 							</td>
 							<td ng-show="options.showAdvancedStats==true">
-								| test
+								| {{item._source.properties.Weapon['Chaos Damage'].min}}
+								- {{item._source.properties.Weapon['Chaos Damage'].max}}
 							</td>
 						</tr>
 						</tbody>
 					</table>
-				</div>
-				<div class="item-stats float-left shrink">
 					<table>
-						<thead>
-						<th><td></td><td></td></th>
-						</thead>
 						<tbody>
-						<tr>
-							<td>Updated</td>
-							<td>
-								<a
-									data-sort-key="shop.updated"
-									title="Number of hours passed since item's stash had an update in the River"
-									data-sort-key="shop.updated"
-									data-sort-order="desc"
-									ng-click="doSearchWithSort($event)">
-									{{item._source.shop.updatedHoursAgo}} hours ago
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td>Modified</td>
-							<td>
-								<a
-									title="Number of hours passed since item was modified in the River"
-									data-sort-key="shop.modified"
-									data-sort-order="desc"
-									ng-click="doSearchWithSort($event)">
-									{{item._source.shop.modifiedHoursAgo}} hours ago
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td>Added</td>
-							<td>
-								<a
-									title="Number of hours passed since item was first seen in the River"
-									data-sort-key="shop.added"
-									data-sort-order="desc"
-									ng-click="doSearchWithSort($event)">
-									{{item._source.shop.addedHoursAgo}} hours ago
-								</a>
-							</td>
-						</tr>
+							<tr>
+								<td>Updated</td>
+								<td>
+									<a
+										data-sort-key="shop.updated"
+										title="Number of hours passed since item's stash had an update in the River"
+										data-sort-key="shop.updated"
+										data-sort-order="desc"
+										ng-click="doSearchWithSort($event)">
+										{{item._source.shop.updatedHoursAgo}} hours ago
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td>Modified</td>
+								<td>
+									<a
+										title="Number of hours passed since item was modified in the River"
+										data-sort-key="shop.modified"
+										data-sort-order="desc"
+										ng-click="doSearchWithSort($event)">
+										{{item._source.shop.modifiedHoursAgo}} hours ago
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td>Added</td>
+								<td>
+									<a
+										title="Number of hours passed since item was first seen in the River"
+										data-sort-key="shop.added"
+										data-sort-order="desc"
+										ng-click="doSearchWithSort($event)">
+										{{item._source.shop.addedHoursAgo}} hours ago
+									</a>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<div class="grid-block sell-infos medium-12">
+			<div class="grid-block sell-infos small-12 medium-12" ng-if="true">
 				<span class=""  ng-if="item._source.shop.saleType && item._source.shop.amount > 0">
 					{{item._source.shop.saleType}}:
 				</span>
@@ -472,9 +463,14 @@
 				<span ng-init="counter = 0">
 					<a ngclipboard class="click small hollow whisper-btn noselect"
 					   data-clipboard-text="{{copyWhisperToClipboard(item)}}"
-					   ng-click="counter = counter + 1"
+					   ng-click="whiserperCounter = whiserperCounter + 1"
 					   color="success" autoclose="2000" zf-open="save-notification-whisper">
-						Whisper<span ng-if="counter > 0"> ({{counter}})</span>
+						Whisper<span ng-if="whiserperCounter > 0"> ({{whiserperCounter}})</span>
+					<a ngclipboard class="click small hollow whisper-btn noselect"
+					   data-clipboard-text="/whois {{item._source.shop.lastCharacterName}}"
+					   ng-click="whoisCounter = whoisCounter + 1"
+					   color="success" autoclose="2000" zf-open="save-notification-whois">
+						Whois<span ng-if="whoisCounter > 0"> ({{whoisCounter}})</span>
 					</a>
 					<i class="seperator"></i>
 				</span>

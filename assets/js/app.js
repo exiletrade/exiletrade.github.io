@@ -18328,13 +18328,17 @@ function debugOutput(input, outputType) {
 
 	}
 }
+
+function defaultFor(arg, val) {
+	return typeof arg !== 'undefined' ? arg : val;
+}
+
 // expects array
 //returns {'corrected', 'unCorrectable'
 function badUserInput(badTokens) {
 	if (badTokens.length == 0) return;
 	var successArr = [];
 	var evaluatedToken;
-	debugOutput("bad Tokens: " + badTokens.join(" "), 'log');
 	//attempt 1 User copy pasted RegEx 
 
 	for (i = 0; i < badTokens.length; i++) {
@@ -18353,7 +18357,6 @@ function badUserInput(badTokens) {
 		}
 	}
 
-	debugOutput("bad Tokens attmept 2: " + badTokens.join(" "), 'log');
 	//attempt 2 removing spaces
 	if (badTokens.length > 0) {
 		//all spaces
@@ -18374,8 +18377,6 @@ function badUserInput(badTokens) {
 				attempt.push(badTokens[i]);
 			}
 		}
-		debugOutput("after filtering", 'log');
-		debugOutput(attempt, 'log');
 		if ((attempt.length >= 2)) {
 			for (var i = 0; i < attempt.length - 1; i++) {
 				for (var j = i + 1; j < attempt.length; j++) {
@@ -18400,7 +18401,14 @@ function badUserInput(badTokens) {
 		}
 		badTokens = attempt;
 	}
-
+	
+	//Interpret bad Tokens as tkokenized fullname
+	if (badTokens.length > 0) {
+		for (var i = 0; i < badTokens.length; i++) {			
+			successArr.push("info.tokenized.fullName:" + badTokens[i].toLowerCase());
+		}
+		badTokens =[];
+	}
 	debugOutput("Result", 'log');
 	debugOutput(successArr, 'log');
 	debugOutput("Failure", 'log');
@@ -18663,7 +18671,8 @@ function indexerLeagueToLadder(league) {
 		'ngclipboard',
 		'duScroll',
 		'angular-cache',
-		'angularSpinner'
+		'angularSpinner',
+		'favico.service'
 	]);
 
 	appModule.config(config);
@@ -18742,7 +18751,7 @@ function indexerLeagueToLadder(league) {
 				console.error("Invalid result from ladderAllPlayerCache - " + url);
 				console.error(result);
 				return [];				
-			})
+			});
 			ladderAllPlayerCache.put(league, promise);
 			return promise;
 	    }
@@ -18863,7 +18872,29 @@ function indexerLeagueToLadder(league) {
 		};
 	});
 
-	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', '$interval', 'es', 'playerOnlineService', function ($q, $scope, $http, $location, $interval, es, playerOnlineService) {
+	/*
+	  Simple favicon service
+	 */
+	angular.module('favico.service', []).factory('favicoService', [
+	function() {
+		var favico = new Favico({
+			animation : 'fade'
+		});
+
+		var badge = function(num) {
+			favico.badge(num);
+		};
+		var reset = function() {
+			favico.reset();
+		};
+
+		return {
+			badge : badge,
+			reset : reset
+		};
+	}]);
+	
+	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', '$interval', 'es', 'playerOnlineService','favicoService', function ($q, $scope, $http, $location, $interval, es, playerOnlineService,favicoService) {
 		debugOutput('controller', 'info');
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
@@ -18889,11 +18920,30 @@ function indexerLeagueToLadder(league) {
 		$scope.savedItemsList = JSON.parse(localStorage.getItem("savedItems"));
 		$scope.loadedOptions = JSON.parse(localStorage.getItem("savedOptions"));
 		$scope.lastRequestedSavedItem = {};
+		$scope.selectedFont = {};
 		$scope.audioPath = './assets/sound/';
-		$scope.audioAlerts = [
-			'Tinkle-Lisa_Redfern-1916445296.mp3'
-		];
 
+		/*
+		 * The soundfiles and sound select names have to be matched
+		 * in loadSounds() function
+		 * */
+		$scope.audioAlerts = [
+			'Tinkle-Lisa_Redfern-1916445296.mp3',
+			'double_tone.mp3',
+			'Blop-Mark_DiAngelo-79054334.mp3',
+			'Cha_Ching_Register-Muska666-173262285.mp3',
+			'Metal_Gong-Dianakc-109711828.mp3',
+			'Pew_Pew-DKnight556-1379997159.mp3',
+			'Short_triumphal_fanfare-John_Stracke-815794903.mp3',
+			'Turkey Gobble-SoundBible.com-123256561.mp3',
+			'Winchester12-RA_The_Sun_God-1722751268.mp3',
+			'alarm_to_the_extreme.mp3'
+		];
+		$scope.snd = new Audio($scope.audioPath+$scope.audioAlerts[0]);
+
+		/*
+		* Create options
+		* */
 		$scope.options = {
 			"leagueSelect": {
 				"type": "select",
@@ -18913,17 +18963,120 @@ function indexerLeagueToLadder(league) {
 				"value": 'Status: Verified',
 				"options": ["Status: Verified", "Status: Gone", "Status: Either"]
 			},
+			"fontSelect": {
+				"type": "select",
+				"name": "Font",
+				"value": 'Fontin',
+				"options": ["Fontin", "Verdana", "Helvetica Neue"]
+			},
+			"soundSelect": {
+				"type": "select",
+				"name": "Sound",
+				"value": 'Tinkle',
+				"options": ["Tinkle", "Double Tone", 'Blop', 'Cha Ching', 'Gong', 'Pew Pew', 'Fanfare', 'Gobble', 'Winchester 12-RA', "Extreme Alarm"]
+			},
 			"searchPrefixInputs": [],
-			"switchOnlinePlayersOnly" : true
+			"switchOnlinePlayersOnly" : true,
+			"muteSound" : false,
+			"notificationVolume" : 1
 		};
 
+		/*
+		 * Create tabs
+		 * */
+		$scope.tabs = [{
+			title: 'Results',
+			id: 0,
+			newItems: 0
+		}];
+		$scope.currentTab = 0;
+
+		/*
+		 * Load new sound; play sound preview
+		 * */
+		$scope.loadSound = function(){
+			/* Get index of selected sound to match against audioAlerts array
+			 * Sounds have to be in same order in audioAlerts and soundSelect.options */
+ 			var i = $scope.options.soundSelect.options.indexOf($scope.options.soundSelect.value);
+			$scope.snd.src = $scope.audioPath+$scope.audioAlerts[i];
+			$scope.snd.load();
+		};
+
+		$scope.playSound = function () {
+			$scope.snd.play();
+		};
+		$scope.changeNotificationVolume = function (){
+			$scope.snd.volume = $scope.options.notificationVolume;
+		};
+
+		/*
+		 * Check if options are being loaded and assign values
+		 * */
 		if ($scope.loadedOptions) checkDefaultOptions();
+
+		function checkDefaultOptions() {
+			if (typeof $scope.loadedOptions.leagueSelect !== 'undefined') {
+				$scope.options.leagueSelect.value = $scope.loadedOptions.leagueSelect.value;
+			}
+			if (typeof $scope.loadedOptions.buyoutSelect !== 'undefined') {
+				$scope.options.buyoutSelect.value = $scope.loadedOptions.buyoutSelect.value;
+			}
+			if (typeof $scope.loadedOptions.verificationSelect !== 'undefined') {
+				$scope.options.verificationSelect.value = $scope.loadedOptions.verificationSelect.value;
+			}
+			if (typeof $scope.loadedOptions.fontSelect !== 'undefined') {
+				$scope.options.fontSelect.value = $scope.loadedOptions.fontSelect.value;
+				console.log($scope.loadedOptions.fontSelect.value);
+				$scope.selectedFont = {
+					"font-family": "'"+ $scope.loadedOptions.fontSelect.value + "', 'Helvetica', Helvetica, Arial, sans-serif"
+				};
+			}
+			if (typeof $scope.loadedOptions.soundSelect !== 'undefined') {
+				$scope.options.soundSelect.value = $scope.loadedOptions.soundSelect.value;
+				$scope.loadSound();
+			}
+			if (typeof $scope.loadedOptions.searchPrefixInputs !== 'undefined' && $scope.loadedOptions.searchPrefixInputs !== null) {
+				$scope.options.searchPrefixInputs = $scope.loadedOptions.searchPrefixInputs;
+			}
+			if (typeof $scope.loadedOptions.switchPseudoMods !== 'undefined' && $scope.loadedOptions.switchPseudoMods !== null) {
+				$scope.options.switchPseudoMods = $scope.loadedOptions.switchPseudoMods;
+			}
+			if (typeof $scope.loadedOptions.switchItemsPerRow !== 'undefined' && $scope.loadedOptions.switchItemsPerRow !== null) {
+				$scope.options.switchItemsPerRow = $scope.loadedOptions.switchItemsPerRow;
+			}
+			if (typeof $scope.loadedOptions.showAdvancedStats !== 'undefined' && $scope.loadedOptions.showAdvancedStats !== null) {
+				$scope.options.showAdvancedStats = $scope.loadedOptions.showAdvancedStats;
+			}
+			if (typeof $scope.loadedOptions.switchOnlinePlayersOnly !== 'undefined' && $scope.loadedOptions.switchOnlinePlayersOnly !== null) {
+				$scope.options.switchOnlinePlayersOnly = $scope.loadedOptions.switchOnlinePlayersOnly;
+			}
+			if (typeof $scope.loadedOptions.muteSound !== 'undefined' && $scope.loadedOptions.muteSound !== null) {
+				$scope.options.muteSound = $scope.loadedOptions.muteSound;
+			}
+			if (typeof $scope.loadedOptions.notificationVolume !== 'undefined' && $scope.loadedOptions.notificationVolume !== null) {
+				$scope.options.notificationVolume = $scope.loadedOptions.notificationVolume;
+			}
+		}
+
+		/*
+		 * Change notification volume if loading saved option
+		 * */
+		if ($scope.snd.volume != $scope.options.notificationVolume) {
+			$scope.changeNotificationVolume();
+		}
+
+		$scope.setFontFamily = function(){
+			$scope.selectedFont = {
+				"font-family": "'"+ $scope.options.fontSelect.value + "', 'Helvetica', Helvetica, Arial, sans-serif"
+			};
+		};
 
 		var automatedSearchIntervalFn = function () {
 			if ($scope.savedAutomatedSearches && $scope.savedAutomatedSearches.length > 0) {
 				debugOutput('Gonna run counts on automated searches: ' + $scope.savedAutomatedSearches.length, 'trace');
 				var countPromises = $scope.savedAutomatedSearches.map(function (search) {
-					var queryString = buildQueryString(search.searchInput);
+					var queryString = buildQueryString(search.searchInput + " timeStamp" + search.lastSearch);
+					search.lastSearch = new Date().getTime();
 					var promise = es.count({
 					  index: 'index',
 					  body: buildEsBody(queryString),
@@ -18941,8 +19094,10 @@ function indexerLeagueToLadder(league) {
 					var total = results
 						.reduce(function (a, b) { return a + b; });
 					if (total > 0) {
-						var snd = new Audio($scope.audioPath+$scope.audioAlerts[0]); // buffers automatically when created
-						snd.play();
+						if (!$scope.options.muteSound) {
+							$scope.snd.play();
+							favicoService.badge(total);
+						}
 					}
 				});
 			}
@@ -18950,40 +19105,11 @@ function indexerLeagueToLadder(league) {
 		automatedSearchIntervalFn();
 		$interval(automatedSearchIntervalFn, 30000);
 
-		$scope.playTestSound = function () {
-			console.log('play');
-			var snd = new Audio($scope.audioPath+$scope.audioAlerts[0]); // buffers automatically when created
-			snd.play();
-		};
+		function createSearchPrefix(options, containsLeagueTerm, containsBuyoutTerm, containsVerifyTerm) {
+			containsLeagueTerm = defaultFor(containsLeagueTerm, false);
+			containsBuyoutTerm = defaultFor(containsBuyoutTerm, false);
+			containsVerifyTerm = defaultFor(containsVerifyTerm, false);
 
-		function checkDefaultOptions() {
-			if (typeof $scope.loadedOptions.leagueSelect !== 'undefined') {
-				$scope.options.leagueSelect.value = $scope.loadedOptions.leagueSelect.value;
-			}
-			if (typeof $scope.loadedOptions.buyoutSelect !== 'undefined') {
-				$scope.options.buyoutSelect.value = $scope.loadedOptions.buyoutSelect.value;
-			}
-			if (typeof $scope.loadedOptions.verificationSelect !== 'undefined') {
-				$scope.options.verificationSelect.value = $scope.loadedOptions.verificationSelect.value;
-			}
-			if (typeof $scope.loadedOptions.searchPrefixInputs !== 'undefined' && $scope.loadedOptions.searchPrefixInputs !== null) {
-				$scope.options.searchPrefixInputs = $scope.loadedOptions.searchPrefixInputs;
-			}
-			if (typeof $scope.loadedOptions.switchPseudoMods !== 'undefined' && $scope.loadedOptions.switchPseudoMods !== null) {
-				$scope.options.switchPseudoMods = $scope.loadedOptions.switchPseudoMods;
-			}
-			if (typeof $scope.loadedOptions.switchItemsPerRow !== 'undefined' && $scope.loadedOptions.switchItemsPerRow !== null) {
-				$scope.options.switchItemsPerRow = $scope.loadedOptions.switchItemsPerRow;
-			}
-			if (typeof $scope.loadedOptions.showAdvancedStats !== 'undefined' && $scope.loadedOptions.showAdvancedStats !== null) {
-				$scope.options.showAdvancedStats = $scope.loadedOptions.showAdvancedStats;
-			}
-			if (typeof $scope.loadedOptions.switchOnlinePlayersOnly !== 'undefined' && $scope.loadedOptions.switchOnlinePlayersOnly !== null) {
-				$scope.options.switchOnlinePlayersOnly = $scope.loadedOptions.switchOnlinePlayersOnly;
-			}
-		}
-
-		function createSearchPrefix(options, containsLeagueTerm = false, containsBuyoutTerm = false, containsVerifyTerm = false) {
 			var searchPrefix = "";
 			if (!containsLeagueTerm) {
 				searchPrefix = options['leagueSelect']['value'].replace(" ", "");
@@ -19391,6 +19517,8 @@ function indexerLeagueToLadder(league) {
 		$scope.saveAutomatedSearch = function () {
 			//ga('send', 'event', 'Save', 'Last Search', $scope.searchInput);
 			var search = { searchInput: $scope.searchInput };
+			var now = new Date()
+			var search = { searchInput: $scope.searchInput + " timestamp" + now.getTime(), lastSearch: now.getTime()};
 			var savedSearches = [];
 
 			if (localStorage.getItem("savedAutomatedSearches") !== null) {
@@ -19467,9 +19595,11 @@ function indexerLeagueToLadder(league) {
 		};
 
 		$scope.resizeGridFrame = function (opened) {
+			var displayStatus = jQuery('div.screenWidthCheck-640').css('display');
+
 			if ( opened === true ){
 				jQuery('#mainGrid').animate({
-					marginRight: "400px"
+					marginRight: (displayStatus == 'none') ? "400px" : "100%"
 				}, 500, 'swing');
 			} else {
 				jQuery('#mainGrid').animate({
@@ -19700,6 +19830,19 @@ function indexerLeagueToLadder(league) {
 				b: playerOnlineService.getStashOnlinePlayers()
 			});
 		}
+
+		/*
+			Handle tabs
+		*/
+		$scope.onClickTab = function (tab) {
+			$scope.currentTab = tab.id;
+			$scope.tabs[tab.id].newItems = 0;
+		};
+		$scope.isActiveTab = function(tabId) {
+			return tabId == $scope.currentTab;
+		};
+
+
 	}]);
 
 
@@ -19738,31 +19881,62 @@ function indexerLeagueToLadder(league) {
 			if (typeof str === 'undefined') {
 				return
 			}
+
+			var validTerms = [
+				"coins",		//0
+				"regal", 		//1
+				"augmentation",	//2
+				"wisdom", 		//3
+				"portal", 		//4
+				"alchemy", 		//5
+				"mirror", 		//6
+				"blessed", 		//7
+				"whetstone",	//8
+				"scrap", 		//9
+				"vaal",			//10
+				"bauble", 		//11
+				"chaos", 		//12
+				"chisel", 		//13
+				"chromatic",	//14
+				"divine", 		//15
+				"exalted", 		//16
+				"transmutation",//17
+				"scouring",		//18
+				"regret",		//19
+				"fusing", 		//20
+				"prism", 		//21
+				"jeweller",		//22
+				"alteration", 	//23
+				"chance",		//24
+				"unknown"		//25
+			];
+
 			str =  str.replace(/[^\w\s]/gi, '').replace(/[0-9]/g, '').toLowerCase();
 
 			var currencyMap = new Map([
-				["unknown shekel", "coins"],
-				["unknown shekels", "coins"],
-				["unknown pc", "coins"],
-				["unknown p", "coins"],
-				["unknown perandus", "coins"],
-				["unknown perandus coin", "coins"],
-				["unknown perandus coins", "coins"],
-				["unknown peranduscoins", "coins"],
-				["unknown pcoins", "coins"],
-				["unknown pcoin", "coins"],
-				["unknown per", "coins"],
-				["unknown exa", "exalted"],
-				["unknown fuse", "fusing"],
-				["unknown alt", "alteration"],
-				["unknown aug", "augmentation"],
-				["unknown jewel", "jewellers"],
-				["unknown cartographer", "chisel"],
-				["unknown scour", "scouring"],
-				["unknown gemcutter", "gcp"],
-				["unknown transmute", "transmutation"],
-				["unknown alch", "alchemy"]
+				["unknown shekel", validTerms[0]],
+				["unknown shekels", validTerms[0]],
+				["unknown pc", validTerms[0]],
+				["unknown p", validTerms[0]],
+				["unknown perandus", validTerms[0]],
+				["unknown perandus coin", validTerms[0]],
+				["unknown perandus coins", validTerms[0]],
+				["unknown peranduscoins", validTerms[0]],
+				["unknown pcoins", validTerms[0]],
+				["unknown pcoin", validTerms[0]],
+				["unknown per", validTerms[0]],
+				["unknown exa", validTerms[16]],
+				["unknown fuse", validTerms[20]],
+				["unknown alt", validTerms[23]],
+				["unknown aug", validTerms[2]],
+				["unknown jewel", validTerms[22]],
+				["unknown cartographer", validTerms[13]],
+				["unknown scour", validTerms[18]],
+				["unknown gemcutter", validTerms[21]],
+				["unknown transmute", validTerms[17]],
+				["unknown alch", validTerms[5]]
 			]);
+
 			var result = currencyMap.get(str);
 			if (!result) result = str;
 
@@ -19786,23 +19960,23 @@ function indexerLeagueToLadder(league) {
 	});
 
 	appModule.directive('execOnScrollToBottom', function () {
-	  return {
-		restrict: 'A',
-        scope: true,
-		link: function (scope, element, attrs) {
-		  var mainGrid = element[0].parentElement;
-		  mainGrid.onscroll = function (e) {
-			var el = e.target;
-			var allowance = 340;
-			var clientHeight = mainGrid.clientHeight;
-			// console.log("Scrolling = " + (el.scrollHeight - el.scrollTop) + " to " + clientHeight + " with allowance " + allowance);
-			if ((el.scrollHeight - el.scrollTop) <= (clientHeight + allowance)) { // fully scrolled
-			  //debugOutput("Scrolled to bottom", 'trace');
-			  scope.$apply(attrs.execOnScrollToBottom); 
+		return {
+			restrict: 'A',
+			scope: true,
+			link: function (scope, element, attrs) {
+				var mainGrid = element[0].parentElement;
+				mainGrid.onscroll = function (e) {
+					var el = e.target;
+					var allowance = 340;
+					var clientHeight = mainGrid.clientHeight;
+					// console.log("Scrolling = " + (el.scrollHeight - el.scrollTop) + " to " + clientHeight + " with allowance " + allowance);
+					if ((el.scrollHeight - el.scrollTop) <= (clientHeight + allowance)) { // fully scrolled
+						//debugOutput("Scrolled to bottom", 'trace');
+						scope.$apply(attrs.execOnScrollToBottom);
+					}
+				};
 			}
-		  };
-		}
-	  };
+		};
 	});
 
 	appModule.directive('item', function () {
