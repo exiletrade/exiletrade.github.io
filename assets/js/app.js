@@ -19073,9 +19073,9 @@ function indexerLeagueToLadder(league) {
 			if ($scope.savedAutomatedSearches && $scope.savedAutomatedSearches.length > 0) {
 				debugOutput('Gonna run counts on automated searches: ' + $scope.savedAutomatedSearches.length, 'trace');
 				var countPromises = $scope.savedAutomatedSearches.map(function (search) {
-					var queryString = buildQueryString(search.searchInput + " timeStamp" + search.lastSearch);
+					var queryString = buildQueryString(search.searchInput);
 					search.lastSearch = new Date().getTime();
-					var promise = es.count({
+					/*var promise = es.count({
 					  index: 'index',
 					  body: buildEsBody(queryString),
 					  size: 0
@@ -19085,14 +19085,54 @@ function indexerLeagueToLadder(league) {
 						return count;
 					}, function (err) {
 					  	debugOutput(err.message, 'trace');
-					});
+					});*/
+					var fetchSize = 20;
+					var from = 0;
+					var promise = doElasticSearch(queryString, from, fetchSize, $scope.sortKey, $scope.sortOrder).then(function (response) {
+						$.each(response.hits.hits, function (index, value) {
+							addCustomFields(value._source);
+						});
+						return {
+							response: response,
+							searchInput: search.searchInput
+						};
+					})
 					return promise;
 				});
+
 				$q.all(countPromises).then(function (results) {
-					var total = results
-						.reduce(function (a, b) { return a + b; });
+					var total = 0;
+					results.forEach(function (e, idx, arr) { total += e.response.hits.hits.length; });
 					if (total > 0) {
-						if (!$scope.options.muteSound) {
+						var newHitsCtr = 0;
+						results.forEach(function (elem, index, array) {
+							var existingTab = $scope.tabs.find(function (tab) {
+								return tab.searchInput === elem.searchInput;
+							});
+							if (!existingTab) {
+							    newHitsCtr += elem.response.hits.total;
+								$scope.tabs.push({
+									title: elem.searchInput,
+									searchInput: elem.searchInput,
+									id: index + 1,
+									newItems: elem.response.hits.total,
+									response: elem.response
+								});
+							} else {
+								function hitToUUID(hit) {
+									return hit._source.uuid;
+								}
+								var currentHits = existingTab.response.hits.hits.map(hitToUUID);
+								var newHits = elem.response.hits.hits.map(hitToUUID);
+								var diff = $(currentHits).not(newHits).get();
+								newHitsCtr += diff.length;
+								if (diff.length != 0) {
+								    existingTab.newItems = diff.length;    
+								}
+								existingTab.response = elem.response;
+							}
+						});
+						if (newHitsCtr > 0 && !$scope.options.muteSound) {
 							$scope.snd.play();
 							favicoService.badge(total);
 						}
@@ -19101,7 +19141,7 @@ function indexerLeagueToLadder(league) {
 			}
 		};
 		automatedSearchIntervalFn();
-		$interval(automatedSearchIntervalFn, 30000);
+		$interval(automatedSearchIntervalFn, 10000); // 10 sec
 
 		function createSearchPrefix(options, containsLeagueTerm, containsBuyoutTerm, containsVerifyTerm) {
 			containsLeagueTerm = defaultFor(containsLeagueTerm, false);
@@ -19305,11 +19345,13 @@ function indexerLeagueToLadder(league) {
 							if (!$scope.Response) {
 								$scope.Response = response;
 								$scope.showSpinner = false;
+								$scope.tabs[0].response = response;
 							} else {
 								$.merge($scope.Response.hits.hits, response.hits.hits);
 							}
 
 							if (accountNamesFilter.length != 0 && $scope.Response.hits.hits.length < limit && response.hits.total > limit && $scope.from < (fetchSize * 10)) {
+								$scope.isScrollBusy = true;
 								return fetch();
 							}
 
@@ -19515,9 +19557,7 @@ function indexerLeagueToLadder(league) {
 		 */
 		$scope.saveAutomatedSearch = function () {
 			//ga('send', 'event', 'Save', 'Last Search', $scope.searchInput);
-			var search = { searchInput: $scope.searchInput };
-			var now = new Date()
-			var search = { searchInput: $scope.searchInput + " timestamp" + now.getTime(), lastSearch: now.getTime()};
+			var search = { searchInput: $scope.searchInput, lastSearch: new Date().getTime()};
 			var savedSearches = [];
 
 			if (localStorage.getItem("savedAutomatedSearches") !== null) {
@@ -19836,12 +19876,12 @@ function indexerLeagueToLadder(league) {
 		$scope.onClickTab = function (tab) {
 			$scope.currentTab = tab.id;
 			$scope.tabs[tab.id].newItems = 0;
+			$scope.Response = tab.response;
+			if (tab.id != 0) $scope.disableScroll = true; // no scrolling for automated search
 		};
 		$scope.isActiveTab = function(tabId) {
 			return tabId == $scope.currentTab;
 		};
-
-
 	}]);
 
 
@@ -19929,6 +19969,8 @@ function indexerLeagueToLadder(league) {
 				["unknown alt", validTerms[23]],
 				["unknown aug", validTerms[2]],
 				["unknown jewel", validTerms[22]],
+				["jewellers", validTerms[22]],
+				["jewellers orb", validTerms[22]],
 				["unknown cartographer", validTerms[13]],
 				["unknown scour", validTerms[18]],
 				["unknown gemcutter", validTerms[21]],
