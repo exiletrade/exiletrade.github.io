@@ -18339,13 +18339,14 @@ function badUserInput(badTokens) {
 	if (badTokens.length == 0) return;
 	var successArr = [];
 	var evaluatedToken;
-	//attempt 1 User copy pasted RegEx 
-
+	//attempt 0 numbers at the end
 	for (i = 0; i < badTokens.length; i++) {
-		badTokens[i] = badTokens[i].replace(/\w\?/gi, "");
-		while (badTokens[i].indexOf(")?") > -1) {
-			badTokens[i] = badTokens[i].replace(/\([^\(\)]*\)\?/, "")
-		}
+		var rgx = new RegExp(/((\d+)$|(\d+)-(\d+)$)/);
+		if(rgx.test(badTokens[i])){
+			var match = rgx.exec(badTokens[i]);
+			badTokens[i] = badTokens[i].replace(rgx,"");
+			badTokens[i] = match[0] + badTokens[i];
+		}	
 	}
 	for (i = 0; i < badTokens.length; i++) {
 		evaluatedToken = evalSearchTerm(badTokens[i]);
@@ -18354,6 +18355,25 @@ function badUserInput(badTokens) {
 			successArr.push(evaluatedToken);
 			badTokens.splice(i, 1);
 			i--;
+		}
+	}
+	
+	//attempt 1 User copy pasted RegEx 
+	if(badTokens.length > 0){
+		for (i = 0; i < badTokens.length; i++) {
+			badTokens[i] = badTokens[i].replace(/\w\?/gi, "");
+			while (badTokens[i].indexOf(")?") > -1) {
+				badTokens[i] = badTokens[i].replace(/\([^\(\)]*\)\?/, "")
+			}
+		}
+		for (i = 0; i < badTokens.length; i++) {
+			evaluatedToken = evalSearchTerm(badTokens[i]);
+			debugOutput(badTokens[i] + '=' + evaluatedToken, 'log');
+			if (evaluatedToken) {
+				successArr.push(evaluatedToken);
+				badTokens.splice(i, 1);
+				i--;
+			}
 		}
 	}
 
@@ -18670,15 +18690,16 @@ function indexerLeagueToLadder(league) {
 		'duScroll',
 		'angular-cache',
 		'angularSpinner',
-		'favico.service'
+		'favico.service',
+		'MassAutoComplete'
 	]);
 
 	appModule.config(config);
 	appModule.run(run);
 
-	config.$inject = ['$urlRouterProvider', '$locationProvider'];
+	config.$inject = ['$urlRouterProvider', '$locationProvider', '$sceProvider'];
 
-	function config($urlProvider, $locationProvider) {
+	function config($urlProvider, $locationProvider, $sceProvider) {
 		$urlProvider.otherwise('/');
 
 		$locationProvider.html5Mode({
@@ -18687,6 +18708,8 @@ function indexerLeagueToLadder(league) {
 		});
 
 		$locationProvider.hashPrefix('!');
+
+		$sceProvider.enabled(false);
 	}
 
 	function run() {
@@ -18892,7 +18915,10 @@ function indexerLeagueToLadder(league) {
 		};
 	}]);
 	
-	appModule.controller('SearchController', ['$q', '$scope', '$http', '$location', '$interval', 'es', 'playerOnlineService','favicoService', function ($q, $scope, $http, $location, $interval, es, playerOnlineService,favicoService) {
+	appModule.controller('SearchController', 
+		['$q', '$scope', '$http', '$location', '$interval', 'es', 'playerOnlineService','favicoService', 
+		function ($q, $scope, $http, $location, $interval, es, playerOnlineService,favicoService) {
+
 		debugOutput('controller', 'info');
 		$scope.searchInput = ""; // sample (gloves or chest) 60life 80eleres
 		$scope.badSearchInputTerms = []; // will contain any unrecognized search term
@@ -18902,6 +18928,7 @@ function indexerLeagueToLadder(league) {
 		$scope.disableScroll = true;
 		$scope.isScrollBusy = false;
 		$scope.onlinePlayers = [];
+		$scope.helpState = false;
 
 		var httpParams = $location.search();
 		debugOutput('httpParams:' + angular.toJson(httpParams, true), 'trace');
@@ -18989,6 +19016,13 @@ function indexerLeagueToLadder(league) {
 		}];
 		$scope.currentTab = 0;
 
+		$scope.removeAutosearch = function() {
+			alert('not implemented');
+		};
+		$scope.clearAutosearch = function() {
+			alert('not implemented');
+		};
+
 		/*
 		 * Load new sound; play sound preview
 		 * */
@@ -19073,22 +19107,11 @@ function indexerLeagueToLadder(league) {
 			if ($scope.savedAutomatedSearches && $scope.savedAutomatedSearches.length > 0) {
 				debugOutput('Gonna run counts on automated searches: ' + $scope.savedAutomatedSearches.length, 'trace');
 				var countPromises = $scope.savedAutomatedSearches.map(function (search) {
-					var queryString = buildQueryString(search.searchInput);
-					search.lastSearch = new Date().getTime();
-					/*var promise = es.count({
-					  index: 'index',
-					  body: buildEsBody(queryString),
-					  size: 0
-					}).then(function (response) {
-						var count = response.count;
-						search.count = count;
-						return count;
-					}, function (err) {
-					  	debugOutput(err.message, 'trace');
-					});*/
+					var queryString = buildQueryString(search.searchInput + " timestamp" + search.lastSearch);
+					//search.lastSearch = new Date().getTime();
 					var fetchSize = 20;
 					var from = 0;
-					var promise = doElasticSearch(queryString, from, fetchSize, $scope.sortKey, $scope.sortOrder).then(function (response) {
+					var promise = doElasticSearch(queryString, from, fetchSize, "shop.updated", "desc").then(function (response) {
 						$.each(response.hits.hits, function (index, value) {
 							addCustomFields(value._source);
 						});
@@ -19099,6 +19122,7 @@ function indexerLeagueToLadder(league) {
 					})
 					return promise;
 				});
+				//localStorage.setItem("savedAutomatedSearches", JSON.stringify($scope.savedAutomatedSearches.reverse()));
 
 				$q.all(countPromises).then(function (results) {
 					var total = 0;
@@ -19111,11 +19135,11 @@ function indexerLeagueToLadder(league) {
 							});
 							if (!existingTab) {
 							    newHitsCtr += elem.response.hits.total;
-								$scope.tabs.push({
+							    $scope.tabs.push({
 									title: elem.searchInput,
 									searchInput: elem.searchInput,
 									id: index + 1,
-									newItems: elem.response.hits.total,
+									newItems: elem.response.hits.total % 21, // max is fetchSize
 									response: elem.response
 								});
 							} else {
@@ -19229,6 +19253,8 @@ function indexerLeagueToLadder(league) {
 		 Runs the current searchInput with default sort
 		 */
 		$scope.doSearch = function () {
+			var valueFromInput = $("#searchField").val();
+			if (typeof valueFromInput !== "undefined") $scope.searchInput = valueFromInput;
 			debugOutput('doSearch called, $scope.searchInput = ' + $scope.searchInput, 'info');
 			doActualSearch($scope.searchInput, limitDefault, sortKeyDefault, sortOrderDefault);
 			ga('send', 'event', 'Search', 'User Input', $scope.searchInput);
@@ -19451,6 +19477,48 @@ function indexerLeagueToLadder(league) {
 			// we call on fm.js to do it's awesome work
 			fm_process(item);
 		}
+
+		$scope.autocomplete_options = {
+			suggest: suggestSearchTermDelimited,
+			on_detach: function (current_value) {
+				$scope.searchInput = current_value;
+		  	}
+	  	};
+
+		function suggestSearchTerm(term) {
+			var q = term.toLowerCase().trim();
+			q = q.replace(/[\(\)-\d]/g, "");(q);
+			var results = [];
+
+			if (/^(OR|AND|NOT)$/i.test(q)) return results;
+
+			// Find first 10 that start with `term`.
+			for (var i = 0; i < sampleTerms.length && results.length < 10; i++) {
+			  var searchTerm = sampleTerms[i].sample;
+			  var searchQuery = sampleTerms[i].query;
+			  if (searchTerm.toLowerCase().indexOf(q) === 0)
+				results.push({ 
+					// FIXME: style me better
+					label: '<strong>' + searchTerm + '</strong>' + '<span>'+ "-" + "<i>" + searchQuery+ "</i>" + '</span>' ,
+					value: searchTerm 
+				});
+			}
+
+			return results;
+		}
+
+		function suggestSearchTermDelimited(term) {
+		  var ix = term.lastIndexOf(' '),
+			  lhs = term.substring(0, ix + 1),
+			  rhs = term.substring(ix + 1),
+			  suggestions = suggestSearchTerm(rhs);
+
+		  suggestions.forEach(function (s) {
+			s.value = lhs + s.value;
+		  });
+
+		  return suggestions;
+		};
 
 		/*
 		 Get CSS Classes for element resistances
@@ -19861,6 +19929,7 @@ function indexerLeagueToLadder(league) {
 			return blacklist.indexOf(type) == -1;
 		};
 		debugOutput("Loaded " + Object.keys(terms).length + " terms.", "info");
+		sampleTerms.sort(function(a, b){return a.sample.length-b.sample.length});
 		if (typeof httpParams['q'] !== 'undefined') {
 			$scope.doSearch();
 		} else {
@@ -19877,11 +19946,15 @@ function indexerLeagueToLadder(league) {
 			$scope.currentTab = tab.id;
 			$scope.tabs[tab.id].newItems = 0;
 			$scope.Response = tab.response;
-			if (tab.id != 0) $scope.disableScroll = true; // no scrolling for automated search
+			$scope.disableScroll = tab.id != 0; // no scrolling for automated search
 		};
 		$scope.isActiveTab = function(tabId) {
 			return tabId == $scope.currentTab;
 		};
+
+		$scope.toggleHelp = function(){
+			return $scope.helpState = ($scope.helpState == false)
+		}
 	}]);
 
 
@@ -19975,6 +20048,9 @@ function indexerLeagueToLadder(league) {
 				["unknown scour", validTerms[18]],
 				["unknown gemcutter", validTerms[21]],
 				["unknown transmute", validTerms[17]],
+				["unknown exaults", validTerms[16]],
+				["unknown x", validTerms[16]],
+				["unknown chaoss", validTerms[12]],
 				["unknown alch", validTerms[5]]
 			]);
 
