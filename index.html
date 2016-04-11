@@ -57,11 +57,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.8/clipboard.min.js"></script>
 <script src="./assets/js/foundation.js"></script>
 <script src="./assets/js/templates.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/elasticsearch/11.0.0/elasticsearch.angular.js"></script>
-<script src="./assets/data/data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elasticsearch/10.1.3/elasticsearch.angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-cache/4.5.0/angular-cache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-spinner/0.8.1/angular-spinner.min.js"></script>
+<script>
+	var terms = {};
+	var sampleTerms = [];
+	// the output from google calls a function 'google.visualization.Query.setResponse()'
+	// and passes a json data that is not so human-readable.
+	window.google = {
+		'visualization' : {
+			'Query' : {
+				'setResponse' : function (data) {
+					var rows = data.table.rows;
+					for(i in rows) {
+						var row = rows[i].c;
+						var quer = row[1].v;
+						var filt = (row[2] !== null && row[2].v !== null) ? row[2].v : "";
+						terms[row[0].v] = {
+							'query' : quer,
+							'filter' : filt
+						};
+						if (row[3] !== null && row[3].v !== null) sampleTerms.push({ sample: row[3].v, query: quer });
+						if (row[4] !== null && row[4].v !== null) sampleTerms.push({ sample: row[4].v, query: quer });
+					}
+				}
+			}
+		}
+	}
+</script>
+<script src="./data/speadsheet_gid675822745.js"></script>
+<script src="./data/speadsheet_gid40738669.js"></script>
+<script src="./data/speadsheet_gid244311060.js"></script>
+<script src="./data/speadsheet_gid1965399973.js"></script>
+<script src="./data/speadsheet_gid1443807460.js"></script>
+<script src="./data/speadsheet_gid57824604.js"></script>
+<script src="./data/speadsheet_gid224979895.js"></script>
+<script src="./data/speadsheet_gid14190859.js"></script>
+<script src="./data/speadsheet_gid154866940.js"></script>
+<script src="./data/speadsheet_gid583395837.js"></script>
+<script src="./data/speadsheet_gid380600191.js"></script>
+<script src="./data/speadsheet_gid1782931570.js"></script>
+<script src="./data/speadsheet_gid223573764.js"></script>
+<script src="./data/speadsheet_gid207179951.js"></script>
+<script src="./data/speadsheet_gid1732537543.js"></script>
+
 <script src="./assets/js/routes.js"></script>
 <script src="./assets/js/app.js"></script>
-
 <script>
 	(function (i, s, o, g, r, a, m) {
 		i['GoogleAnalyticsObject'] = r;
