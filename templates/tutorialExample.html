@@ -1,0 +1,58 @@
+<!--example of a button starting the tutorial-->
+<a class="button" id="testbutton" ng-click="openTutorialPopup('', 0)" ng-if="enableTutorialFeature">Test Tutorial</a>
+
+<!--data-target = id of target element-->
+<!--popups should be placed at root level of #mainGrid (home.html)-->
+<div class="tutorial-popup" data-target="testbutton" id="tutorial-0">
+	<div class="content-wrapper">
+		<div class="arrow-shadow"></div>
+		<a class="close-button" ng-click="closeTutorialPopup($event)">×</a>
+		<div class="content">
+			<p>
+				Example 1 Content
+			</p>
+			<a href="#" class="button" ng-click="openTutorialPopup('next', $event)">Next</a>
+		</div>
+	</div>
+</div>
+
+<div class="tutorial-popup" data-target="optionsButton" id="tutorial-1">
+	<div class="content-wrapper">
+		<div class="arrow-shadow"></div>
+		<a class="close-button" ng-click="closeTutorialPopup($event)">×</a>
+		<div class="content">
+			<p>
+				Example 2 Content
+			</p>
+			<a href="#" class="button" ng-click="openTutorialPopup('prev', $event)">Prev</a>
+			<a href="#" class="button" ng-click="openTutorialPopup('next', $event)">Next</a>
+		</div>
+	</div>
+</div>
+
+<div class="tutorial-popup" data-target="savedItemsButton" id="tutorial-2">
+	<div class="content-wrapper">
+		<div class="arrow-shadow"></div>
+		<a class="close-button" ng-click="closeTutorialPopup($event)">×</a>
+		<div class="content">
+			<p>
+				Example 3 Content
+			</p>
+			<a href="#" class="button" ng-click="openTutorialPopup('prev', $event)">Prev</a>
+			<a href="#" class="button" ng-click="openTutorialPopup('next', $event)">Next</a>
+		</div>
+	</div>
+</div>
+
+<div class="tutorial-popup" data-target="searchField" id="tutorial-3">
+	<div class="content-wrapper">
+		<div class="arrow-shadow"></div>
+		<a class="close-button" ng-click="closeTutorialPopup($event)">×</a>
+		<div class="content">
+			<p>
+				Example 4 Content
+			</p>
+			<a href="#" class="button" ng-click="openTutorialPopup('prev', $event)">Prev</a>
+		</div>
+	</div>
+</div>
