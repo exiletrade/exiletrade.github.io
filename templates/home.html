@@ -38,11 +38,11 @@
 						<img zf-iconic="" icon="bookmark" size="small" title="Bookmark the search">
 						<span class="desktop">Save</span>
 					</a>
-					<!--a href="#" ng-click="saveAutomatedSearch()" class="button small saveSearchNotificationLink" title="Add Automated Search"
+					<a href="#" ng-click="saveAutomatedSearch()" class="button small saveSearchNotificationLink" title="Add Automated Search"
 					   content="Saved: {{searchInput}}" color="success" autoclose="2500" zf-notify="save-notification-search">
 						<img src="./assets/img/add.svg" class="add-icon">
 						<span class="desktop">Auto</span>
-					</a-->
+					</a>
 					<div class="searchStats" title="{{queryString}}" ng-if="Response.took" zf-open="showElasticJsonRequestModal">
 						<div title="Time it took to search for the initial results">
 							<img zf-iconic="" icon="dashboard" size="small">
@@ -305,7 +305,7 @@
 					  ng-change="blacklistCandidate.commentLength = 100 - blacklistCandidate.comment.length">
 			</textarea>
 
-			<a href="#" class="button" zf-close="" ng-click="addPlayerToBlacklist(blacklistCandidate.account, blacklistCandidate.comment)">Yes</a>
+			<a href="#" class="button" zf-close="" ng-click="addPlayerToBlacklist(blacklistCandidate.account, blacklistCandidate.comment)">Add</a>
 			<a href="#" class="button alert" zf-close="" ng-click="clearBlacklistCandidate">Cancel</a>
 		</div>
 
@@ -353,6 +353,46 @@
 			</table>
 		</div>
 
+		<div zf-modal="" id="showCurrencyTradingModal">
+			<a zf-close="" class="close-button">×</a>
+			<h5>Contact Seller: <span class="highlight">{{currencyTrading.item.shop.lastCharacterName}}</span></h5>
+
+			<span>Select the amount you want to buy:</span>
+
+			<div class="selectAmount grid-block">
+				<div class="buy grid-content shrink">
+					<div>
+						<img src="{{currencyTrading.item.info.icon}}" title="{{currencyTrading.item.info.fullName}}">
+						<span class="amount" ng-class="{'outOfStock': (currencyTrading.item.properties.stackSize.current - currencyTrading.rangeValue) == 0}">
+							{{currencyTrading.item.properties.stackSize.current - currencyTrading.rangeValue}}
+						</span>
+					</div>
+					<span class="desc">Buy</span>
+				</div>
+				<div class="inputs grow grid-content">
+					<input type="range" ng-model="currencyTrading.rangeValue" min="{{currencyTrading.rangeMin}}"
+						   max="{{currencyTrading.rangeMax}}"
+						   step="{{currencyTrading.rangeSteps}}"
+						   ng-change="updateCurrencyBuyMessage(currencyTrading.item, currencyTrading.rangeValue)">
+					<input type="number" ng-model="currencyTrading.rangeValue" min="{{currencyTrading.rangeMin}}"
+						   max="{{currencyTrading.rangeMax}}" step="{{currencyTrading.rangeSteps}}">
+				</div>
+				<div class="pay grid-content shrink">
+					<div>
+						<span class="amount">{{currencyTrading.pay}}</span>
+						<img src="{{currencyTrading.item.info.icon}}" class="price {{currencyTrading.item.shop.currency | cleanCurrency}}">
+					</div>
+					<span class="desc">Pay</span>
+				</div>
+			</div>
+
+			<textarea ng-model="currencyTrading.msg" spellcheck="false"></textarea>
+
+			<a href="#" class="button click" ngclipboard data-clipboard-text="{{currencyTrading.msg}}">
+				Copy to clipboard
+			</a>
+		</div>
+
 		<!-- Show Elastic JSON Request Debug Modal -->
 		<div zf-modal="" id="showElasticJsonRequestModal">
 			<a zf-close="" class="close-button">×</a>
@@ -364,7 +404,7 @@
 	<!-- Searchresults -->
 	<div class="grid-content search-results">
 		<div id="tabs">
-			<div class="tab-headers grid-block" ng-show="(tabs.length>1)">
+			<div class="tab-headers grid-block" ng-show="(savedAutomatedSearches.length>0)">
 				<div ng-repeat="tab in tabs"
 					 ng-class="{active:isActiveTab(tab.id)}"
 					 ng-click="onClickTab(tab)"
@@ -374,16 +414,28 @@
 				</div>
 			</div>
 			<div class="tab-contents clearfix">
-				<div class="grid-block search-items large-up-2 tab"
+				<div class="grid-block search-items large-up-2 tab" ng-if="!isCurrencySearch"
 					 ng-class="{active:isActiveTab(tab.id)}" ng-show="isActiveTab(tab.id)" ng-repeat="tab in tabs">
 					<span ng-if="tab.id>0" class="tab-controls clearfix">
-						<a href="#" class="button hollow alert float-right" ng-click="removeAutosearch()">Remove Autosearch</a>
-						<a href="#" class="button hollow warning float-right" ng-click="clearAutosearch()">Clear List</a>
+						<!--<a href="#" class="button hollow alert float-right" ng-click="removeAutosearch()">Remove Autosearch</a>
+						<a href="#" class="button hollow warning float-right" ng-click="clearAutosearch()">Clear List</a>-->
 					</span>
-					<div class="grid-content item" ng-repeat="item in Response.hits.hits" ng-style="options.switchItemsPerRow"
+					<div class="grid-content item" ng-repeat="item in tab.response.hits.hits" ng-style="options.switchItemsPerRow"
 						 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
 						<!-- Inserting templates/directives/item.html -->
 						<div item></div>
+					</div>
+				</div>
+				<div class="grid-block search-items search-currency large-up-2 tab" ng-if="isCurrencySearch && currencyTradingEnabled"
+					 ng-class="{active:isActiveTab(tab.id)}" ng-show="isActiveTab(tab.id)" ng-repeat="tab in tabs">
+					<span ng-if="tab.id>0" class="tab-controls clearfix">
+						<!--<a href="#" class="button hollow alert float-right" ng-click="removeAutosearch()">Remove Autosearch</a>
+						<a href="#" class="button hollow warning float-right" ng-click="clearAutosearch()">Clear List</a>-->
+					</span>
+					<div class="grid-content item currency" ng-repeat="item in tab.response.hits.hits" ng-style="options.switchItemsPerRow"
+						 data-id="{{item._id}}" data-md5sum="{{item._source.md5sum}}" data-uuid="{{item._source.uuid}}">
+						<!-- Inserting templates/directives/currency.html -->
+						<div currency class="grid-block large-up-2 medium-up-2 small-up-1"></div>
 					</div>
 				</div>
 				<div ng-show='isScrollBusy' class="scrollIndicator grid-content">
