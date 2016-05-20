@@ -29,6 +29,7 @@
             <h1>ExileTrade Stats</h1>
             <p>Count of each unique item per league seen in the Public Stash API (both gone and available). 'gone' means it was removed from the Public Stash Tab, 'available' means it's still available for trade. This is my first time making charts, so it's all noob-made; but I'll be updating this.</p>
             <p><strong>Note:</strong> It may take ~4sec to load the chart, please wait.</p>
+            <p>These charts uses up-to-date data from ExileTools. Will be adding the Prophecy leagues soon as they are live, so stay tuned!</p>
         </div>
 
         <h3>Perandus HC</h3>
@@ -115,18 +116,12 @@
 
       // Our charting tool will need a flat structured json data
       function flattenAggsData(data) {
-        console.info(data.aggregations)
         var buckets = data.aggregations.filtered.agg1.buckets
-        //var pretty = JSON.stringify(buckets, null, 2)
-        //console.log(pretty)
-        //$('#chartContainerAllItemData').html()
         var flatten = $.map(buckets, function (bucket, i) {
           var name = bucket.key
           var count = bucket.doc_count
 
           var agg2Buckets = bucket.agg2.buckets
-          console.info(agg2Buckets)
-          console.info($.grep(agg2Buckets, bucketKeyFilter("YES")))
           var available = 0
           var gone = 0
           var availableBucket = $.grep(agg2Buckets, bucketKeyFilter("YES"))[0]
@@ -145,7 +140,26 @@
             Gone: gone
           }
         })
-        return flatten;
+        var flatten2 = []
+        $.each(flatten, function( index, value ) {
+            if (value.Gone) {
+                flatten2.push({
+                    Name: value.Name,
+                    Status: "Gone",
+                    Count: value.Gone,
+                    Total: value.Count
+                })    
+            }
+            if (value.Available) {
+                flatten2.push({
+                    Name: value.Name,
+                    Status: "Available",
+                    Count: value.Available,
+                    Total: value.Count
+                })    
+            }
+        });
+        return flatten2;
       }
 
       function bucketKeyFilter(key) {
@@ -161,7 +175,17 @@
         var xAxis = chart.addCategoryAxis("x", "Name");
         xAxis.fontSize = "12px";
         chart.addMeasureAxis("y", "Count");
-        var series = chart.addSeries(null, dimple.plot.bar);
+        var series = chart.addSeries("Status", dimple.plot.bar);
+        series.getTooltipText = function (e) {
+               var field = e.aggField[0]
+               var arr = [
+                e.x,
+                field + ": " + e.yValue
+               ]
+               if (field == "Available") arr.push("Total: " + e.y)
+               return arr
+           };
+        chart.assignColor("Available", "green")
         chart.draw();
       }
     
