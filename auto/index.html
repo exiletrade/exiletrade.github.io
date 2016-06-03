@@ -1,4 +1,7 @@
+<!doctype html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
   <title>ExileTrade|Auto</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js"></script>
@@ -53,6 +56,8 @@
         ]
       </textarea>
     <input id="btnFilter" type="button" value="   Update Filter   " />
+    <input id="btnClearResults" type="button" value="   Clear Results   " />
+    <br/>
     <input id="urlWithFilter" type="text" value="" />
     <br/>
     <div id="log"></div>
@@ -104,10 +109,14 @@
     socket.emit('filter', filter);
     var jsonStr = JSON.stringify(filter);
     log("Sent Filter: " + jsonStr);
-    var newurl = 'http://exiletra.de/auto/q=' + encodeURIComponent(jsonStr);
+    var newurl = 'http://exiletra.de/auto/?q=' + encodeURIComponent(jsonStr);
     $('#urlWithFilter').val(newurl);
   };
   $("#btnFilter").click(parseAndEmitFilter);
+  
+  $("#btnClearResults").click(function() {
+    $('#itemsDiv').html("");
+  });
 
   // setup clipboardjs https://clipboardjs.com
   new Clipboard('.btn');
@@ -169,3 +178,5 @@
   });
 </script>
 </body>
+
+</html>
